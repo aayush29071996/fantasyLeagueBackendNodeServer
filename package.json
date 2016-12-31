@@ -1,7 +1,7 @@
 {
   "name": "hattrick",
   "version": "1.0.0",
-  "description": "A simple webpage for Hattrick Fantasy Arena",
+  "description": "A simple webpage for Inyards Fantasy Arena",
   "main": "server.js",
   "dependencies": {
     "body-parser": "^1.15.2",
@@ -21,7 +21,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://gitlab.com/hattrick/hattrick-web.git"
+    "url": "git+https://gitlab.com/inyards/inyards-web.git"
+  },"scripts": {
+    "postinstall": "./node_modules/bower/bin/bower install"
   },
   "keywords": [
     "hattrick",
@@ -31,7 +33,7 @@
   "author": "Gohula Krishnan",
   "license": "ISC",
   "bugs": {
-    "url": "https://gitlab.com/hattrick/hattrick-web/issues"
+    "url": "https://gitlab.com/inyards/inyards-web/issues"
   },
-  "homepage": "https://gitlab.com/hattrick/hattrick-web#README"
+  "homepage": "https://gitlab.com/inyards/inyards-web#README"
 }
