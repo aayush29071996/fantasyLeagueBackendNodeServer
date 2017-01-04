@@ -1,3 +1,5 @@
+var InviteController = require('./controllers/InviteController');
+
 module.exports = function(app) {
 
 	var __dirname =  './public/';
@@ -13,4 +15,7 @@ module.exports = function(app) {
 			root: __dirname
 		});
 	});
+
+	app.post('/invite', InviteController.save);
+
 };
