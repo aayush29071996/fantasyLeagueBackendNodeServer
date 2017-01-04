@@ -12,9 +12,7 @@
     <title>Inyards Fantasy Sports</title>
     <link rel=stylesheet href="css/main.css">
     <link rel="stylesheet" href="bower_components/font-awesome-bower/css/font-awesome.css">
-    <link rel="icon" 
-      type="image/png" 
-      href="img/favicon.ico">
+    <link rel="icon" type="image/png" href="img/favicon.ico">
     <!--[if lte IE 8]>
     <link rel=stylesheet href="css/ie.css">
     <![endif]-->
@@ -181,16 +179,18 @@
         </div>
     </div>
     <div class="level level-outro text-center ">
-        <div class=container>
-            <form class=contact method=get action="/ " accept-charset="UTF-8 ">
+        <div class="container ">
+            <div class="contact " accept-charset="UTF-8 ">
                 <div class="h2 mb-20 " style="color: #fff; font-weight: 500; ">Coming soon to the
                     <br class="visible-xs-block "> Google Play Store</div>
                     <p class="mb-35 fa-white ">Enter your email and we’ll send a invite as soon as we launch
-                    <div class="btn-append ">
-                        <input type=email class="text email " name="email " placeholder="Email " required>
-                        <input type=submit class="submit appended " value=submit>
+                    <div class="btn-append mb-35 ">
+                        <input id="emailData" type=email class="text email " name="email " placeholder="Email " required>
+                        <input id="emailBtn" type=submit class="submit appended ">
                     </div>
-            </form>
+                    <p id="emailValidAlert" class="fa-white ">Thank you</p>
+                    <p id="emailInvalidAlert" class="fa-white ">Looks like you've entered an invalid email address. Try Again.</p>
+            </div>
         </div>
     </div>
 
@@ -223,6 +223,51 @@
     <!--  <script src="js/modal.js "></script> -->
     <script src="js/main.js "></script>
     <!-- //-end- concat_js -->
+    <script type="text/javascript ">
+
+
+       $(document).ready(function(){
+        setTimeout(hideAlerts, 10);
+        function hideAlerts(){
+            $("#emailValidAlert").hide();
+            $("#emailInvalidAlert").hide();
+        }     
+
+        function validateEmail(email) {
+            var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+            return emailReg.test(email);
+        }
+
+        $("#emailBtn").click(function(){
+            var email = $("#emailData ").val();
+            if(email != undefined && email != "" && validateEmail(email)){
+                     $.ajax({
+                        type: "POST",
+                        url: "/invite",
+                        data: JSON.stringify({
+                            'email':email
+                        }),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function(data){ 
+                            $("#emailValidAlert").show();
+                            setTimeout(hideAlerts, 2000);
+                        },
+                        failure: function(errMsg) {
+                             setTimeout(hideAlerts, 2000);
+                        }
+                        });
+            
+            } else{
+                 $("#emailInvalidAlert").show();
+                  setTimeout(hideAlerts, 2000);
+            }
+        });
+        });
+
+    </script>
+
+
 </body>
 
 </html>
