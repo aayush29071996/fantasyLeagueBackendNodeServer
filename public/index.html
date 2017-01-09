@@ -183,13 +183,15 @@
             <div class="contact " accept-charset="UTF-8 ">
                 <div class="h2 mb-20 " style="color: #fff; font-weight: 500; ">Coming soon to the
                     <br class="visible-xs-block "> Google Play Store</div>
-                    <p class="mb-35 fa-white ">Enter your email and we’ll send a invite as soon as we launch
+                    <p class="fa-white mb-35 ">Enter your email and we’ll send a invite as soon as we launch
                     <div class="btn-append mb-35 ">
-                        <input id="emailData" type=email class="text email " name="email " placeholder="Email " required>
-                        <input id="emailBtn" type=submit class="submit appended ">
+                        <input id="emailData" type="email" class="text email" name="email" placeholder="Email" required>
+                        <input id="emailBtn" type="submit" class="submit appended ">
                     </div>
-                    <p id="emailValidAlert" class="fa-white ">Thank you</p>
-                    <p id="emailInvalidAlert" class="fa-white ">Looks like you've entered an invalid email address. Try Again.</p>
+                    <div class="mb-35">
+                    <p id="emailValidAlert" class="fa-white ">Thank You!</p>
+                    <p id="emailInvalidAlert" class="fa-white "></p>
+                    </div>
             </div>
         </div>
     </div>
@@ -227,10 +229,12 @@
 
 
        $(document).ready(function(){
+
         setTimeout(hideAlerts, 10);
         function hideAlerts(){
-            $("#emailValidAlert").hide();
-            $("#emailInvalidAlert").hide();
+            console.log('hide 10');
+            $("#emailValidAlert").text('');
+            $("#emailInvalidAlert").text('');
         }     
 
         function validateEmail(email) {
@@ -239,8 +243,16 @@
         }
 
         $("#emailBtn").click(function(){
-            var email = $("#emailData ").val();
-            if(email != undefined && email != "" && validateEmail(email)){
+            var email = $("#emailData").val();
+             if(email === ''){
+                $("#emailInvalidAlert").text('Enter an Email Address');
+                setTimeout(hideAlerts, 2000);
+                return;
+            } else if(!validateEmail(email)){
+                $("#emailInvalidAlert").text('Looks like you\'ve entered an invalid email address. Try Again.');
+                setTimeout(hideAlerts, 2000);
+                return;
+            } else if(email != undefined && validateEmail(email)){
                      $.ajax({
                         type: "POST",
                         url: "/invite",
@@ -250,11 +262,18 @@
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         success: function(data){ 
-                            $("#emailValidAlert").show();
+                            if(data.error === 'Email Already in use'){
+                             $("#emailInvalidAlert").text('You have already subscribed for our Invite');
+                             setTimeout(hideAlerts, 2000);
+                            } 
+                            else{
+                            console.log(data);
+                            $("#emailValidAlert").text('Thank You!');
                             setTimeout(hideAlerts, 2000);
+                         }
                         },
                         failure: function(errMsg) {
-                             setTimeout(hideAlerts, 2000);
+                            
                         }
                         });
             

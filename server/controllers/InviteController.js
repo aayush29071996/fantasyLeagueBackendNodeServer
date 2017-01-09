@@ -1,25 +1,50 @@
 var HttpStatus =  require('http-status');
-var fs = require('node-fs');
+var Invite = require('../models/Invite');
+var Validation = require('./Validation');
 
+//Saves invite
 exports.save = function(req, res){
-	var email = req.body.email;
-	fs.appendFile('invite-emails.txt', '\n' + email, function (err){
+	console.log('email save request arrived from ' + req.body.email);
+	Invite.findOne({'email': new RegExp('^' + req.body.email + '$', 'i')}, function (err, invite){
 		if(err){
 			res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
 				status: 'failure',
                 code: HttpStatus.INTERNAL_SERVER_ERROR,
                 data: '',
-                error: 'unexpected error in accessing or writing file'
+                error: 'unexpected error in accessing data'
 			});
 			return;
 		}
-		else{
-			res.status(HttpStatus.OK).json({
+		if(invite == null) {
+			console.log('inside null');
+			var newInvite = new Invite;
+			newInvite.email = req.body.email;
+			newInvite.save(function(saveErr, saveInvite){
+				if(saveErr){
+					res.status(HttpStatus.BAD_REQUEST).json({
+						status: 'failure',
+						code: HttpStatus.BAD_REQUEST,
+						data: '',
+						error: Validation.validatingErrors(saveErr)
+					});
+					return;
+				}
+				res.status(HttpStatus.OK).json({
                     status: 'success',
                     code: HttpStatus.OK,
-                    data: email,
+                    data: newInvite,
                     error: ''
-                });
+			        });
+			        return;
+			});
+		} else{
+			res.status(HttpStatus.OK).json({
+	            status: 'success',
+	            code: HttpStatus.OK,
+	            data: '',
+	            error: 'Email Already in use'
+  		    });
+			return;
 		}
 	});
 };
