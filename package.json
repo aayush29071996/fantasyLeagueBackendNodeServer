@@ -1,19 +1,24 @@
 {
-  "name": "hattrick",
+  "name": "inyards",
   "version": "1.0.0",
-  "description": "A simple webpage for Hattrick Fantasy Arena",
+  "description": "A simple webpage for Inyards Fantasy Sports",
   "main": "server.js",
   "dependencies": {
     "body-parser": "^1.15.2",
     "bower": "^1.8.0",
     "cors": "^2.8.1",
+    "crypto": "0.0.3",
     "express": "^4.14.0",
     "font-awesome": "^4.7.0",
     "http-status": "^0.2.3",
+    "moment": "^2.17.1",
     "mongoose": "^4.7.5",
     "mongoose-unique-validator": "^1.0.3",
     "morgan": "^1.7.0",
-    "node-fs": "^0.1.7"
+    "node-fs": "^0.1.7",
+    "nodemailer": "^2.7.0",
+    "trimmer": "^1.0.0",
+    "uuid": "^3.0.1"
   },
   "devDependencies": {},
   "scripts": {
@@ -21,17 +26,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://gitlab.com/hattrick/hattrick-web.git"
+    "url": "git+https://gitlab.com/inyards/inyards-web.git"
   },
   "keywords": [
-    "hattrick",
+    "inyards",
     "fantasy",
-    "games"
+    "games",
+    "sports"
   ],
   "author": "Gohula Krishnan",
   "license": "ISC",
   "bugs": {
-    "url": "https://gitlab.com/hattrick/hattrick-web/issues"
+    "url": "https://gitlab.com/inyards/inyards-web/issues"
   },
-  "homepage": "https://gitlab.com/hattrick/hattrick-web#README"
+  "homepage": "https://gitlab.com/inyards/inyards-web#README"
 }

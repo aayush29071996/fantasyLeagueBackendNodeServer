@@ -1,3 +1,8 @@
+/**
+* Created by harirudhra on Sun 1 Jan 2017
+*/
+var LoginController = require('./controllers/LoginController');
+var UserController = require('./controllers/UserController');
 var InviteController = require('./controllers/InviteController');
 
 module.exports = function(app) {
@@ -16,6 +21,15 @@ module.exports = function(app) {
 		});
 	});
 
+	//invite route
 	app.post('/invite', InviteController.save);
+
+	//user routes
+	app.post('/username', UserController.validate);
+	app.post('/register', UserController.save);
+
+	//login routes
+	app.post('/authenticate', LoginController.authenticate);
+
 
 };
