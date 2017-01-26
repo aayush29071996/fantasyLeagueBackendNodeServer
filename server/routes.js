@@ -9,11 +9,10 @@ module.exports = function(app) {
 
 	var __dirname =  './public/';
 
-	app.all('/', function(req, res, next){
+	app.all('/', function(req, res){
 		res.sendFile('index.html', {
 			root: __dirname
 		});
-
 	});
 
 	app.all('/about', function(req, res){
@@ -26,13 +25,7 @@ module.exports = function(app) {
 	app.post('/invite', InviteController.save);
 
 	//user routes
-	app.all('/api', function(req, res, next){
-		res.header("Access-Control-Allow-Origin", "*");
-    	res.header("Access-Control-Allow-Headers", "Cache-Control, Pragma, Origin, Authorization, Content-Type, X-Requested-With");
-    	res.header("Access-Control-Allow-Methods", "GET, PUT, POST");
-    	return next();
-	});
-	app.post('/api/username', UserController.validate);
+	app.post('/username', UserController.validate);
 	app.post('/register', UserController.save);
 
 	//login routes
