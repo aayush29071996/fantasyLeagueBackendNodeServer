@@ -15,7 +15,8 @@ var errorMsg = {
 	EMAIL_IN_USE : 'email already in use',
 	USERNAME_IN_USE : 'username already in use',
 	MOBILE_IN_USE : 'mobile number in use',
-	INVALID_PASS: 'username and password does not match'
+	INVALID_PASS_U: 'username and password does not match',
+	INVALID_PASS_E: 'email and password does not match'
 }
 
 var status = {
@@ -34,8 +35,18 @@ exports.authenticate = function(req, res){
 	if(req.body.password){
 		var password = encrypt(key, trimmed(req.body.password));
 	}
+	var authMethod, authData, authError;
+	if(req.body.hasOwnProperty('username')){
+		authMethod = 'username';
+		authData = req.body.username;
+		authError = errorMsg.INVALID_PASS_U;
+	} else {
+		authMethod = 'email';
+		authData = req.body.email;
+		authError = errorMsg.INVALID_PASS_E;
+	}
 
-	User.findOne({username: new RegExp('^' + req.body.username + '$', 'i'), password: password}, {password:0}, function(err, user){
+	User.findOne({[authMethod]: new RegExp('^' + authData + '$', 'i'), password: password}, {password:0}, function(err, user){
 		if(err){
 			res.status(httpStatus.ISE).json({
 				status: status.FAILURE,
@@ -50,7 +61,7 @@ exports.authenticate = function(req, res){
 				status: status.FAILURE,
 				code: httpStatus.BR,
 				data: '',
-				error: errorMsg.INVALID_PASS
+				error: authError
 			})
 			return;
 		}
