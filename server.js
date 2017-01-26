@@ -17,7 +17,7 @@ var mongooseUri = 'mongodb://heroku_5598ll25:egpvjohtsscsnq85friakf1260@ds157278
 mongoose.connect(mongooseUri);
 
 
-//app.use(cors('*'));
+//app.use(cors());
 app.use(express.static('public'));
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: false }))
