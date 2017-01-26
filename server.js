@@ -5,7 +5,7 @@ var express = require('express');
 var app = express();
 var server = require('http').Server(app);
 var bodyParser = require('body-parser');
-//var cors = require('cors');
+var cors = require('cors');
 var morgan = require('morgan');
 var mongoose = require('mongoose');
 var path = require('path');
@@ -17,7 +17,7 @@ var mongooseUri = 'mongodb://heroku_5598ll25:egpvjohtsscsnq85friakf1260@ds157278
 mongoose.connect(mongooseUri);
 
 
-//app.use(cors());
+app.options('*',cors());
 app.use(express.static('public'));
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: false }))
