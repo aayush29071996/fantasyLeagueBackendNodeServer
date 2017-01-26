@@ -17,7 +17,7 @@ var mongooseUri = 'mongodb://localhost/inyards';
 mongoose.connect(mongooseUri);
 
 
-app.use(cors());
+app.use(cors('*'));
 app.use(express.static('public'));
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: false }))
