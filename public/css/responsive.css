@@ -709,9 +709,9 @@
 	    margin-right: 10px !important;	
 	}
 	.tg-modalbox.fade .modal-dialog {
-		width: 270px !important;
+		width: 85% !important;
     top: 24vh;
-    left: 120% !important;	
+    left: 415px !important;	
 	}
 	.toomuch-popup{
 		top: 7vh !important;	
