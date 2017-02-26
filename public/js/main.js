@@ -1,516 +1,544 @@
-Modernizr.addTest('iphone-safari', function () {
-   var deviceAgent = navigator.userAgent.toLowerCase(),
-   agentID = deviceAgent.match(/(iphone|ipod|ipad)/),
-   isSafari = !!navigator.userAgent.match(/Version\/[\d\.]+.*Safari/);
-    if (agentID && isSafari ) {
-		return true;
-	}
-});
-
-function debounce(func, wait, immediate) {
-// utility to trigger events after set time (used on scroll principally)
-			var timeout;
-			return function() {
-				var context = this, args = arguments;
-				clearTimeout(timeout);
-				timeout = setTimeout(function() {
-					timeout = null;
-					if (!immediate) {
-						func.apply(context, args);
-					}
-				}, wait);
-				if (immediate && !timeout) {
-					func.apply(context, args);
-				}
-			};
-}
-
-$(function() {
-
-	var 
-	$body = $('body'),
-	videoEle,
-	$videoBgSelector = $('#bg-video'),
-	videoBgEle = $videoBgSelector.get(0),
-	$header = $('.header'),
-	$modalVideo = $('.modal-video'),
-	$fadeControls = $('.modal-video .fade-control'),
-	$launchButton = $('.btn-launch-video'),
-	$hasHint = $('.has-hint'),
-	$hero = $('.level-hero'),
-	controlsTimer = null,
-	eventLastX = 0,
-	eventLastY = 0,
-	desktopView =  Modernizr.mq( "screen and ( min-width: 1200px )" ),
-	canPlaceholder = Modernizr.input.placeholder;
-	baseUrl = window.location.hostname;
-	
-	if ( Modernizr.video && desktopView && videoBgEle ) {
-			videoBgEle.load();
-			videoBgEle.play();
-		
-		if (typeof videoBgEle.loop == 'boolean') { 
-			// loop supported
-			videoBgEle.loop = true;
-		} 
-		else { 
-			// loop property not supported
-			videoBgEle.on('ended', function () {
-				this.currentTime = 0;
-				this.play();
-			}, 
-			false);
-		}
-		
-	}
-
-	else {
-		$videoBgSelector.remove();
-	}
-	
-	var checkModal = function() {
-		return $modalVideo.hasClass('active');
-	};
-	
-	 $(document).on('keydown.od47', function(e) {
-	 
-	 if ( checkModal() ) {
-			var target = $modalVideo.find('video');
-			switch(e.which) {
-			
-				case 27: clearVideo(); e.preventDefault();
-				break;
-				case 32: togglePlayPause(target); e.preventDefault();
-				break;
-				default: return; 
-			
-			}
-			// e.preventDefault();
-		}
-	});
-	
-	var clearVideo = function() {
-		// close modal video
-		var videoEle = $modalVideo.find('video').get(0);
-		$body.removeClass('modal-open');
-		$modalVideo.removeClass('playing').removeClass('active');
-	
-		videoEle.pause();
-		if ( $videoBgSelector.length ) {
-			videoBgEle.play();
-		}
-		
-		controlsTimer = null;
-
-		setTimeout(function() { 
-			if ( videoEle.readyState !== 0 ) {
-					videoEle.currentTime = 0;
-			}
-		}, 500);
-
-	};
-
-	var launchVideo = function( target ) {
-		
-		$body.addClass('modal-open');
-		$modalVideo.addClass('active').append('<i class="icon loading-icon"></i>');
-		var videoEle = $('#' + target).find('video').get(0);
-		videoEle.load();
-		// autotrigger play hack iOS (ipad)
-		videoEle.play();
-		videoEle.pause();
-		
-		$fadeControls.addClass('on');
-		beginFadeTimer(5000);
-		
-		
-		setTimeout(function() {
-			
-			videoEle.classList ? videoEle.classList.add('playing') : videoEle.className += ' playing';
-			
-			if ( videoBgEle && !videoBgEle.paused ) {
-				videoBgEle.pause();
-			}
-			videoEle.play();
-			$('.loading-icon').remove();
-			
-			videoEle.addEventListener('webkitendfullscreen', function() {
-				// clearVideo( videoEle );
-				clearVideo();
-			}, false);
-				
-			videoEle.addEventListener('ended', function() {
-				clearVideo();
-			}, false);
-			
-		},1000);
-	};
-	
-	// launch popup
-	$launchButton.on('click', function(e) {
-		if ( Modernizr.video  ) {
-			var target = $(this).data('videomodal');
-			launchVideo( target );
-			e.preventDefault();
-		} 
-		
-	});
-	
-	var togglePlayPause = function( trigger ) {
-		var videoEle = trigger.get(0);
-		// If the mediaPlayer is currently paused or has ended
-		if (videoEle.paused || videoEle.ended ) {
-			videoEle.play();
-			
-		}
-		// Otherwise it must currently be playing?
-		else {
-			videoEle.pause();
-		}
-	};
-	
-	$modalVideo.find('video').on('click', function ( e ){
-		var $this = $(this);
-		togglePlayPause( $this );
-	});
-	
-	$('.close-modal').on('click', function(e) {
-		// var videoModal = $(this).closest('.modal-video');
-		clearVideo();
-	});
-	
-	// timer fadeout on controls
-	var beginFadeTimer = function( duration ) {
-		$fadeControls.addClass('on');
-		if ( ! duration ) {
-			duration = 4000;
-		}
-		if ( controlsTimer ) {
-				clearTimeout( controlsTimer ); 
-				controlsTimer = null;
-			}
-			controlsTimer = setTimeout( fadeControlsOut , duration );
-	};
-	
-	var fadeControlsOut = function() {
-		$fadeControls.removeClass('on');
-	};
-	
-
-	$modalVideo.add($fadeControls).on('mousemove touchmove', function( e ) {
-			// click / touch restarts timer
-		if( eventLastX !== e.clientX || eventLastY !== e.clientY ) {
-
-				beginFadeTimer( 4000 );
-			}   
-			eventLastX = e.pageX;
-			eventLastY = e.pageY;
-	}).on('click', function(e) {
-		beginFadeTimer( 4000 );
-	});
-	
-	// hint arrows
-	var levelHandler = function()  {
-		
-		var st = $(window).scrollTop(),
-		wh = $(window).height(),
-		hh = $hero.outerHeight(true),
-		headerh = $header.outerHeight(true);
-		
-			if ( $hasHint.length ) {
-			
-				if ( wh > (hh+headerh) ) {
-						$hasHint.removeClass('active-state');
-				}
-				
-				else {
-		
-					if ( st <= 50 ) {
-						$hasHint.addClass('active-state');
-					}
-			
-					else {
-						$hasHint.removeClass('active-state');
-					}
-				}
-		}
-		
-	};
-	
-	// run on doc ready
-	levelHandler();
-	
-	var scrollTrigger = debounce(function() {
-		// re-run on scroll :)
-		levelHandler();
-	}, 1);
-	// doesnt play well to debounce this
-	
-	if ( canPlaceholder ) {
-		// switched. ie test
-		$('label').addClass('sr-only');
-	}
-	
-	// "retry" form 
-	$(document).on( 'click', '.reload-form', function( e ) {
-		e.preventDefault();
-		$(this).closest('.success').removeClass('active').prev().removeClass('hide');
-	});
-	
-	// bootstrap dropdown 
-	
-	$(document).on('click', '.dropdown-menu li', function( e ) {
-		var $t = $(this),
-		$parent = $t.parent(),
-		optVal = $(this).data('value'),
-		placeholder = $(this).data('placeholder'),
-		displayTarget = $parent.data('displaytarget'),
-		inputTarget = $parent.data('inputtarget'),
-		$inputTarget = $(inputTarget);
-		$t.addClass('disabled').siblings().removeClass('disabled');
-		$(displayTarget).text(placeholder);
-		if ( inputTarget ) {
-			$inputTarget.find('option[value="' + optVal + '"]').attr('selected', 'selected').siblings().removeAttr('selected');
-		}
-	});
-	
-	// bootstrap modal hack - click detection to see if click is within modal or not 
-	// this css: http://jsfiddle.net/sRmLV/22/
-	$('.modal-valign-helper').on('click', function(e) {
-		var target = $( e.target );
-		if ( target.is('.modal-dialog') ) {
-				$('.modal').modal('hide');
-			}
-
-		// e.preventDefault();
-	});
-	
-	// external links in new window 
-	$('a[href^="http:"]').not('[href*="'+baseUrl+'"]').addClass('external').attr({target: "_blank"});
-	
-	if ( window.location.hash && $('.is-section-archived').length ) {
-		var eleID = window.location.hash.split('#');
-		$('[aria-controls="' + eleID[1] + '"]').hide();
-	}
-	
-	if (window.history && window.history.pushState) {
-	
-		$('.show-section').on('click', function(e) {
-				e.preventDefault();
-				
-				var $t = $(this),
-				anchor = $t.attr('href'),
-				offset = $(anchor).offset();
-				
-				$t.hide();
-				history.pushState({}, "", anchor);
-				$(anchor).addClass('is-archive-visible');
-				$('body,html').animate({scrollTop: (offset.top)-50 }, 500);
-			});
-		
-	}
-	
-	
-	
-	// util - needed ?
-	$(window).on('load', function() {
-		$body.addClass('loaded');
-	});
-	
-	$(window).on('resize scroll',  scrollTrigger );
-	
-	// scroll to next level clicking on hint arrow - cheap!
-	$('.hint-arrow').on('click', function ( e ) {
-		var $parentLevel = $(this).closest('.level');
-		
-		if ( ! $parentLevel.length ) {
-			$parentLevel = $('.level-hero');
-		}
-		
-		var $nextLevel = $parentLevel.next('.level'),
-		target = $nextLevel.offset(),
-		target = target.top;
-		if ( $nextLevel ) {
-			$('body,html').animate({scrollTop: target}, 700, "linear");
-		}
-	});
-
-	// scroll to next level - this should be merged with previous function
-	$('.btn-scroll').on('click', function ( e ) {
-		var href = $(this).attr('href');
-		
-		if ( href.length ) {
-			var $target = $(href);
-		}
-		
-		var target = $target.offset(),
-		target = target.top;
-		$('body,html').animate({scrollTop: target}, 700, "linear");
-
-		e.preventDefault();
-
-	});
-	
-	// colophon date 
-	var d = new Date(),
-	dateText = d.getFullYear();
-	$('#date-year').text(dateText);
-	
-	// LAUNCH VIDEO VIA DIRECT URL
-	var getHash = location.hash;
-	
-	if ( getHash === "#video" || getHash === "video" ) {
-		var videoID = $launchButton.data('videomodal');
-		launchVideo(videoID);
-	}
-
-	// TABBED CONTENT
-
-	$tabList = $('.inline-tabs');
-
- 	function measureTabs() {
-
- 		$tabList.each(function (e) {
-
-			var $t = $(this),
-			$listItems = $t.find('li'),
-			totalWidth = 0,
- 			$parent = $t.closest('.inline-tabs-wrapper'),
- 			ww = window.innerWidth;
-
-			$listItems.each( function() {
-				var $li = $(this);
-				totalWidth += $li.outerWidth( true );
-
-				// console.log( $li.offset() );
-			});
-
-			console.log(totalWidth);
-
-			if ( totalWidth +30 > ww ) {
-				$parent.addClass('active-nav');
-				$t.width(totalWidth);
-
-			}
-
-			else {
-				$parent.removeClass('active-nav');
-				$t.removeAttr('style');
-			}
-			
+"use strict";
+/*------------------------------------------
+		CUSTOM FUNCTION WRITE HERE
+------------------------------------------*/
+$(document).ready(function() {
+	/*------------------------------------------
+			SLIDER BACKGROUND MOVE
+	------------------------------------------*/
+	function sliderbgMove(){
+		var moveForce = 25;
+		var rotateForce = 15;
+		$(document).mousemove(function(e) {
+			var docX = $(document).width();
+			var docY = $(document).height();
+			var moveX = (e.pageX - docX/2) / (docX/2) * -moveForce;
+			var moveY = (e.pageY - docY/2) / (docY/2) * -moveForce;
+			var rotateY = (e.pageX / docX * rotateForce*2) - rotateForce;
+			var rotateX = -((e.pageY / docY * rotateForce*2) - rotateForce);
+			$('.tg-imglayer')
+			.css('left', moveX+'px')
+			.css('top', moveY+'px')
+			.css('transform', 'rotateX('+rotateX+'deg) rotateY('+rotateY+'deg)');
 		});
-
-
 	}
-
-	var resizeTabs = debounce(function() {
-
-		measureTabs();
-	}, 50);
-
-	$(window).on('load resize', function() {
-		resizeTabs();
+	sliderbgMove();
+	/*------------------------------------------
+			HOME SLIDER
+	------------------------------------------*/
+	var swiper = new Swiper('#tg-home-slider', {
+		nextButton: '.tg-btn-next',
+		prevButton: '.tg-btn-prev',
+		loop: true,
 	});
-
-	function prevNextTabs(e, $t ) {
-		e.preventDefault();
-
-		var 
-
-		$target = $t.parent(),
-		$wrapper = $target.find('.inline-tabs-list-wrapper'),
-		$scroller = $wrapper.find('.inline-tabs'),
-		$listItems = $target.find('li'),
-		$firstInView = $target.find('.first-in-view'),
-		distance,
-		animSpeed = 400,
-		currentScroll = $wrapper.scrollLeft();
-
-		// can click, will click
-		if( ! $t.hasClass('disabled') ) {
-
-			if ( $t.hasClass('btn-prev') ) {
-
-				if ( $firstInView.prev().length ) {
-
-					$firstInView.removeClass('first-in-view').prev().addClass('first-in-view');
-
-				}
-
-				distance = $firstInView.outerWidth();
-
-				$wrapper.animate({scrollLeft: ( currentScroll - distance ) }, animSpeed, function () {
-
-						$target.find('.btn-next').removeClass('disabled');
-
-						var scrollLeft = $wrapper.scrollLeft();
-
-						if ( scrollLeft <= 0 ) {
-							$t.addClass('disabled');
-						}
-				});
-
-
-
+	/*------------------------------------------
+			NAV CLOSE
+	------------------------------------------*/
+	function closeToggle(){
+		$('.tg-nav .navbar-toggle').on('click', function(){
+			$('.tg-nav .tg-close').addClass('active');
+		});
+		$('.tg-nav .tg-close').on('click', function(){
+			$('.tg-nav .tg-close').removeClass('active');
+		});
+	}
+	closeToggle();
+	/*------------------------------------------
+			SEARCH AREA
+	------------------------------------------*/
+	function searchToggle(){
+		$('#tg-btn-search').on('click', function(){
+			$('.tg-searchbox').addClass('in');
+		});
+		$('#tg-close-search').on('click', function(){
+			$('.tg-searchbox').removeClass('in');
+		});
+	}
+	searchToggle();
+	/*------------------------------------------
+			MATCH COUNTER
+	------------------------------------------*/
+	function matchCounter(){
+		var launch = new Date('2017', '06', '14', '11', '15');
+		var days = $('.tg-days');
+		var hours = $('.tg-hours');
+		var minutes = $('.tg-minutes');
+		var seconds = $('.tg-seconds');
+		setDate();
+		function setDate(){
+			var now = new Date();
+			if( launch < now ){
+				days.html('<h3>0</h3><h4>Day</h4>');
+				hours.html('<h3>0</h3><h4>Hour</h4>');
+				minutes.html('<h3>0</h3><h4>Minute</h4>');
+				seconds.html('<h3>0</h3><h4>Second</h4>');
 			}
-
-			else {
-
-				// switch class to next item if we cab
-
-				if ( $firstInView.next().length ) {
-
-					$firstInView.removeClass('first-in-view').next().addClass('first-in-view');
-
-				}
-
-				distance = $firstInView.outerWidth();
-
-				$wrapper.animate({scrollLeft: (distance + currentScroll) }, animSpeed, function () {
-
-						$target.find('.btn-prev').removeClass('disabled');
-						var scrollLeft = $wrapper.scrollLeft();
-
-
-						// alert ( "scroll left:" + scrollLeft + " width of scroller: " + $scroller.width() + " width of wrapper: " + $wrapper.width() );
-
-
-						if ( ( $wrapper.width() + scrollLeft ) >= $scroller.width()  ) {
-							$t.addClass('disabled');
-						}
-				});
-
-			}	
-
-			
-
+			else{
+				var s = -now.getTimezoneOffset()*60 + (launch.getTime() - now.getTime())/1000;
+				var d = Math.floor(s/86400);
+				days.html('<h3>'+d+'</h3><h4>Day'+(d>1?'s':''),'</h4>');
+				s -= d*86400;
+				var h = Math.floor(s/3600);
+				hours.html('<h3>'+h+'</h3><h4>Hour'+(h>1?'s':''),'</h4>');
+				s -= h*3600;
+				var m = Math.floor(s/60);
+				minutes.html('<h3>'+m+'</h3><h4>Minute'+(m>1?'s':''),'</h4>');
+				s = Math.floor(s-m*60);
+				seconds.html('<h3>'+s+'</h3><h4>Second'+(s>1?'s':''),'</h4>');
+				setTimeout(setDate, 1000);
+			}
 		}
-		
 	}
-
-	$('.inline-tabs-nav').on('click', function(e) {
-		
-		prevNextTabs(e,  $(this) );
-
+	matchCounter();
+	/*------------------------------------------
+			PRICE RANGE
+	------------------------------------------*/
+	$(function() {
+		$("#tg-slider-range").slider({
+			range: true,
+			min: 0,
+			max: 500,
+			values: [ 75, 300 ],
+			slide: function( event, ui ) {
+				$( "#amount" ).val( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
+			}
+		});
+		$( "#amount" ).val( "$" + $( "#tg-slider-range" ).slider( "values", 0 ) + " - $" + $( "#tg-slider-range" ).slider( "values", 1 ));
 	});
-
-	var $tabs = $('.inline-tabs a');
-	$tabs.on('click', function (e) {
-		
-		var $this = $(this),
-		h = $this.attr('href'),
-		$parent = $this.closest('.inline-tabs'),
-		$li = $parent.find('li'),
-		$target = $(h);
-
-		$li.removeClass('active');
-		$this.parent().addClass('active');
-
-		$target.addClass('active').siblings().removeClass('active');
-
-		e.preventDefault();
+	/*------------------------------------------
+			ALL MATCHS SLIDER
+	------------------------------------------*/
+	var swiper = new Swiper('#tg-match-slider', {
+		direction: 'vertical',
+		slidesPerView: 4,
+		spaceBetween: 10,
+		mousewheelControl: true,
+		nextButton: '.tg-themebtnnext',
+		prevButton: '.tg-themebtnprev',
+		//autoplay: 2000,
 	});
-
-
+	/*------------------------------------------
+			ALL MATCHS SLIDER
+	------------------------------------------*/
+	var swiper = new Swiper('#tg-slideshow-slider', {
+		slidesPerView: 1,
+		pagination: '.swiper-pagination',
+		paginationType: 'fraction',
+		mousewheelControl: true,
+		nextButton: '.tg-themebtnnext',
+		prevButton: '.tg-themebtnprev',
+		autoplay: 2000,
+	});
+	/*------------------------------------------
+			PLAYER DETAIL SLIDER
+	------------------------------------------*/
+	var swiper = new Swiper('#tg-playerslider', {
+		slidesPerView: 1,
+		nextButton: '.tg-themebtnnext',
+		prevButton: '.tg-themebtnprev',
+		//autoplay: 2000,
+	});
+	/* ---------------------------------------
+			STATISTICS
+	 -------------------------------------- */
+	try {
+		$('.tg-statistic').appear(function () {
+			$('.tg-statistic-count').countTo();
+		});
+	} catch (err) {}
+	/*------------------------------------------
+			ALL MATCHS SLIDER
+	------------------------------------------*/
+	var mainswiper = new Swiper('#tg-upcomingmatch-slider', {
+		direction: 'vertical',
+		slidesPerView: 3,
+		spaceBetween: 10,
+		mousewheelControl: true,
+		nextButton: '.tg-themebtnnext',
+		prevButton: '.tg-themebtnprev',
+		autoplay: 0,
+	});
+	var mainswiper = new Swiper('#tg-why-slider', {
+		direction: 'vertical',
+		slidesPerView: 3,
+		spaceBetween: 10,
+		mousewheelControl: true,
+		nextButton: '.tg-themebtnnext',
+		prevButton: '.tg-themebtnprev',
+		autoplay: 0,
+	});
+	/*------------------------------------------
+			SPONSER SLIDER
+	------------------------------------------*/
+	var mainswiper = new Swiper('#tg-sponser-slider', {
+		direction: 'vertical',
+		slidesPerView: 3,
+		spaceBetween: 10,
+		mousewheelControl: true,
+		nextButton: '.tg-themebtnnext',
+		prevButton: '.tg-themebtnprev',
+	});
+	/*------------------------------------------
+			OTHER FIXTURES SLIDER
+	------------------------------------------*/
+	var mainswiper = new Swiper('#tg-otherfixtures-slider', {
+		direction: 'vertical',
+		slidesPerView: 5,
+		spaceBetween: 10,
+		mousewheelControl: true,
+		nextButton: '.tg-themebtnnext',
+		prevButton: '.tg-themebtnprev',
+		breakpoints: {
+			991: {
+				slidesPerView: 3,
+			}
+		}
+	});
+	/*------------------------------------------
+			ALL MATCHS SCROLLBAR
+	------------------------------------------*/
+	$("#tg-playerscrollbar, #tg-matchscrollbar").mCustomScrollbar({
+		axis:"y",
+	});
+	/* ---------------------------------------
+			PRETTY PHOTO GALLERY
+	 -------------------------------------- */
+	$("a[data-rel]").each(function () {
+		$(this).attr("rel", $(this).data("rel"));
+	});
+	$("a[data-rel^='prettyPhoto']").prettyPhoto({
+		animation_speed: 'normal',
+		theme: 'dark_square',
+		slideshow: 3000,
+		autoplay_slideshow: false,
+		social_tools: false
+	});
+	/*------------------------------------------
+			POINTS TABLE SLIDER
+	------------------------------------------*/
+	var swiper = new Swiper('#tg-pointstable-slider', {
+		direction: 'vertical',
+		slidesPerView: 6,
+		spaceBetween: 10,
+		mousewheelControl: true,
+		nextButton: '.tg-themebtnnext',
+		prevButton: '.tg-themebtnprev',
+		autoplay: 2500,
+	});
+	/*------------------------------------------
+			TESTIMONIOAL SLIDER
+	------------------------------------------*/
+	var swiper = new Swiper('#tg-testimonial-slider', {
+		slidesPerView: 1,
+		nextButton: '.tg-themebtnnext',
+		prevButton: '.tg-themebtnprev',
+		autoplay: 0,
+	});
+	/*------------------------------------------
+			PLAYER GIRD SLIDER
+	------------------------------------------*/
+	var swiper = new Swiper('#tg-player-slider', {
+		slidesPerView: 4,
+		spaceBetween: 30,
+		mousewheelControl: true,
+		nextButton: '.tg-themebtnnext',
+		prevButton: '.tg-themebtnprev',
+		autoplay: 0,
+		breakpoints: {
+			479: {
+				slidesPerView: 1,
+				spaceBetween: 0,
+			},
+			640: {
+				slidesPerView: 2,
+			},
+			767: {
+				slidesPerView: 3,
+				spaceBetween: 15,
+			},
+			991: {
+				slidesPerView: 3,
+			}
+		}
+	});
+	/*------------------------------------------
+			CONTENT ANIMATION
+	------------------------------------------*/
+	var swiper = new Swiper('#tg-home-sliderfade', {
+		autoplay: 3000,
+		effect: 'fade',
+		loop: true,
+	});
+	/*------------------------------------------
+			HOME SLIDER VERTICAL
+	------------------------------------------*/
+	var swiper = new Swiper('#tg-home-slidertwo', {
+		autoplay: 3000,
+		loop: true,
+		direction: 'vertical',
+	});
+	/*------------------------------------------
+			RESULT DETAIL SLIDER
+	------------------------------------------*/
+	var swiper = new Swiper('#tg-matchdetailslider', {
+		slidesPerView: 1,
+		nextButton: '.tg-themebtnnext',
+		prevButton: '.tg-themebtnprev',
+		autoplay: 0,
+	});
+	/*------------------------------------------
+			SHOP BANNER SLIDER
+	------------------------------------------*/
+	var swiper = new Swiper('#tg-shopslider', {
+		loop: true,
+		slidesPerView: 1,
+		pagination: '.swiper-pagination',
+		paginationClickable: true,
+	});
+	/*------------------------------------------
+			PRODUCT INCREASE
+	------------------------------------------*/
+	$('em.minus').on('click', function () {
+		$('#quantity1').val(parseInt($('#quantity1').val(), 10) - 1);
+	});
+	$('em.plus').on('click', function () {
+		$('#quantity1').val(parseInt($('#quantity1').val(), 10) + 1);
+	});
+	/*------------------------------------------
+			RELATED PRODUCT SLIDER
+	------------------------------------------*/
+	var swiper = new Swiper('#tg-relatedproductslider', {
+		slidesPerView: 3,
+		spaceBetween: 30,
+		mousewheelControl: true,
+		paginationType: 'fraction',
+		nextButton: '.tg-themebtnnext',
+		prevButton: '.tg-themebtnprev',
+		pagination: '.swiper-pagination',
+		breakpoints: {
+			479: {slidesPerView: 1,},
+			640: {slidesPerView: 2,},
+			767: {slidesPerView: 3,},
+			991: {slidesPerView: 2,}
+		}
+	});
+	/* ---------------------------------------
+			PORTFOLIO FILTERABLE
+	-------------------------------------- */
+	var $container = $('.tg-soccermedia-content');
+	var $optionSets = $('.option-set');
+	var $optionLinks = $optionSets.find('a');
+	function doIsotopeFilter() {
+		if ($().isotope) {
+			var isotopeFilter = '';
+			$optionLinks.each(function () {
+				var selector = $(this).attr('data-filter');
+				var link = window.location.href;
+				var firstIndex = link.indexOf('filter=');
+				if (firstIndex > 0) {
+					var id = link.substring(firstIndex + 7, link.length);
+					if ('.' + id == selector) {
+						isotopeFilter = '.' + id;
+					}
+				}
+			});
+			$container.isotope({
+				filter: isotopeFilter
+			});
+			$optionLinks.each(function () {
+				var $this = $(this);
+				var selector = $this.attr('data-filter');
+				if (selector == isotopeFilter) {
+					if (!$this.hasClass('active')) {
+						var $optionSet = $this.parents('.option-set');
+						$optionSet.find('.active').removeClass('active');
+						$this.addClass('active');
+					}
+				}
+			});
+			$optionLinks.on('click', function () {
+				var $this = $(this);
+				var selector = $this.attr('data-filter');
+				$container.isotope({itemSelector: '.masonry-grid', filter: selector});
+				if (!$this.hasClass('active')) {
+					var $optionSet = $this.parents('.option-set');
+					$optionSet.find('.active').removeClass('active');
+					$this.addClass('active');
+				}
+				return false;
+			});
+		}
+	}
+	var isotopeTimer = window.setTimeout(function () {
+		window.clearTimeout(isotopeTimer);
+		doIsotopeFilter();
+	}, 1000);
+	/*------------------------------------------
+			HOME TWO NAVIGATION
+	------------------------------------------*/
+	$('#tg-btnnav').on('click', function () {
+		$('#tg-wrapper').toggleClass('tg-sidenavshow');
+	});
+	/*------------------------------------------
+			HOME ONE MOBILE NAVIGATION
+	------------------------------------------*/
+	$('#tg-close').on('click', function () {
+		$('#tg-navigationm-mobile').removeClass('in');
+	});
 	
+	/*------------------------------------------
+			PRODUCT SLIDER
+	------------------------------------------*/
+	function shopSlider(){
+		var sync1 = $("#tg-productlargeslider");
+		var sync2 = $("#tg-productthumbslider");
+		sync1.owlCarousel({
+			singleItem : true,
+			slideSpeed : 1000,
+			navigation: false,
+			pagination : false,
+			afterAction : syncPosition,
+			responsiveRefreshRate : 200,
+		});
+		sync2.owlCarousel({
+			items :					3,
+			itemsDesktop :			[1199,3],
+			itemsDesktopSmall :		[979,3],
+			itemsTablet :			[767,4],
+			itemsMobile :			[479,3],
+			pagination : false,
+			responsiveRefreshRate : 100,
+			afterInit : function(el){
+				el.find(".owl-item").eq(0).addClass("tg-active");
+			}
+		});
+		function syncPosition(el){
+			var current = this.currentItem;
+			$("#tg-productthumbslider")
+			.find(".owl-item")
+			.removeClass("tg-active")
+			.eq(current)
+			.addClass("tg-active");
+			if($("#tg-productthumbslider").data("owlCarousel") !== undefined){
+				center(current);
+			}
+		}
+		$("#tg-productthumbslider").on("click", ".owl-item", function(e){
+			e.preventDefault();
+			var number = $(this).data("owlItem");
+			sync1.trigger("owl.goTo",number);
+		});
+		function center(number){
+			var sync2visible = sync2.data("owlCarousel").owl.visibleItems;
+			var num = number;
+			var found = false;
+			for(var i in sync2visible){
+				if(num === sync2visible[i]){
+					var found = true;
+				}
+			}
+			if(found===false){
+				if(num>sync2visible[sync2visible.length-1]){
+					sync2.trigger("owl.goTo", num - sync2visible.length+2);
+				}else{
+					if(num - 1 === -1){
+						num = 0;
+					}
+					sync2.trigger("owl.goTo", num);
+				}
+			} else if(num === sync2visible[sync2visible.length-1]){
+				sync2.trigger("owl.goTo", sync2visible[1]);
+			} else if(num === sync2visible[0]){
+				sync2.trigger("owl.goTo", num-1);
+			}
+		}
+	}
+	shopSlider();
+	/*------------------------------------------
+			ADDRESS SLIDER
+	------------------------------------------*/
+	function addressMapSlider(){
+		var sync1 = $("#tg-mapcontent");
+		var sync2 = $("#tg-officeaddressslider");
+		sync1.owlCarousel({
+			singleItem : true,
+			slideSpeed : 1000,
+			navigation: false,
+			pagination:false,
+			afterAction : syncPosition,
+			responsiveRefreshRate : 200,
+		});
+		sync2.owlCarousel({
+			items : 3,
+			itemsDesktop      : [1199,3],
+			itemsDesktopSmall     : [991,2],
+			itemsTablet       : [767,2],
+			itemsMobile       : [479,1],
+			pagination:false,
+			responsiveRefreshRate : 100,
+			afterInit : function(el){
+				el.find(".owl-item").eq(0).addClass("synced");
+			}
+		});
+		function syncPosition(el){
+			var current = this.currentItem;
+			$("#tg-officeaddressslider")
+				.find(".owl-item")
+				.removeClass("synced")
+				.eq(current)
+				.addClass("synced");
+			if($("#tg-officeaddressslider").data("owlCarousel") !== undefined){
+				center(current);
+			}
+		}
+		$("#tg-officeaddressslider").on("click", ".owl-item", function(e){
+			e.preventDefault();
+			var number = $(this).data("owlItem");
+			sync1.trigger("owl.goTo",number);
+		});
+		function center(number){
+			var sync2visible = sync2.data("owlCarousel").owl.visibleItems;
+			var num = number;
+			var found = false;
+			for(var i in sync2visible){
+				if(num === sync2visible[i]){
+					var found = true;
+				}
+			}
+		if(found===false){
+			if(num>sync2visible[sync2visible.length-1]){
+				sync2.trigger("owl.goTo", num - sync2visible.length+2);
+			}else{
+				if(num - 1 === -1){
+					num = 0;
+				}
+				sync2.trigger("owl.goTo", num);
+			}
+			} else if(num === sync2visible[sync2visible.length-1]){
+				sync2.trigger("owl.goTo", sync2visible[1]);
+			} else if(num === sync2visible[0]){
+				sync2.trigger("owl.goTo", num-1);
+			}
+		}
+	}
+	addressMapSlider();
+	/*------------------------------------------
+			MEDIA SCROLLBAR
+	------------------------------------------*/
+	$("#tg-soccermediascrollbar").mCustomScrollbar({
+		axis:"x",
+		advanced:{
+			autoExpandHorizontalScroll:true
+		}
+	});
+	/* ---------------------------------------
+			MEDIA SCROLLBAR RESET
+	-------------------------------------- */
+	function resetScrollbar(){
+		$('#tg-filterbale-nav li a').on('click', function () {
+			$('#tg-soccermediascrollbar').html();
+			$('#mCSB_1_container').animate({left: '0'});
+		});
+	}
+	resetScrollbar();
 });
