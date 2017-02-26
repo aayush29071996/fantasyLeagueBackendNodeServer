@@ -1,3 +1,7 @@
+/*
+* Created by harirudhra on Sat 21 Jan 2017
+*/
+
 exports.validatingErrors = function (err) {
     var errors = {};
     console.log(err);

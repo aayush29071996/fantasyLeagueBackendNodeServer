@@ -1,3 +1,7 @@
+/*
+* Created by harirudhra on Sun 1 Jan 2017
+*/
+
 var HttpStatus =  require('http-status');
 var Invite = require('../models/Invite');
 var Validation = require('./Validation');

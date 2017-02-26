@@ -1,6 +1,7 @@
-/**
+/*
 * Created by harirudhra on Sat 21 Jan 2017
 */
+
 var User = require('../models/User');
 var HttpStatus = require('http-status');
 var Validation = require('./Validation');

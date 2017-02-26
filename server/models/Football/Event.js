@@ -1,4 +1,4 @@
-/**
+/*
 * Created by harirudhra on Wed 25 Jan 2017
 */
 var mongoose = require('mongoose');
