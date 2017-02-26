@@ -28,8 +28,6 @@
   "repository": {
     "type": "git",
     "url": "git+https://gitlab.com/inyards/inyards-web.git"
-  },"scripts": {
-    "postinstall": "./node_modules/bower/bin/bower install"
   },
   "keywords": [
     "inyards",
