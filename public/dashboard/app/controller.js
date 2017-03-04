@@ -4,17 +4,12 @@
 var dashControllers = angular.module('dashControllers', ['dashServices']);
 
 
-dashControllers.controller('mainController', function($scope, Api,$window){
+dashControllers.controller('mainController', function($scope,$window){
  
- Api.whoAmI();
-    $scope.logout=function() {
-        Api.logoutUser();
-    }
+
 });
 
 dashControllers.controller('homeController', function () {
-
-
-    });
+});
     
     

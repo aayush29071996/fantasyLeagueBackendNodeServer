@@ -11,27 +11,27 @@
         <title>Dashboard | Code Club.</title>
 
         <!--Morris Chart CSS -->
-		<link rel="stylesheet" href="public/dashboard/css/dashboard.css">
+		<link rel="stylesheet" href="dashboard/css/dashboard.css">
         
         <base href="/">
         <!-- App css -->
-        <link href="public/dashboard/css/bootstrap.min.css" rel="stylesheet">
-        <link href="public/dashboard/css/core.css" rel="stylesheet">
-        <link href="public/dashboard/css/components.css" rel="stylesheet">
-        <link href="public/dashboard/css/icons.css" rel="stylesheet">
-        <link href="public/dashboard/css/pages.css" rel="stylesheet">
-        <link href="public/dashboard/css/menu.css" rel="stylesheet">
-        <link href="public/dashboard/css/responsive.css" rel="stylesheet">
+        <link href="dashboard/css/bootstrap.min.css" rel="stylesheet">
+        <link href="dashboard/css/core.css" rel="stylesheet">
+        <link href="dashboard/css/components.css" rel="stylesheet">
+        <link href="dashboard/css/icons.css" rel="stylesheet">
+        <link href="dashboard/css/pages.css" rel="stylesheet">
+        <link href="dashboard/css/menu.css" rel="stylesheet">
+        <link href="dashboard/css/responsive.css" rel="stylesheet">
 
-        <script src="public/dashboard/js/modernizr.js"></script>
-<script>
+        <script src="dashboard/js/modernizr.js"></script>
+<!--<script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
   })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
   ga('create', 'UA-85991646-2', 'auto');
   ga('send', 'pageview');
-</script>
+</script>-->
     </head>
 
 
@@ -45,7 +45,7 @@
 
                 <!-- LOGO -->
                 <div class="topbar-left">
-                    <a href="/dashboard" class="logo"><span><span>CodeClub</span></span><i class="zmdi zmdi-layers"></i></a>
+                    <a href="/dashboard" class="logo"><span><span>In</span>yards</span><i class="zmdi zmdi-layers"></i></a>
                 </div>
             </div>
             <!-- Top Bar End -->
@@ -58,9 +58,9 @@
                     <!-- User -->
                     <div class="user-box">
                         <div class="user-img">
-                            <img src="public/dashboard/avatar/Male/1.png" alt="user-img" title="John Doe" class="img-circle img-thumbnail img-responsive">
+                            <img src="dashboard/avatar/Male/1.png" alt="user-img" title="John Doe" class="img-circle img-thumbnail img-responsive">
                         </div>
-                        <h5><a>John Doe</a> </h5>
+                        <h5><a>Pradeep Baskaran</a> </h5>
                         <ul class="list-inline">
                             <li>
                                 <a href="#" >
@@ -75,9 +75,7 @@
                             </li>
                         </ul>
                     </div>
-                    <!-- End User -->
-
-                    <!--- Sidemenu -->
+                    
                     <div id="sidebar-menu">
                         <ul>
                         	<li class="text-muted menu-title">Navigation</li>
@@ -110,143 +108,48 @@
                         </ul>
                         <div class="clearfix"></div>
                     </div>
-                    <!-- Sidebar -->
                     <div class="clearfix"></div>
-
                 </div>
-
             </div>
-            <!-- Left Sidebar End -->
-
-
-
-            <!-- ============================================================== -->
-            <!-- Start right Content here -->
-            <!-- ============================================================== -->
             <div class="content-page" ng-view>
             </div>
-
-
-            <!-- ============================================================== -->
-            <!-- End Right content here -->
-            <!-- ============================================================== -->
-
-
-            <!-- Right Sidebar -->
-            <!--<div class="side-bar right-bar">
-                <a href="javascript:void(0);" class="right-bar-toggle">
-                    <i class="zmdi zmdi-close-circle-o"></i>
-                </a>
-                <h4 class="">Notifications</h4>
-                <div class="notification-list nicescroll">
-                    <ul class="list-group list-no-border user-list">
-                        <li class="list-group-item">
-                            <a href="#" class="user-list-item">
-                                <div class="avatar">
-                                    <img src="assets/images/users/avatar-2.jpg" alt="">
-                                </div>
-                                <div class="user-desc">
-                                    <span class="name">Michael Zenaty</span>
-                                    <span class="desc">There are new settings available</span>
-                                    <span class="time">2 hours ago</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="list-group-item">
-                            <a href="#" class="user-list-item">
-                                <div class="icon bg-info">
-                                    <i class="zmdi zmdi-account"></i>
-                                </div>
-                                <div class="user-desc">
-                                    <span class="name">New Signup</span>
-                                    <span class="desc">There are new settings available</span>
-                                    <span class="time">5 hours ago</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="list-group-item">
-                            <a href="#" class="user-list-item">
-                                <div class="icon bg-pink">
-                                    <i class="zmdi zmdi-comment"></i>
-                                </div>
-                                <div class="user-desc">
-                                    <span class="name">New Message received</span>
-                                    <span class="desc">There are new settings available</span>
-                                    <span class="time">1 day ago</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="list-group-item active">
-                            <a href="#" class="user-list-item">
-                                <div class="avatar">
-                                    <img src="assets/images/users/avatar-3.jpg" alt="">
-                                </div>
-                                <div class="user-desc">
-                                    <span class="name">James Anderson</span>
-                                    <span class="desc">There are new settings available</span>
-                                    <span class="time">2 days ago</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="list-group-item active">
-                            <a href="#" class="user-list-item">
-                                <div class="icon bg-warning">
-                                    <i class="zmdi zmdi-settings"></i>
-                                </div>
-                                <div class="user-desc">
-                                    <span class="name">Settings</span>
-                                    <span class="desc">There are new settings available</span>
-                                    <span class="time">1 day ago</span>
-                                </div>
-                            </a>
-                        </li>
-
-                    </ul>
-                </div>
             </div>
-            <!-- /Right-bar -->
-
-        </div>
-        <!-- END wrapper -->
-
-
-
         <script>
             var resizefunc = [];
         </script>
 
         <!-- jQuery  -->
-        <script src="public/dashboard/js/jquery.min.js"></script>
-        <script src="public/dashboard/js/bootstrap.min.js"></script>
-        <script src="public/dashboard/js/detect.js"></script>
-        <script src="public/dashboard/js/fastclick.js"></script>
-        <script src="public/dashboard/js/jquery.slimscroll.js"></script>
-        <script src="public/dashboard/js/jquery.blockUI.js"></script>
-        <script src="public/dashboard/js/waves.js"></script>
-        <script src="public/dashboard/js/jquery.nicescroll.js"></script>
-        <script src="public/dashboard/js/jquery.slimscroll.js"></script>
-        <script src="public/dashboard/js/jquery.scrollTo.min.js"></script>
+        <script src="dashboard/js/jquery.min.js"></script>
+        <script src="dashboard/js/bootstrap.min.js"></script>
+        <script src="dashboard/js/detect.js"></script>
+        <script src="dashboard/js/fastclick.js"></script>
+        <script src="dashboard/js/jquery.slimscroll.js"></script>
+        <script src="dashboard/js/jquery.blockUI.js"></script>
+        <script src="dashboard/js/waves.js"></script>
+        <script src="dashboard/js/jquery.nicescroll.js"></script>
+        <script src="dashboard/js/jquery.slimscroll.js"></script>
+        <script src="dashboard/js/jquery.scrollTo.min.js"></script>
 
         <!-- KNOB JS -->
-        <script src="public/dashboard/js/jquery.knob.js"></script>
+        <script src="dashboard/js/jquery.knob.js"></script>
 
         <!--Morris Chart-->
-		<script src="public/dashboard/js/morris.min.js"></script>
-		<script src="public/dashboard/js/raphael-min.js"></script>
+		<script src="dashboard/js/morris.min.js"></script>
+		<script src="dashboard/js/raphael-min.js"></script>
 
         <!-- Dashboard init -->
-        <script src="public/dashboard/js/jquery.dashboard.js"></script>
+        <script src="dashboard/js/jquery.dashboard.js"></script>
 
         <!-- App js -->
-        <script src="public/dashboard/js/jquery.core.js"></script>
-        <script src="public/dashboard/js/jquery.app.js"></script>
+        <script src="dashboard/js/jquery.core.js"></script>
+        <script src="dashboard/js/jquery.app.js"></script>
         
-        <script src="public/dashboard/bower_components/angular/angular.js"></script>
-        <script src="public/dashboard/bower_components/angular-route/angular-route.js"></script>
-        <script src="public/dashboard/bower_components/angular-resource/angular-resource.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular-route.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular-resource.js"></script>
         
-        <script src="public/dashboard/app/app.js"></script>
-        <script src="public/dashboard/app/controller.js"></script>
-        <script src="public/dashboard/app/services.js"></script>
+        <script src="dashboard/app/app.js"></script>
+        <script src="dashboard/app/controller.js"></script>
+        <script src="dashboard/app/services.js"></script>
     </body>
 </html>

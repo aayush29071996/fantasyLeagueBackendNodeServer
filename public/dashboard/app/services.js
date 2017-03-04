@@ -5,22 +5,13 @@
 var dashServices = angular.module('dashServices', ['ngResource','dashControllers']);
 
 
-dashServices.factory('Api', function($http,$window){
+dashServices.factory('Admin', function($http,$window){
     var user={};
-    
+    var baseURI = "https://inyards.herokuapp.com/";
     user.whoAmI=function() {
-        return $http.post("https://thecodeclub.herokuapp.com/api/whoami").then(function(data){
+        return $http.post("").then(function(data){
             return;
             });
-    }
-    
-    user.logoutUser=function(){
-     return $http.post("https://thecodeclub.herokuapp.com/api/logout").then(function(data) {
-                $window.location.href="https://thecodeclub.herokuapp.com";
-                return;
-    });
-    
-    
     }
     
     return user;
