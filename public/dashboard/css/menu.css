@@ -1,9 +1,3 @@
-/*
-Template Name: Adminto Dashboard
-Author: CoderThemes
-Email: coderthemes@gmail.com
-File: Menu
-*/
 .topbar {
   left: 0px;
   position: fixed;
@@ -40,16 +34,16 @@ File: Menu
   display: none;
 }
 .logo {
-  color: #188ae2 !important;
+  color: #111 !important;
   font-size: 32px;
   font-family: 'Rancho', cursive;
 }
 .logo i {
   display: none;
 }
-.logo span span {
+/*.logo span span {
   color: #10c469;
-}
+}*/
 .user-box {
   text-align: center;
   padding: 30px 0px 20px 0px;
