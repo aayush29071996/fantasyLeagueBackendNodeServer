@@ -14,6 +14,10 @@ dashServices.factory('Football', function($http){
         return $http.get(baseURI+'/teams');
     };
     
+    user.getAllPlayers=function() {
+        return $http.get(baseURI+'/players');
+    };
+    
     return user;
     });
     

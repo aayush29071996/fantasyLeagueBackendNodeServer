@@ -23,6 +23,12 @@ dashBoard.config(function($routeProvider, $locationProvider) {
             controller: 'FootTeams',
             headTitle: 'FootTeams'
         })
+        .when('/football/players', {
+            cache: false,
+            templateUrl: 'dashboard/views/football/players.html',
+            controller: 'FootPlayers',
+            headTitle: 'FootTeams'
+        })
         
         .otherwise({
             redirectTo: '/dashboard'
