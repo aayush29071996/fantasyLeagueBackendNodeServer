@@ -24,8 +24,8 @@ module.exports = function(app) {
 		});
 	});
 
-	app.all('/about', function(req, res){
-		res.sendFile('about.html', {
+	app.all('/admin', function(req, res){
+		res.sendFile('dashboard/index.html', {
 			root: __dirname
 		});
 	});

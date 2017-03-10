@@ -1,37 +1,44 @@
 <!DOCTYPE html>
-<html ng-app="dashBoard" ng-controller="mainController">
+<html ng-app="dashBoard" ng-controller="Admin">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="A Non - Profit Coding Club.">
+        <meta name="description" content="">
         <meta name="author" content="Pratheev">
 
         <!--<link rel="shortcut icon" href="assets/images/favicon.ico">-->
 
-        <title>Dashboard | Code Club.</title>
-
+        <title>Admin | Inyards Fantasy Sports</title>
+      
         <!--Morris Chart CSS -->
-		<link rel="stylesheet" href="public/dashboard/css/dashboard.css">
+		<link rel="stylesheet" href="dashboard/css/dashboard.css">
         
-        <base href="/">
+        <!--<base href="/">-->
         <!-- App css -->
-        <link href="public/dashboard/css/bootstrap.min.css" rel="stylesheet">
-        <link href="public/dashboard/css/core.css" rel="stylesheet">
-        <link href="public/dashboard/css/components.css" rel="stylesheet">
-        <link href="public/dashboard/css/icons.css" rel="stylesheet">
-        <link href="public/dashboard/css/pages.css" rel="stylesheet">
-        <link href="public/dashboard/css/menu.css" rel="stylesheet">
-        <link href="public/dashboard/css/responsive.css" rel="stylesheet">
-
-        <script src="public/dashboard/js/modernizr.js"></script>
-<script>
+        <link href="dashboard/css/bootstrap.min.css" rel="stylesheet">
+        <link href="dashboard/css/core.css" rel="stylesheet">
+        <link href="dashboard/css/components.css" rel="stylesheet">
+        <link href="dashboard/css/icons.css" rel="stylesheet">
+        <link href="dashboard/css/pages.css" rel="stylesheet">
+        <link href="dashboard/css/menu.css" rel="stylesheet">
+        <link href="dashboard/css/responsive.css" rel="stylesheet">
+        <link href="dashboard/css/sweet-alert.css" rel="stylesheet">
+        <!--<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
+  -->
+        <!--<link href="dashboard/css/custombox.css" rel="stylesheet">
+        -->
+        <!--<link href="dashboard/css/switchery.min.css" rel="stylesheet">
+        --><script src="dashboard/js/modernizr.js"></script>
+<!--<script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
   })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
   ga('create', 'UA-85991646-2', 'auto');
   ga('send', 'pageview');
-</script>
+</script>-->
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
     </head>
 
 
@@ -45,8 +52,54 @@
 
                 <!-- LOGO -->
                 <div class="topbar-left">
-                    <a href="/dashboard" class="logo"><span><span>CodeClub</span></span><i class="zmdi zmdi-layers"></i></a>
+                    <a href="#/dashboard" class="logo"><span>Inyards</span><i class="zmdi zmdi-blur"></i></a>
                 </div>
+                <!-- Button mobile view to collapse sidebar menu -->
+                <div class="navbar navbar-default" role="navigation">
+                    <div class="container">
+
+                        <!-- Page title -->
+                        <ul class="nav navbar-nav navbar-left">
+                            <li>
+                                <button class="button-menu-mobile open-left">
+                                    <i class="zmdi zmdi-menu"></i>
+                                </button>
+                            </li>
+                            <li>
+                                <h4 class="page-title">{{headTitle}}</h4>
+                            </li>
+                        </ul>
+
+                        <!-- Right(Notification and Searchbox -->
+                        <ul class="nav navbar-nav navbar-right">
+                            <li>
+                                <!-- Notification -->
+                                <div class="notification-box">
+                                    <ul class="list-inline m-b-0">
+                                        <li>
+                                            <a href="javascript:void(0);" class="sa-na right-bar-toggle">
+                                                <i class="zmdi zmdi-notifications-none"></i>
+                                            </a>
+                                            <div class="noti-dot">
+                                                <span class="dot"></span>
+                                                <span class="pulse"></span>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!-- End Notification bar -->
+                            </li>
+                            <li class="hidden-xs">
+                                <form role="search" class="app-search">
+                                    <input type="text" placeholder="Search..."
+                                           class="form-control sa-na">
+                                    <a href=""><i class="fa fa-search"></i></a>
+                                </form>
+                            </li>
+                        </ul>
+
+                    </div><!-- end container -->
+                </div><!-- end navbar -->
             </div>
             <!-- Top Bar End -->
 
@@ -58,195 +111,115 @@
                     <!-- User -->
                     <div class="user-box">
                         <div class="user-img">
-                            <img src="public/dashboard/avatar/Male/1.png" alt="user-img" title="John Doe" class="img-circle img-thumbnail img-responsive">
+                            <img src="http://static.tumblr.com/e050cf2bebd74fbc2d7f80dcda2a2a01/bcklrvd/KProigovk/tumblr_static_3md6m0d5cjcw0c4c0gs44ww4c.jpg" alt="user-img" title="John Doe" class="img-circle img-thumbnail img-responsive">
                         </div>
-                        <h5><a>John Doe</a> </h5>
+                        <h5><a>Pradeep Baskaran</a> </h5>
                         <ul class="list-inline">
                             <li>
-                                <a href="#" >
+                                <a class="sa-na">
                                     <i class="zmdi zmdi-settings" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Settings"></i>
                                 </a>
                             </li>
 
                             <li>
-                                <a href="" class="text-custom" ng-click="logout()">
+                                <a href="http://inyards.com/" class="text-custom" ng-click="logout()">
                                     <i class="zmdi zmdi-power" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Logout"></i>
                                 </a>
                             </li>
                         </ul>
                     </div>
-                    <!-- End User -->
-
-                    <!--- Sidemenu -->
+                    
                     <div id="sidebar-menu">
                         <ul>
                         	<li class="text-muted menu-title">Navigation</li>
 
                             <li>
-                                <a href="#" class="waves-effect"><i class="ti-pulse"></i> <span> Train </span> </a>
+                                <a href="" class="sa-na waves-effect"><i class="zmdi zmdi-accounts"></i> <span> Users </span> </a>
                             </li>
 
-                            <li>
-                                <a href="#" class="waves-effect"><i class="zmdi zmdi-local-dining"></i> <span> Feed </span> </a>
+                            <li class="has_sub">
+                                <a href="javascript:void(0);" class="waves-effect"><i class="fa fa-soccer-ball-o"></i> <span> Football </span> <span class="menu-arrow"></span></a>
+                                <ul class="list-unstyled">
+                                    <li><a href="#/football/teams">Teams</a></li>
+                                    <li><a href="#/football/players">Players</a></li>
+                                    <li><a href="" class="sa-na">Fixtures</a></li>
+                                    <li><a href="" class="sa-na">API Control</a></li>
+                                </ul>
                             </li>
-
-                            <li>
-                                <a href="#" class="waves-effect"><i class="zmdi zmdi-puzzle-piece"></i> <span> Solve </span></a>
+                            <li class="has_sub">
+                                <a href="javascript:void(0);" class="waves-effect"><i class="zmdi zmdi-input-composite"></i> <span> Cricket </span> <span class="menu-arrow"></span></a>
+                                <ul class="list-unstyled">
+                                    <li><a href="" class="sa-na">Teams</a></li>
+                                    <li><a href="" class="sa-na">Players</a></li>
+                                    <li><a href="" class="sa-na">Fixtures</a></li>
+                                    <li><a href="" class="sa-na">API Control</a></li>
+                                </ul>
                             </li>
-
-                            <li>
-                                <a href="#" class="waves-effect"><i class="zmdi zmdi-code"></i><span> Compete </span> </a>
-                                
-                            </li>
-
-                            <li>
-                                <a href="#" class="waves-effect"><i class="ti-blackboard"></i> <span> Teach </span> </a>
-                                
-                            </li>
-
-                            <li>
-                                <a href="#" class="waves-effect"><i class="fa fa-microphone"></i><span> Speak </span> </a>
-                            </li>
+                            
                         </ul>
                         <div class="clearfix"></div>
                     </div>
-                    <!-- Sidebar -->
                     <div class="clearfix"></div>
-
                 </div>
-
             </div>
-            <!-- Left Sidebar End -->
-
-
-
-            <!-- ============================================================== -->
-            <!-- Start right Content here -->
-            <!-- ============================================================== -->
             <div class="content-page" ng-view>
             </div>
-
-
-            <!-- ============================================================== -->
-            <!-- End Right content here -->
-            <!-- ============================================================== -->
-
-
-            <!-- Right Sidebar -->
-            <!--<div class="side-bar right-bar">
-                <a href="javascript:void(0);" class="right-bar-toggle">
-                    <i class="zmdi zmdi-close-circle-o"></i>
-                </a>
-                <h4 class="">Notifications</h4>
-                <div class="notification-list nicescroll">
-                    <ul class="list-group list-no-border user-list">
-                        <li class="list-group-item">
-                            <a href="#" class="user-list-item">
-                                <div class="avatar">
-                                    <img src="assets/images/users/avatar-2.jpg" alt="">
-                                </div>
-                                <div class="user-desc">
-                                    <span class="name">Michael Zenaty</span>
-                                    <span class="desc">There are new settings available</span>
-                                    <span class="time">2 hours ago</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="list-group-item">
-                            <a href="#" class="user-list-item">
-                                <div class="icon bg-info">
-                                    <i class="zmdi zmdi-account"></i>
-                                </div>
-                                <div class="user-desc">
-                                    <span class="name">New Signup</span>
-                                    <span class="desc">There are new settings available</span>
-                                    <span class="time">5 hours ago</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="list-group-item">
-                            <a href="#" class="user-list-item">
-                                <div class="icon bg-pink">
-                                    <i class="zmdi zmdi-comment"></i>
-                                </div>
-                                <div class="user-desc">
-                                    <span class="name">New Message received</span>
-                                    <span class="desc">There are new settings available</span>
-                                    <span class="time">1 day ago</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="list-group-item active">
-                            <a href="#" class="user-list-item">
-                                <div class="avatar">
-                                    <img src="assets/images/users/avatar-3.jpg" alt="">
-                                </div>
-                                <div class="user-desc">
-                                    <span class="name">James Anderson</span>
-                                    <span class="desc">There are new settings available</span>
-                                    <span class="time">2 days ago</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="list-group-item active">
-                            <a href="#" class="user-list-item">
-                                <div class="icon bg-warning">
-                                    <i class="zmdi zmdi-settings"></i>
-                                </div>
-                                <div class="user-desc">
-                                    <span class="name">Settings</span>
-                                    <span class="desc">There are new settings available</span>
-                                    <span class="time">1 day ago</span>
-                                </div>
-                            </a>
-                        </li>
-
-                    </ul>
-                </div>
             </div>
-            <!-- /Right-bar -->
-
-        </div>
-        <!-- END wrapper -->
-
-
-
         <script>
             var resizefunc = [];
         </script>
 
         <!-- jQuery  -->
-        <script src="public/dashboard/js/jquery.min.js"></script>
-        <script src="public/dashboard/js/bootstrap.min.js"></script>
-        <script src="public/dashboard/js/detect.js"></script>
-        <script src="public/dashboard/js/fastclick.js"></script>
-        <script src="public/dashboard/js/jquery.slimscroll.js"></script>
-        <script src="public/dashboard/js/jquery.blockUI.js"></script>
-        <script src="public/dashboard/js/waves.js"></script>
-        <script src="public/dashboard/js/jquery.nicescroll.js"></script>
-        <script src="public/dashboard/js/jquery.slimscroll.js"></script>
-        <script src="public/dashboard/js/jquery.scrollTo.min.js"></script>
-
+        <script src="dashboard/js/jquery.min.js"></script>
+        <script src="dashboard/js/bootstrap.min.js"></script>
+        <script src="dashboard/js/detect.js"></script>
+        <script src="dashboard/js/fastclick.js"></script>
+        <script src="dashboard/js/jquery.slimscroll.js"></script>
+        <script src="dashboard/js/jquery.blockUI.js"></script>
+        <script src="dashboard/js/waves.js"></script>
+        <script src="dashboard/js/jquery.nicescroll.js"></script>
+        <script src="dashboard/js/jquery.slimscroll.js"></script>
+        <script src="dashboard/js/jquery.scrollTo.min.js"></script>
+        <!--
+        <script src="dashboard/js/custombox.js"></script>
+        <script src="dashboard/js/legacy.js"></script>-->
+        <script src="dashboard/js/sweet-alert.min.js"></script>
+        <script src="dashboard/js/admin.js"></script>
+        
+        <!--<script src="dashboard/js/jquery.magnific-popup.min.js"></script>
+        <script src="dashboard/js/jquery.dataTables.js"></script>
+        <script src="dashboard/js/dataTables.bootstrap.js"></script>
+        <script src="dashboard/js/mindmup-editabletable.js"></script>
+        <script src="dashboard/js/numeric-input-example.js"></script>
+        <script src="dashboard/js/datatables.editable.init.js"></script>
+        <script src="dashboard/js/switchery.min.js"></script>
         <!-- KNOB JS -->
-        <script src="public/dashboard/js/jquery.knob.js"></script>
+        <script src="dashboard/js/jquery.knob.js"></script>
 
         <!--Morris Chart-->
-		<script src="public/dashboard/js/morris.min.js"></script>
-		<script src="public/dashboard/js/raphael-min.js"></script>
+		<script src="dashboard/js/morris.min.js"></script>
+		<script src="dashboard/js/raphael-min.js"></script>
 
         <!-- Dashboard init -->
-        <script src="public/dashboard/js/jquery.dashboard.js"></script>
+        <script src="dashboard/js/jquery.dashboard.js"></script>
 
         <!-- App js -->
-        <script src="public/dashboard/js/jquery.core.js"></script>
-        <script src="public/dashboard/js/jquery.app.js"></script>
+        <script src="dashboard/js/jquery.core.js"></script>
+        <script src="dashboard/js/jquery.app.js"></script>
         
-        <script src="public/dashboard/bower_components/angular/angular.js"></script>
-        <script src="public/dashboard/bower_components/angular-route/angular-route.js"></script>
-        <script src="public/dashboard/bower_components/angular-resource/angular-resource.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular-route.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular-resource.js"></script>
         
-        <script src="public/dashboard/app/app.js"></script>
-        <script src="public/dashboard/app/controller.js"></script>
-        <script src="public/dashboard/app/services.js"></script>
+          <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+
+  <!-- Angular Material Library -->
+  <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
+  
+        <script src="dashboard/app/app.js"></script>
+        <script src="dashboard/app/controller.js"></script>
+        <script src="dashboard/app/services.js"></script>
     </body>
 </html>
