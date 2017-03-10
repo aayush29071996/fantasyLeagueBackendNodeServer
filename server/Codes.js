@@ -23,7 +23,8 @@ exports.errorMsg = {
 	T_NO : 'currently, no teams',
 	T_ID_INUSE : 'team id in use',
 	P_NO : 'no player',
-	P_ID_INUSE : 'player id in use'
+	P_ID_INUSE : 'player id in use',
+	F_ID_INUSE : 'fixture id in use'
 }
 
 exports.status = {
