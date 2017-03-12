@@ -1,9 +1,13 @@
-<md-dialog cg-busy="{promise:TeamIdAvailabilityPromise,message:'Please Wait...'}">
+<md-dialog cg-busy="{promise:ViewTeamPromise,message:'Please Wait...'}" style="height: 100vh;width: 100vw;">
   <form ng-cloak>
     <md-toolbar>
-      <div class="md-toolbar-tools">
-        <h2>Add a Team</h2>
+      <div class="md-toolbar-tools" style="background: #222;">
+      <img style="height: 120px;margin-top: 14vh;margin-left: 1vw;" src="{{logo}}" alt="">
+        <h2 style="width: 73%;text-align: center;">{{teamName}}</h2>
         <span flex></span>
+        <md-button class="md-icon-button" ng-click="close()">
+        <span>EDIT</span>
+        </md-button>
         <md-button class="md-icon-button" ng-click="close()">
         <!--<span><i class="icon ion-ios-close"></i></span>-->
           <!--<i class="icon ion-ios-close-outline"></i>-->
@@ -12,21 +16,24 @@
       </div>
     </md-toolbar>
 
-    <md-dialog-content>
+    <md-dialog-content style="">
     <form class="form-horizontal" role="form">
         <div class="form-group" style="margin-top:20px;">
-            <label class="col-md-2 control-label">Team Id</label>
-            <div class="col-md-10">
+            <label class="col-md-2 control-label" style="width: 26vw;margin-left: 22vw;">Team Id</label>
+            <label class="col-md-2 control-label" style="width: 26vw;text-align:center;">Team Status</label>
+            <label class="col-md-2 control-label" style="width: 26vw;margin-left: 22vw;">{{teamId}}</label>
+            <label class="col-md-2 control-label" style="width: 26vw;text-align:center;">{{teamStatus}}</label>
+            <!--<div class="col-md-10">
                 <input type="text" class="form-control" ng-model="newteam.id" style="color:#111;background: #ddd;width: 40vw;">
                 <p style="color:red;" ng-show="teamIdNA">Team Id Not Available!</p>
-            </div>
+            </div>-->
         </div>
-        <div class="form-group" style="margin-top:10vh;">
+        <!--<div class="form-group" style="margin-top:10vh;">
             <label class="col-md-2 control-label" for="example-email">Team Name</label>
             <div class="col-md-10">
                 <input type="text" id="example-email" style="color:#111;background: #ddd;width: 40vw;" ng-model="newteam.name" class="form-control" placeholder="">
             </div>
-        </div>
+        </div>-->
         <!--<div class="form-group" style="margin-top:20vh;">
             <label class="col-md-2 control-label">Status</label>
             <div class="col-md-10">
@@ -37,17 +44,17 @@
     </form>
     </md-dialog-content>
 
-    <md-dialog-actions layout="row">
+    <!--<md-dialog-actions layout="row">
       <!--<md-button href="http://en.wikipedia.org/wiki/Mango" target="_blank" md-autofocus>
         More on Wikipedia
       </md-button>-->
-      <span flex></span>
+      <!--<span flex></span>
       <md-button ng-click="close()">
        Cancel
       </md-button>
       <md-button ng-click="createTeam(newteam)">
         Create
       </md-button>
-    </md-dialog-actions>
+    </md-dialog-actions>-->
   </form>
 </md-dialog>

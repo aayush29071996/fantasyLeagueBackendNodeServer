@@ -4,7 +4,8 @@ var dashBoard = angular.module('dashBoard', [
     'ngRoute',
     'dashControllers',
     'dashServices',
-    'ngMaterial'
+    'ngMaterial',
+    'cgBusy'
 ]);
 dashBoard.run(function($rootScope){
   $rootScope._ = _;

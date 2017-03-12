@@ -17,23 +17,74 @@ dashControllers.controller('Admin', function($scope,$window){
 
 dashControllers.controller('Dashboard', function () {
 });
+function AddTeamPopupCtrl ($scope,$mdDialog,Football){
+    $scope.close=function(){
+        $mdDialog.hide();
+    }
+    $scope.createTeam=function(team){
+        var newTeam={
+          teamId:team.id,
+          name:team.name,
+          status:false
+        };
+        $scope.TeamIdAvailabilityPromise=Football.newTeamAvailability(team.id).then(function(res){
+                $scope.teamIdNA=false;
+        }).catch(function(e){
+            $scope.teamIdNA=true;
+            });
+    }
+};
+function ViewTeamPopupCtrl ($scope,$mdDialog,Football,teamId){
+     $scope.close=function(){
+         $mdDialog.hide();
+     }
+    var id=teamId;
+    //console.log(id);
+    //$scope.createTeam=function(team){
+      /*  var newTeam={
+          teamId:team.id,
+          name:team.name,
+          status:false
+        };
+      */  
+      $scope.ViewTeamPromise=Football.getTeamDetails(id).then(function(res){
+                res=res.data.data[0];
+                console.log(res);
+                $scope.teamName=res.name;
+                $scope.logo=res.logo;
+                $scope.teamId=res.teamId;
+                $scope.teamStatus=res.active;
+        }).catch(function(e){
+            //$scope.teamIdNA=true;
+            });
+    // }
+};
 
-dashControllers.controller('FootTeams', function ($scope, Football, PagerService) {
-    /*$scope.AddTeam = function(ev) {
-    $mdDialog.show({/*
-      controller: FootTeams,*/
-      /*templateUrl: 'dashboard/views/add.team.html',
+dashControllers.controller('FootTeams', function ($scope, Football, PagerService, $mdDialog) {
+    $scope.AddTeam = function(ev) {
+    $mdDialog.show({
+      controller: AddTeamPopupCtrl,
+      templateUrl: 'dashboard/views/add.team.html',
       parent: angular.element(document.body),
       targetEvent: ev,
       clickOutsideToClose:true,
-      fullscreen: true
-    })
-    .then(function(answer) {
-      $scope.status = 'You said the information was "' + answer + '".';
-    }, function() {
-      $scope.status = 'You cancelled the dialog.';
+      fullscreen: false
     });
-  };*/
+    };
+    $scope.ViewTeam = function(id,ev) {
+    $mdDialog.show({
+      controller: ViewTeamPopupCtrl,
+      templateUrl: 'dashboard/views/view.team.html',
+      parent: angular.element(document.body),
+      targetEvent: ev,
+      locals:{
+          teamId: id
+          },
+      clickOutsideToClose:true,
+      fullscreen: true
+    });
+    console.log(id);
+  };
   
     $scope.selectedSort = 'teamId';
     //$scope.selectedRPP = "10";
@@ -59,7 +110,7 @@ dashControllers.controller('FootTeams', function ($scope, Football, PagerService
             $scope.items = $scope.footTeams.slice($scope.pager.startIndex, $scope.pager.endIndex + 1);
         }
         };
-    Football.getAllTeams().then(function(Teams){
+    $scope.allTeamsPromise=Football.getAllTeams().then(function(Teams){
       $scope.footTeams = Teams.data.data; 
 
         $scope.pager = {};
@@ -111,7 +162,7 @@ dashControllers.controller('FootPlayers', function ($scope, Football, PagerServi
             $scope.items = $scope.footTeams.slice($scope.pager.startIndex, $scope.pager.endIndex + 1);
         }
         };
-    Football.getAllPlayers().then(function(Teams){
+    $scope.allPlayersPromise=Football.getAllPlayers().then(function(Teams){
       $scope.footTeams = Teams.data.data; 
         console.log($scope.footTeams);
         $scope.pager = {};
