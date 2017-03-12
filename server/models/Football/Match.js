@@ -18,6 +18,27 @@ var WeatherSchema = new mongoose.Schema({
 	windDegree:{type:String}
 });
 
+var LineupSchema = new mongoose.Schema({
+	playerId:{type:String},
+    position:{type:String},
+    shirtNumber:{type:Number},
+    assists:{type:Number,default:0},
+    foulsCommited:{type:Number,default:0},
+    foulsDrawn:{type:Number,default:0},
+    goals:{type:Number,default:0},
+    offsides:{type:Number,default:0},
+    missedPenalties:{type:Number,default:0},
+    scoredPenalties: {type:Number,default:0},
+    posx:{type:Number, default:null},
+    posy:{type:Number,default:null},
+    redcards:{type:Number,default:0},
+    saves:{type:Number,default:0},
+    shotsOnGoal:{type:Number,default:0},
+    shotsTotal:{type:Number,default:0},
+    yellowcards:{type:Number,default:0},
+    type:{type:String}
+});
+
 var MatchSchema = new mongoose.Schema({
 	matchId:{type:String, required:true},
 	team1Id:{type:String, required:true},
@@ -32,12 +53,17 @@ var MatchSchema = new mongoose.Schema({
 	startingDateTime:{type:Date},
 	minute:{type:Number},
 	extraMinute:{type:Number},
+	injuryTime:{type:Number},
+	htScore:{type:String},
+	ftScore:{type:String},
+	etScore:{type:String},
 	seasonId:{type:String, required:true},
 	stageId:{type:String, required:true},
 	roundId:{type:String},
 	venueId:{type:String},
 	weather:WeatherSchema,
-	events:[{type:Schema.Types.ObjectId, ref:'Event'}]
+	events:[{type:Schema.Types.ObjectId, ref:'Event'}],
+	lineup:[LineupSchema]
 		
 });
 

@@ -9,7 +9,6 @@ var FixturesHandler = require('./handlers/Football/FixturesHandler');
 var TeamsHandler = require('./handlers/Football/TeamsHandler');
 var PlayersHandler = require('./handlers/Football/PlayersHandler');
 
-
 var FixtureController = require('./controllers/Football/FixtureController');
 var TeamController = require('./controllers/Football/TeamController');
 var PlayerController = require('./controllers/Football/PlayerController');
@@ -53,14 +52,14 @@ module.exports = function(app) {
 
 	//RUD admin routes for fixtures
 	app.get('/competions',FixtureController.getCompetitionsAndSeasons);
-	app.get('/fixtures/:id', FixtureController.getFixturesBySeason);
-	app.get('/fixture/:id',FixtureController.getFixture);
+	app.get('/fixtures/:seasonId', FixtureController.getFixturesBySeason);
+	app.get('/fixture/:matchId',FixtureController.getFixture);
 	//TODO: app.put('/fixture/:id', FixtureController.updateFixture);
 	//TODO: app.delete('/fixture/:id', FixtureController.deleteFixture);
 
 	//CRUD admin routes for teams
 	app.get('/teams', TeamController.getAllTeams);
-	app.get('/team/:id', TeamController.getTeam);
+	app.get('/team/:teamId', TeamController.getTeam);
 	app.post('/team/id', TeamController.getTeamIdAvailability);
 	app.post('/team/', TeamController.createTeam);
 	app.put('/team/', TeamController.updateTeam);
@@ -69,7 +68,7 @@ module.exports = function(app) {
 
 	//CRUD admin routes for players
 	app.get('/players', PlayerController.getAllPlayers);
-	app.get('/player/:id', PlayerController.getPlayer);
+	app.get('/player/:playerId', PlayerController.getPlayer);
 	app.post('/player/id', PlayerController.getPlayerIdAvailability);
 	app.post('/player/', PlayerController.createPlayer);
 	app.put('/player/', PlayerController.updatePlayer);

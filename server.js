@@ -25,6 +25,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json());
 
 require("./server/routes.js")(app);
+// require("./server/jobs.js")(app);
 
 server.listen(port);
 console.log('App is listening on port: ' + port);
