@@ -84,7 +84,7 @@ exports.getFixturesHistory = function(req, res) {
 							fixture.push(season);
 							fixturesSet.push(fixture);
 
-							if(index == matches.length - 1){
+							if(fixturesSet.length == matches.length){
 								res.status(Codes.httpStatus.OK).json({
 									status: Codes.status.SUCCESS,
 									code: Codes.httpStatus.OK,
@@ -95,6 +95,7 @@ exports.getFixturesHistory = function(req, res) {
 							}
 
 							});
+
 						});
 					});
 
@@ -177,7 +178,7 @@ exports.getFixturesLive = function(req, res) {
 							fixture.push(season);
 							fixturesSet.push(fixture);
 
-							if(index == matches.length - 1){
+							if(fixturesSet.length == matches.length){
 								res.status(Codes.httpStatus.OK).json({
 									status: Codes.status.SUCCESS,
 									code: Codes.httpStatus.OK,
@@ -270,7 +271,7 @@ exports.getFixturesUpcoming = function(req, res) {
 							fixture.push(season);
 							fixturesSet.push(fixture);
 
-							if(index == matches.length - 1){
+							if(fixturesSet.length == matches.length){
 								res.status(Codes.httpStatus.OK).json({
 									status: Codes.status.SUCCESS,
 									code: Codes.httpStatus.OK,
@@ -281,9 +282,9 @@ exports.getFixturesUpcoming = function(req, res) {
 							}
 
 							});
+
 						});
 					});
-
 			});
 			
 		}
