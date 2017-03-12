@@ -45,7 +45,7 @@ exports.getAllPlayers = function(req, res) {
 
 //get player details
 exports.getPlayer = function(req, res){
-	Player.find({playerId:req.params.id},function(playerErr, player){
+	Player.find({playerId:req.params.playerId},function(playerErr, player){
 		if(playerErr){
 			res.status(Codes.httpStatus.ISE).json({
 	            status: Codes.status.FAILURE,
