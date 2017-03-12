@@ -14,6 +14,14 @@ dashServices.factory('Football', function($http){
         return $http.get(baseURI+'/teams');
     };
     
+    user.newTeamAvailability=function(teamId){
+        return $http.post(baseURI+'/team/id',{"teamId":teamId});
+    };
+    
+    user.getTeamDetails=function(teamId) {
+        return $http.get(baseURI+'/team/'+teamId);
+    };
+    
     user.getAllPlayers=function() {
         return $http.get(baseURI+'/players');
     };
