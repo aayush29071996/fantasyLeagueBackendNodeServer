@@ -6,11 +6,7 @@
  var Match = require('../../models/Football/Match');
  var MatchCard = require('../../models/Football/MatchCard');
  var Player = require('../../models/Football/Master/Player');	
-<<<<<<< HEAD
-=======
-
  var moment = require('moment');
->>>>>>> 84b0a64e92a3cbbacae23379737ea6678a2af84d
 
  var Codes = require('../../Codes');
  var Validation = require('../Validation');
