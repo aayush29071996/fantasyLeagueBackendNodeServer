@@ -6,6 +6,11 @@
  var Match = require('../../models/Football/Match');
  var MatchCard = require('../../models/Football/MatchCard');
  var Player = require('../../models/Football/Master/Player');	
+<<<<<<< HEAD
+=======
+
+ var moment = require('moment');
+>>>>>>> 84b0a64e92a3cbbacae23379737ea6678a2af84d
 
  var Codes = require('../../Codes');
  var Validation = require('../Validation');
@@ -37,43 +42,58 @@ exports.createMatchCard = function(req, res) {
 		        });
 	        	return;
 			}		
-
-			Player.find({playerId:{$in:req.body.players}, function(playersListErr, playersList){
-				console.log(playersList)
-				var matchCard = new MatchCard;
-				matchCard.user = user;
-				matchCard.match = match;
-				matchCard.players = [];
-				playersList.forEach(function(player, index){
+			var players = []
+			req.body.players.forEach(function(playerId, index){
+				Player.findOne({playerId:playerId}, function(playerErr, player){
+					if(matchErr){
+						res.status(Codes.httpStatus.ISE).json({
+				            status: Codes.status.FAILURE,
+				            code: Codes.httpStatus.ISE,
+				            data: '',
+				            error: Codes.errorMsg.UNEXP_ERROR
+				        });
+		        		return;
+						}	
+					var newPlayer = new Player();
 					newPlayer.playerId = player.playerId;
 					newPlayer.name = player.name;
 					newPlayer.positionId = player.positionId;
 					newPlayer.position = player.position;
 					newPlayer.active = player.active;
-					matchCard.players.push(newPlayer)
+					players.push(newPlayer)
+					console.log(newPlayer)
+					if(players.length == req.body.players.length){
+
+						var matchCard = new MatchCard;
+						matchCard.user = user;
+						matchCard.match = match;
+						matchCard.players = players
+						matchCard.createdOn = moment.utc();
+						//console.log(matchCard)
+						matchCard.save(function(matchCardSaveErr, savedMatchCard){
+		            	if (matchCardSaveErr) {
+		                    res.status(Codes.httpStatus.BR).json({
+		                        status: Codes.status.FAILURE,
+		                        code: Codes.httpStatus.BR,
+		                        data: '',
+		                        error: Validation.validatingErrors(matchCardSaveErr)
+		                    });
+		                    return;
+		                } 
+		                if(savedMatchCard){
+		                	res.status(Codes.httpStatus.OK).json({
+					            status: Codes.status.SUCCESS,
+					            code: Codes.httpStatus.OK,
+					            data: savedMatchCard._id,
+					            error: ''
+			        		});
+			    			return;
+		                	}
+		            	});
+					}
+
 				});
-				matchCard.createdOn = moment.utc();
-				matchCard.save(function(matchCardSaveErr, savedMatchCard){
-            	if (matchCardSaveErr) {
-                    res.status(Codes.httpStatus.BR).json({
-                        status: Codes.status.FAILURE,
-                        code: Codes.httpStatus.BR,
-                        data: '',
-                        error: Validation.validatingErrors(matchCardSaveErr)
-                    });
-                    return;
-                } 
-                if(savedMatchCard){
-                	res.status(Codes.httpStatus.OK).json({
-			            status: Codes.status.SUCCESS,
-			            code: Codes.httpStatus.OK,
-			            data: savedMatchCard._id,
-			            error: ''
-	        		});
-	    			return;
-                	}
-            	});
-			}});
+			});
 		});
 	});
 }
