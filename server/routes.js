@@ -12,6 +12,7 @@ var PlayersHandler = require('./handlers/Football/PlayersHandler');
 var FixtureController = require('./controllers/Football/FixtureController');
 var TeamController = require('./controllers/Football/TeamController');
 var PlayerController = require('./controllers/Football/PlayerController');
+var PointsSystemController = require('./controllers/Football/PointsSystemController');
 
 module.exports = function(app) {
 
@@ -73,4 +74,10 @@ module.exports = function(app) {
 	app.post('/player/', PlayerController.createPlayer);
 	app.put('/player/', PlayerController.updatePlayer);
 	app.delete('/player/', PlayerController.deletePlayer);
+
+	//MatchCard routes
+	app.post('/createMatchCard', PointsSystemController.createMatchCard);
+	//app.post('/getMatchCard', PointsSystemController.getMatchCard);
+
+
 };
