@@ -7,6 +7,7 @@ var moment = require('moment');
 var Competition = require('../../models/Football/Competition');
 var Season = require('../../models/Football/Season');
 var Match = require('../../models/Football/Match');
+var Event = require('../../models/Football/Event');
 var Team = require('../../models/Football/Master/Team');
 
 var Codes = require('../../Codes');
@@ -424,7 +425,7 @@ exports.getFixturesBySeason = function(req, res){
 //get fixture details
 exports.getFixture = function(req, res){
 
-	Match.findOne({matchId:req.params.matchId},function(matchErr, match){
+	Match.findOne({matchId:req.params.matchId}).populate('events').exec(function(matchErr, match){
 		console.log(req.params)
 		if(matchErr){
 			res.status(Codes.httpStatus.ISE).json({

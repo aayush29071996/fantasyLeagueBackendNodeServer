@@ -8,14 +8,14 @@ var EventSchema = new mongoose.Schema({
 	eventId:{type:String, required:true},
 	matchId:{type:String, required:true},
 	teamId:{type:String, required:true},
-	playerId:{type:String, required:true},
+	playerId:{type:String, default:null},
 	minute:{type:String},
 	extraMinute:{type:String, default:null},
 	type:{type:String},
-	assistPlayerId:{type:String, default:null},
-	relatedEventId:{type:String, default:null},
-	playerInId:{type:String, default:null},
-	playerOutId:{type:String, default:null}
+	assistPlayerId:{type:String},
+	relatedEventId:{type:String},
+	playerInId:{type:String},
+	playerOutId:{type:String}
 
 });
 

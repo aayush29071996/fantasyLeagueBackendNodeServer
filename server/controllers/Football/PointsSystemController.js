@@ -57,7 +57,6 @@ exports.createMatchCard = function(req, res) {
 					newPlayer.position = player.position;
 					newPlayer.active = player.active;
 					players.push(newPlayer)
-					console.log(newPlayer)
 					if(players.length == req.body.players.length){
 
 						var matchCard = new MatchCard;
@@ -65,7 +64,6 @@ exports.createMatchCard = function(req, res) {
 						matchCard.match = match;
 						matchCard.players = players
 						matchCard.createdOn = moment.utc();
-						//console.log(matchCard)
 						matchCard.save(function(matchCardSaveErr, savedMatchCard){
 		            	if (matchCardSaveErr) {
 		                    res.status(Codes.httpStatus.BR).json({
@@ -93,3 +91,4 @@ exports.createMatchCard = function(req, res) {
 		});
 	});
 }
+
