@@ -44,19 +44,19 @@ exports.populatePlayersForAllTeams = function(req, res){
 		}
 
 		if(teams.length > 0){
-			teams.forEach(function(team, index){
+			teams.forEach(function(team, teamIndex){
 
 				include = 'position'
 				params = 'players/team/' + team.teamId;
 				
 				request.get(fireUrl(params, include), function(err, response, data){
-
-					if (err) {
+	
+					if (err) {	
 			            res.status(Codes.httpStatus.ISE).json({
 			                status: Codes.status.FAILURE,
 			                code: Codes.httpStatus.ISE,
 			                data: '',
-			                error: Codes.errorMsg.UNEXP_ERROR
+			                error: Codes.errorMsg.UNEXP_ERROR + " " + err
 			            });
 			            return;
 			        }
@@ -99,9 +99,9 @@ exports.populatePlayersForAllTeams = function(req, res){
 
 			            data = data.data;
 
-			           	data.forEach(function(player, index){
+			           	data.forEach(function(player, playerIndex){
 
-			           		Player.findOne({ playerId: player.id }, function(playerErr, playerObj) {
+			           		Player.findOne({ playerId: player.id }).populate('teams').exec(function(playerErr, playerObj) {
 			                    if (playerErr) {
 			                        res.status(Codes.httpStatus.ISE).json({
 			                            status: Codes.status.FAILURE,
@@ -113,6 +113,38 @@ exports.populatePlayersForAllTeams = function(req, res){
 			                    }
 
 			                    if (playerObj != null) {
+
+			                    	if(playerObj.teams.length > 0){
+			                    		console.log('adding new team to player refernce');
+			                    		var teamLength = playerObj.teams.length;
+			                    		var inequalIndex = 0;
+			                    		playerObj.teams.forEach(function(existingTeam, eTeamIndex){
+			                    			console.log('existing team id :' + existingTeam.teamId);
+			                    			console.log('new team id :' + team.teamId);
+			                    			if(existingTeam.teamId != team.teamId){
+			                    				inequalIndex = inequalIndex + 1;
+			                    				console.log('inequalIndex ' + inequalIndex);
+			                    				console.log('teamLength ' + teamLength);
+			                    				if(teamLength == inequalIndex){
+			                    					playerObj.teams.push(team);
+						                    		playerObj.save(function(playerSaveErr, savedPlayer){
+						                        	if (playerSaveErr) {
+						                                console.log('playerSaveErr')
+						                                res.status(Codes.httpStatus.BR).json({
+						                                    status: Codes.status.FAILURE,
+						                                    code: Codes.httpStatus.BR,
+						                                    data: '',
+						                                    error: Validation.validatingErrors(playerSaveErr)
+						                                });
+						                                return;
+						                            }
+			                    				});
+					                    	}
+					                    }
+			                        });
+
+			                    	}
+
 			                        console.log('player with id ' + playerObj.playerId + ' and name ' + playerObj.name + ' already exists')
 			                      
 
@@ -124,7 +156,7 @@ exports.populatePlayersForAllTeams = function(req, res){
 			                        var newPlayer = new Player();
 			                        newPlayer.playerId = player.id;
 			                        newPlayer.name = player.name;
-
+			                        newPlayer.teams.push(team);
 			                    	if(player.hasOwnProperty('position')){		                        
 				                        newPlayer.positionId = player.position.id;
 				                        newPlayer.position = player.position.name;
@@ -165,6 +197,16 @@ exports.populatePlayersForAllTeams = function(req, res){
 				                                });
 			                                return;
 			                            	}
+			                            	if(teamIndex == teams.length - 1){
+							                	res.status(Codes.httpStatus.OK).json({
+									                status: Codes.status.SUCCESS,
+									                code: Codes.httpStatus.OK,
+									                data: 'populated all players for all teams',
+									                error: ''
+									            });
+									            return;
+							                }
+
 		                            	});
 
 			                          	});
@@ -175,16 +217,6 @@ exports.populatePlayersForAllTeams = function(req, res){
 			           	});
 			        }
 				});
-
-				if(index == teams.length - 1){
-                	res.status(Codes.httpStatus.OK).json({
-		                status: Codes.status.SUCCESS,
-		                code: Codes.httpStatus.OK,
-		                data: 'populated all players for all teams',
-		                error: ''
-		            });
-		            return;
-                }
 			});
 		}
 

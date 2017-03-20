@@ -10,7 +10,7 @@ var Validation = require('../Validation');
 //get list of all teams as an array obj
 exports.getAllTeams = function(req, res) {
 	
-	Team.find({}).select('teamId name active').exec(function(teamsErr, teams){
+	Team.find({}).select('teamId name active competitions').populate('competitions').exec(function(teamsErr, teams){
 		if(teamsErr){
 			res.status(Codes.httpStatus.ISE).json({
 	            status: Codes.status.FAILURE,
@@ -44,7 +44,7 @@ exports.getAllTeams = function(req, res) {
 
 //get team details
 exports.getTeam = function(req, res){
-	Team.find({teamId:req.params.teamId}).populate('players','playerId name active').exec(function(teamErr, team){
+	Team.find({teamId:req.params.teamId}).populate('players','playerId name active competitions').populate('competitions').exec(function(teamErr, team){
 		if(teamErr){
 			res.status(Codes.httpStatus.ISE).json({
 	            status: Codes.status.FAILURE,
@@ -68,6 +68,37 @@ exports.getTeam = function(req, res){
             status: Codes.status.SUCCESS,
             code: Codes.httpStatus.OK,
             data: team,
+            error: ''
+        });
+        return;
+	});
+}
+
+//toggle team status
+exports.toggleTeamStatus = function(req, res){
+	Team.findOneAndUpdate({teamId:req.body.teamId}, {$set:{active: req.body.active}},{"new":true}).exec(function(teamErr, team){
+		if(teamErr){
+			res.status(Codes.httpStatus.ISE).json({
+	            status: Codes.status.FAILURE,
+	            code: Codes.httpStatus.ISE,
+	            data: '',
+	            error: Codes.errorMsg.UNEXP_ERROR
+	        });
+	        return;
+		}
+		if(team == null){
+			res.status(Codes.httpStatus.BR).json({
+                status: Codes.status.FAILURE,
+                code: Codes.httpStatus.BR,
+                data: '',
+                error: Codes.errorMsg.T_NO
+            });
+            return;
+		}
+		res.status(Codes.httpStatus.OK).json({
+            status: Codes.status.SUCCESS,
+            code: Codes.httpStatus.OK,
+            data: team.active,
             error: ''
         });
         return;

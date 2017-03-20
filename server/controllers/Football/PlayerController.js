@@ -21,6 +21,9 @@ exports.getAllPlayers = function(req, res) {
 	        });
 	        return;
 		}
+
+		console.log(players.length + ' players');
+
 		if(players.length == 0){
 			res.status(Codes.httpStatus.OK).json({
                 status: Codes.status.SUCCESS,
@@ -72,6 +75,38 @@ exports.getPlayer = function(req, res){
         });
         return;
 	});
+}
+
+//toggle player status
+exports.togglePlayerStatus = function(req, res){
+	Player.findOneAndUpdate({playerId:req.body.playerId}, {$set:{active:req.body.active}},{"new":true}).exec(function(playerErr, player){
+		if(playerErr){
+			res.status(Codes.httpStatus.ISE).json({
+	            status: Codes.status.FAILURE,
+	            code: Codes.httpStatus.ISE,
+	            data: '',
+	            error: Codes.errorMsg.UNEXP_ERROR
+	        });
+	        return;
+		}
+		if(player == null){
+			res.status(Codes.httpStatus.BR).json({
+                status: Codes.status.FAILURE,
+                code: Codes.httpStatus.BR,
+                data: '',
+                error: Codes.errorMsg.P_NO
+            });
+            return;
+		}
+		res.status(Codes.httpStatus.OK).json({
+            status: Codes.status.SUCCESS,
+            code: Codes.httpStatus.OK,
+            data: player.active,
+            error: ''
+        });
+        return;
+	});
+	
 }
 
 //check availability for new player id

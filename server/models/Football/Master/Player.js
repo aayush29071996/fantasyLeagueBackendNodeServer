@@ -9,7 +9,8 @@ var PlayerSchema = new mongoose.Schema({
 	name:{type:String,default:null},
 	positionId:{type:String,default:0},
 	position:{type:String,default:"None"},
-	active:{type:Boolean, default:false}
+	active:{type:Boolean, default:false},
+	teams:[{type:Schema.Types.ObjectId, ref:'Team'}]
 });
 
 var Player = mongoose.model('Player', PlayerSchema);
