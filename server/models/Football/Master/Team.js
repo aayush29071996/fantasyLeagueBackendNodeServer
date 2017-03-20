@@ -10,7 +10,8 @@ var TeamSchema = new mongoose.Schema({
 	name:{type:String, required:true},
 	logo:{type:String},
 	active:{type:Boolean,default:false},
-	players:[{type:Schema.Types.ObjectId, ref:'Player'}]
+	players:[{type:Schema.Types.ObjectId, ref:'Player'}],
+	competitions:[{type:Schema.Types.ObjectId, ref:'Competition'}]
 });
 
 var Team = mongoose.model('Team', TeamSchema);

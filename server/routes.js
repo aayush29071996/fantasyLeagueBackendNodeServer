@@ -62,6 +62,7 @@ module.exports = function(app) {
 	app.get('/teams', TeamController.getAllTeams);
 	app.get('/team/:teamId', TeamController.getTeam);
 	app.post('/team/id', TeamController.getTeamIdAvailability);
+	app.post('/team/toggleStatus', TeamController.toggleTeamStatus);
 	app.post('/team/', TeamController.createTeam);
 	app.put('/team/', TeamController.updateTeam);
 	app.delete('/team/', TeamController.deleteTeam);
@@ -71,6 +72,7 @@ module.exports = function(app) {
 	app.get('/players', PlayerController.getAllPlayers);
 	app.get('/player/:playerId', PlayerController.getPlayer);
 	app.post('/player/id', PlayerController.getPlayerIdAvailability);
+	app.post('/player/toggleStatus', PlayerController.togglePlayerStatus);
 	app.post('/player/', PlayerController.createPlayer);
 	app.put('/player/', PlayerController.updatePlayer);
 	app.delete('/player/', PlayerController.deletePlayer);

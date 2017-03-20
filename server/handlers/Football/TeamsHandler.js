@@ -6,6 +6,7 @@ var request = require('request');
 
 var Team = require('../../models/Football/Master/Team');
 var Season = require('../../models/Football/Season');
+var Competition = require('../../models/Football/Competition');
 
 
 var Codes = require('../../Codes');
@@ -22,7 +23,7 @@ var fireUrl = function(params, include) {
 
 exports.populateTeamsForAllSeasons = function(req, res){
 
-	Season.find({}, function(seasErr, seasons){
+	Season.find({}).populate('competition').exec(function(seasErr, seasons){
 
 		if(seasErr){
 			res.status(Codes.httpStatus.ISE).json({
@@ -42,6 +43,7 @@ exports.populateTeamsForAllSeasons = function(req, res){
             });
             return;
 		}
+		//console.log(seasons)
 
 		if(seasons.length > 0){
 			seasons.forEach(function(season, index){
@@ -113,17 +115,48 @@ exports.populateTeamsForAllSeasons = function(req, res){
 			                    }
 
 			                    if (teamObj != null) {
+
+			                    	if(teamObj.competitions.length > 0){
+			                    		console.log('adding new competition to team refernce');
+			                    		var competitionLength = teamObj.competitions.length;
+			                    		var inequalIndex = 0;
+			                    		teamObj.competitions.forEach(function(competition, index){
+			                    			if(competition.competitionId != season.competition.competitionId){
+			                    				inequalIndex = inequalIndex + 1;
+			                    				if(competitionLength == inequalIndex){
+			                    					teamObj.competitions.push(season.competition);
+						                    		teamObj.save(function(teamSaveErr, savedTeam){
+						                        	if (teamSaveErr) {
+						                                console.log('teamSaveErr')
+						                                res.status(Codes.httpStatus.BR).json({
+						                                    status: Codes.status.FAILURE,
+						                                    code: Codes.httpStatus.BR,
+						                                    data: '',
+						                                    error: Validation.validatingErrors(teamSaveErr)
+						                                });
+						                                return;
+						                            }
+			                    				});
+					                    	}
+					                    }
+			                        });
+
+			                    	}
+
 			                        console.log('team with id ' + teamObj.teamId + ' and name ' + teamObj.name + ' already exists')
 			                        return false;
 			                    }
 
 			                    if (teamObj == null) {
+
 			                        console.log('adding new team')
 			                        var newTeam = new Team();
 			                        newTeam.teamId = team.id;
 			                        newTeam.name = team.name;
 			                        newTeam.logo = team.logo;
 			                        newTeam.players = [];
+			                        newTeam.competitions = [];
+			                        newTeam.competitions.push(season.competition);
 			                        newTeam.save(function(teamSaveErr, savedTeam){
 			                        	if (teamSaveErr) {
 			                                console.log('teamSaveErr')
