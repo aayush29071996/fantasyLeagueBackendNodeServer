@@ -68,7 +68,7 @@ exports.getTeam = function(req, res){
             status: Codes.status.SUCCESS,
             code: Codes.httpStatus.OK,
             data: team,
-            error: ''
+            error: 's'
         });
         return;
 	});
