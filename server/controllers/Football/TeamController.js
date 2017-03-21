@@ -44,7 +44,7 @@ exports.getAllTeams = function(req, res) {
 
 //get team details
 exports.getTeam = function(req, res){
-	Team.find({teamId:req.params.teamId}).populate('players','playerId name active competitions').populate('competitions').exec(function(teamErr, team){
+	Team.find({teamId:req.params.teamId}).populate('players competitions','playerId name active').exec(function(teamErr, team){
 		if(teamErr){
 			res.status(Codes.httpStatus.ISE).json({
 	            status: Codes.status.FAILURE,

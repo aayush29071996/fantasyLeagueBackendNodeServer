@@ -27,7 +27,7 @@
         </select></label>
         
         </div></div><div class="col-sm-6"><div id="datatable-editable_filter" class="dataTables_filter"><label>Search&nbsp;<input ng-model="tableSearchQuery" type="search" class="form-control input-sm" placeholder=""></label></div></div></div><div class="row"><div class="col-sm-12">
-        <table class="table table-striped dataTable no-footer" id="datatable-editable" role="grid">
+        <table  cg-busy="{promise:allPlayersPromise,message:'Please Wait...'}" class="table table-striped dataTable no-footer" id="datatable-editable" role="grid">
             <thead>
                 <tr role="row">
                 <th tabindex="0" rowspan="1" colspan="1" style="width: 215px;">Player Id</th>
@@ -39,10 +39,11 @@
                     <td>{{teams.playerId}}</td>
                     <td>{{teams.name}}</td>
                     <td class="actions">
-                        <a href="#" class="hidden on-editing save-row"><i class="fa fa-save"></i></a>
-                        <a href="#" class="hidden on-editing cancel-row"><i class="fa fa-times"></i></a>
-                        <a href="#" class="on-default edit-row"><i class="fa fa-pencil"></i></a>
-                        <a href="#" class="on-default remove-row"><i class="fa fa-trash-o"></i></a>
+                        <!--<a href="#" class="hidden on-editing save-row"><i class="fa fa-save"></i></a>
+                        <a href="#" class="hidden on-editing cancel-row"><i class="fa fa-times"></i></a>-->
+                        <a href="" class="on-default edit-row" ng-click="ViewPlayer(teams.playerId)"><i class="fa fa-eye"></i></a>
+                        <a href="" class="on-default edit-row"><i class="fa fa-pencil"></i></a>
+                        <a href="" class="on-default remove-row"><i class="fa fa-trash-o"></i></a>
                     </td>
                 </tr>
                 </tbody>

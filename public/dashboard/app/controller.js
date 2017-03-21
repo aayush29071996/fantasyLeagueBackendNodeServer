@@ -48,12 +48,13 @@ function ViewTeamPopupCtrl ($scope,$mdDialog,Football,teamId){
         };
       */  
       $scope.ViewTeamPromise=Football.getTeamDetails(id).then(function(res){
-                res=res.data.data[0];
+                res=res.data.data[1];
                 console.log(res);
                 $scope.teamName=res.name;
                 $scope.logo=res.logo;
                 $scope.teamId=res.teamId;
                 $scope.teamStatus=res.active;
+                $scope.players=res.players;
         }).catch(function(e){
             //$scope.teamIdNA=true;
             });
@@ -135,9 +136,47 @@ dashControllers.controller('FootTeams', function ($scope, Football, PagerService
         }
     });
 });
-    
-dashControllers.controller('FootPlayers', function ($scope, Football, PagerService) {
-  
+    function ViewPlayerPopupCtrl ($scope,$mdDialog,Football,playerId){
+     $scope.close=function(){
+         $mdDialog.hide();
+     }
+    var id=playerId;
+    //console.log(id);
+    //$scope.createTeam=function(team){
+      /*  var newTeam={
+          teamId:team.id,
+          name:team.name,
+          status:false
+        };
+      */  
+      $scope.ViewPlayerPromise=Football.getPlayerDetails(id).then(function(res){
+                res=res.data.data;
+                console.log(res);
+                $scope.teamName=res.name;
+                $scope.logo=res.logo;
+                $scope.teamId=res.teamId;
+                $scope.teamStatus=res.active;
+                $scope.players=res.players;
+        }).catch(function(e){
+            //$scope.teamIdNA=true;
+            });
+    // }
+};
+dashControllers.controller('FootPlayers', function ($scope, Football, PagerService, $mdDialog) {
+   $scope.ViewPlayer = function(id,ev) {
+    $mdDialog.show({
+      controller: ViewPlayerPopupCtrl,
+      templateUrl: 'dashboard/views/view.player.html',
+      parent: angular.element(document.body),
+      targetEvent: ev,
+      locals:{
+          teamId: id
+          },
+      clickOutsideToClose:true,
+      fullscreen: true
+    });
+    console.log(id);
+  };
     $scope.selectedSort = 'playerId';
     //$scope.selectedRPP = "10";
     $scope.changedRPP = function(value){

@@ -26,6 +26,8 @@
         <option value="-name">Team Name (Descending)</option>
         <option value="active">Status (Ascending)</option>
         <option value="-active">Status (Descending)</option>
+        <option value="active">League Name (Ascending)</option>
+        <option value="-active">League Name (Descending)</option>
         </select></label>
         
         </div></div><div class="col-sm-6"><div id="datatable-editable_filter" class="dataTables_filter"><label>Search&nbsp;<input ng-model="tableSearchQuery" type="search" class="form-control input-sm" placeholder=""></label></div></div></div><div class="row"><div class="col-sm-12">
@@ -36,6 +38,8 @@
                 Team Id</th>
                 <th tabindex="0" rowspan="1" colspan="1" style="width: 283px;">Team Name</th>
                 <th tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Status</th>
+                <th tabindex="0" rowspan="1" colspan="1" style="width: 259px;">League #1</th>
+                <th tabindex="0" rowspan="1" colspan="1" style="width: 259px;">League #2</th>
                 <th rowspan="1" colspan="1" style="width: 110px;">Actions</th></tr>
             </thead>
             <tbody>
@@ -43,6 +47,8 @@
                     <td>{{teams.teamId}}</td>
                     <td>{{teams.name}}</td>
                     <td>{{teams.active}}</td>
+                    <td>{{teams.competitions[0].name}}</td>
+                    <td>{{teams.competitions[1].name}}</td>
                     <td class="actions">
                         <!--<a href="#" class="hidden on-editing save-row"><i class="fa fa-save"></i></a>-->
                         <!--<a href="#" class="hidden on-editing cancel-row"><i class="fa fa-times"></i></a>-->
