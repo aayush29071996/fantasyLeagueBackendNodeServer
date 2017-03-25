@@ -258,9 +258,9 @@
   -o-transform: rotate(90deg);
   transform: rotate(90deg);
 }
-#sidebar-menu ul ul {
-  display: none;
-}
+/*#sidebar-menu ul ul {*/
+/*  display: none;*/
+/*}*/
 #sidebar-menu ul ul li {
   border-top: 0;
 }

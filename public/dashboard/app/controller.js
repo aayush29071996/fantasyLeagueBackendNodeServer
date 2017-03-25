@@ -3,26 +3,12 @@
 
 var dashControllers = angular.module('dashControllers', ['dashServices']);
 
-
-dashControllers.controller('Admin', function($scope,$window){
-    
-        $scope.hasAuthorized = false;
-        
-        if($scope.hasAuthorized){
-            var headTitleLookup = {
-            '': 'Dashboard',
-            '#/dashboard': 'Dashboard',
-            '#/football/teams': 'Football - Manage Teams',
-            '#/football/players': 'Football - Manage Players'
-        };
-        
-        $scope.headTitle = headTitleLookup[$window.location.hash];    
-        }
-});
 dashControllers.controller('Login', function ($scope, Auth, $state, $timeout) {
     $scope.user={};
+    $scope.btnText="Login";
     $scope.loginError=false;
     $scope.doLogin=function(){
+        $scope.btnText="Logging In...";
         var userData = {
             username: $scope.user.username,
             password: $scope.user.password
@@ -30,18 +16,22 @@ dashControllers.controller('Login', function ($scope, Auth, $state, $timeout) {
         
         Auth.authenticate(userData).then(function(res){
             if(res.data.success)
-                $state.go('dashboard');
-            else
+                $state.go('admin.dashboard');
+            else{
+                $scope.btnText="Login";
                 $scope.loginError=true;
                 $timeout(function(){
                     $scope.loginError=false;    
                 },2000);
+            }
         });
     };
 });
 
 dashControllers.controller('Dashboard', function () {
 });
+
+
 function AddTeamPopupCtrl ($scope,$mdDialog,Football){
     $scope.close=function(){
         $mdDialog.hide();
@@ -252,3 +242,21 @@ dashControllers.controller('FootPlayers', function ($scope, Football, PagerServi
     });
 });
     
+dashControllers.controller('FootFixtures', function($scope, Auth, $state, $timeout) {
+    
+})
+dashControllers.controller('FootApis', function($scope, Auth, $state, $timeout) {
+    
+})
+dashControllers.controller('CricTeams', function($scope, Auth, $state, $timeout) {
+    
+})
+dashControllers.controller('CricPlayers', function($scope, Auth, $state, $timeout) {
+    
+})
+dashControllers.controller('CricFixtures', function($scope, Auth, $state, $timeout) {
+    
+})
+dashControllers.controller('CricApis', function($scope, Auth, $state, $timeout) {
+    
+})
