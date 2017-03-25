@@ -24,7 +24,7 @@ module.exports = function(app) {
 		});
 	});
 
-	app.all('/admin', function(req, res){
+	app.get('/admin', function(req, res){
 		res.sendFile('dashboard/index.html', {
 			root: __dirname
 		});
