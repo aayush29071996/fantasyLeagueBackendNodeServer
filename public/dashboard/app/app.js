@@ -3,6 +3,7 @@
 var dashBoard = angular.module('dashBoard', [
     'ui.router',
     'dashboardCtrl',
+    'footTeamsCtrl',
     'dashControllers',
     'dashServices',
     'ngMaterial',

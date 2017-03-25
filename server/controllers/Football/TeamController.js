@@ -223,7 +223,7 @@ exports.updateTeam = function(req, res){
 
 //delete existing team
 exports.deleteTeam = function(req, res){
-	Team.findOneAndRemove({teamId:req.body.teamId}, function(teamErr, team){
+	Team.findOneAndRemove({teamId:req.params.teamId}, function(teamErr, team){
 		if(teamErr){
 			res.status(Codes.httpStatus.ISE).json({
 	            status: Codes.status.FAILURE,

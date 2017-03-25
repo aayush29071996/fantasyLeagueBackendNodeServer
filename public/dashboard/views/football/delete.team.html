@@ -1,0 +1,26 @@
+<md-dialog cg-busy="{promise:DeleteTeamPromise,message:'Please Wait...'}">
+  <form ng-cloak>
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2>Delete {{teamName}}</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="close()">
+          <span>X</span>
+        </md-button>
+      </div>
+    </md-toolbar>
+
+    <md-dialog-content style="padding: 50px;">
+     <h4 style="text-align:center">Are you sure you want to delete {{teamName}}?</h4>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+      <span flex></span>
+      <md-button ng-click="close()">
+       Cancel
+      </md-button>
+      <md-button ng-click="deleteTeam()">
+        Delete
+      </md-button>
+    </md-dialog-actions>
+  </form>
+</md-dialog>
