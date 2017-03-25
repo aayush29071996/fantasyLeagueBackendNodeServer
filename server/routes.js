@@ -33,6 +33,14 @@ module.exports = function(app) {
 	//invite route
 	app.post('/invite', InviteController.save);
 
+	// Admin Authentication
+	app.post('/admin', function(req,res){
+		if(req.body.username == 'pradeepbaskaran' && req.body.password == 'fantasysportsreinvented')
+			res.send({ success: true });
+		else
+			res.send({ success: false });
+	});
+	
 	//user routes
 	app.post('/username', UserController.validate);
 	app.post('/register', UserController.save);
