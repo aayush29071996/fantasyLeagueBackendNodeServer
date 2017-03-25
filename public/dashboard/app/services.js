@@ -4,6 +4,16 @@
 
 var dashServices = angular.module('dashServices', ['ngResource','dashControllers']);
 
+dashServices.factory('Auth', function($http){
+    var user={};
+    var baseURI = "https://inyards.herokuapp.com";
+    
+    user.authenticate = function(data){
+        return $http.post(baseURI + '/admin', data);  
+    };
+    
+    return user;
+});
 
 dashServices.factory('Football', function($http){
     var user={};

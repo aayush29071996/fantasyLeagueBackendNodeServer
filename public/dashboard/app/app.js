@@ -1,7 +1,7 @@
 'use strict';
         
 var dashBoard = angular.module('dashBoard', [
-    'ngRoute',
+    'ui.router',
     'dashControllers',
     'dashServices',
     'ngMaterial',
@@ -10,30 +10,32 @@ var dashBoard = angular.module('dashBoard', [
 dashBoard.run(function($rootScope){
   $rootScope._ = _;
 });
-dashBoard.config(function($routeProvider, $locationProvider) {
-        $routeProvider
-        .when('/dashboard', {
+dashBoard.config(function($stateProvider, $locationProvider, $urlRouterProvider) {
+        $stateProvider
+        .state('login', {
             cache: false,
+            url:'/login',
+            templateUrl: 'dashboard/views/login.html',
+            controller: 'Login'
+         })
+        .state('dashboard', {
+            cache: false,
+            url:'/dashboard',
             templateUrl: 'dashboard/views/dashboard.html',
-            controller: 'Dashboard',
-            headTitle: 'Dashboard'
+            controller: 'Dashboard'
         })
-       .when('/football/teams', {
-            cache: false,
-            templateUrl: 'dashboard/views/football/teams.html',
-            controller: 'FootTeams',
-            headTitle: 'FootTeams'
-        })
-        .when('/football/players', {
-            cache: false,
-            templateUrl: 'dashboard/views/football/players.html',
-            controller: 'FootPlayers',
-            headTitle: 'FootTeams'
-        })
+    //   .when('/football/teams', {
+    //         cache: false,
+    //         templateUrl: 'dashboard/views/football/teams.html',
+    //         controller: 'FootTeams'
+    //     })
+    //     .when('/football/players', {
+    //         cache: false,
+    //         templateUrl: 'dashboard/views/football/players.html',
+    //         controller: 'FootPlayers'
+    //     })
         
-        .otherwise({
-            redirectTo: '/dashboard'
-        });
+        $urlRouterProvider.otherwise('/login');
         
         $locationProvider.hashPrefix('');
     });

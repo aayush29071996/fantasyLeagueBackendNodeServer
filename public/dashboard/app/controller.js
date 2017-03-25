@@ -5,14 +5,39 @@ var dashControllers = angular.module('dashControllers', ['dashServices']);
 
 
 dashControllers.controller('Admin', function($scope,$window){
-    var headTitleLookup = {
+    
+        $scope.hasAuthorized = false;
+        
+        if($scope.hasAuthorized){
+            var headTitleLookup = {
             '': 'Dashboard',
             '#/dashboard': 'Dashboard',
             '#/football/teams': 'Football - Manage Teams',
             '#/football/players': 'Football - Manage Players'
         };
         
-        $scope.headTitle = headTitleLookup[$window.location.hash];
+        $scope.headTitle = headTitleLookup[$window.location.hash];    
+        }
+});
+dashControllers.controller('Login', function ($scope, Auth, $state, $timeout) {
+    $scope.user={};
+    $scope.loginError=false;
+    $scope.doLogin=function(){
+        var userData = {
+            username: $scope.user.username,
+            password: $scope.user.password
+        };
+        
+        Auth.authenticate(userData).then(function(res){
+            if(res.data.success)
+                $state.go('dashboard');
+            else
+                $scope.loginError=true;
+                $timeout(function(){
+                    $scope.loginError=false;    
+                },2000);
+        });
+    };
 });
 
 dashControllers.controller('Dashboard', function () {
