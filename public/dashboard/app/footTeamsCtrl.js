@@ -30,7 +30,7 @@ function ViewTeamPopupCtrl ($scope,$mdDialog,Football,teamId){
      }
     var id=teamId;
       $scope.ViewTeamPromise=Football.getTeamDetails(id).then(function(res){
-                res=res.data.data[1];
+                res=res.data.data[0];
                 console.log(res);
                 $scope.teamName=res.name;
                 $scope.logo=res.logo;
@@ -48,6 +48,7 @@ function DeleteTeamPopupCtrl ($scope,$mdDialog,Football,teamId,teamName){
     }
     $scope.deleteTeam=function(){
         $scope.DeleteTeamPromise=Football.deleteTeam(teamId).then(function(res){
+                $scope.close();
                 window.location.reload();
         }).catch(function(e){
             $scope.deleteResponse=e.data;
@@ -92,58 +93,16 @@ function DeleteTeamPopupCtrl ($scope,$mdDialog,Football,teamId,teamName){
       clickOutsideToClose:true,
       fullscreen: true
     });
-    console.log(id);
   };
   
   
     $scope.selectedSort = 'teamId';
     $scope.selectedRPP = "10";
      $scope.changedRPP = function(value){
-         console.log(value);
          $scope.selectedRPP=value;  
      };
-    //     $scope.pager = {};
-    //     $scope.setPage = setPage;
-
-    //     initController();
-    //     function initController() {
-    //         // initialize to page 1
-    //         $scope.setPage(1);
-    //     }
-
-    //     function setPage(page) {
-    //         if (page < 1 || page > $scope.pager.totalPages) {
-    //             return;
-    //         }
-
-    //         // get pager object from service
-    //         $scope.pager = PagerService.GetPager($scope.footTeams.length, page, $scope.selectedRPP);
-    //         // get current page of items
-    //         $scope.items = $scope.footTeams.slice($scope.pager.startIndex, $scope.pager.endIndex + 1);
-    //     }
-    //     };
     $scope.allTeamsPromise=Football.getAllTeams().then(function(Teams){
       $scope.footTeams = Teams.data.data; 
 
-        // $scope.pager = {};
-        // $scope.setPage = setPage;
-
-        // initController();
-
-        // function initController() {
-        //     // initialize to page 1
-        //     $scope.setPage(1);
-        // }
-
-        // function setPage(page) {
-        //     if (page < 1 || page > $scope.pager.totalPages) {
-        //         return;
-        //     }
-
-        //     // get pager object from service
-        //     $scope.pager = PagerService.GetPager($scope.footTeams.length, page, $scope.selectedRPP);
-        //     // get current page of items
-        //     $scope.items = $scope.footTeams.slice($scope.pager.startIndex, $scope.pager.endIndex + 1);
-        // }
     });
 });
