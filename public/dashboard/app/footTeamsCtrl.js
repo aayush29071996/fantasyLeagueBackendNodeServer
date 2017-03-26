@@ -97,51 +97,53 @@ function DeleteTeamPopupCtrl ($scope,$mdDialog,Football,teamId,teamName){
   
   
     $scope.selectedSort = 'teamId';
-    //$scope.selectedRPP = "10";
-    $scope.changedRPP = function(value){
-        console.log(value);
-        $scope.pager = {};
-        $scope.setPage = setPage;
+    $scope.selectedRPP = "10";
+     $scope.changedRPP = function(value){
+         console.log(value);
+         $scope.selectedRPP=value;  
+     };
+    //     $scope.pager = {};
+    //     $scope.setPage = setPage;
 
-        initController();
-        function initController() {
-            // initialize to page 1
-            $scope.setPage(1);
-        }
+    //     initController();
+    //     function initController() {
+    //         // initialize to page 1
+    //         $scope.setPage(1);
+    //     }
 
-        function setPage(page) {
-            if (page < 1 || page > $scope.pager.totalPages) {
-                return;
-            }
+    //     function setPage(page) {
+    //         if (page < 1 || page > $scope.pager.totalPages) {
+    //             return;
+    //         }
 
-            // get pager object from service
-            $scope.pager = PagerService.GetPager($scope.footTeams.length, page, $scope.selectedRPP);
-            // get current page of items
-            $scope.items = $scope.footTeams.slice($scope.pager.startIndex, $scope.pager.endIndex + 1);
-        }
-        };
+    //         // get pager object from service
+    //         $scope.pager = PagerService.GetPager($scope.footTeams.length, page, $scope.selectedRPP);
+    //         // get current page of items
+    //         $scope.items = $scope.footTeams.slice($scope.pager.startIndex, $scope.pager.endIndex + 1);
+    //     }
+    //     };
     $scope.allTeamsPromise=Football.getAllTeams().then(function(Teams){
       $scope.footTeams = Teams.data.data; 
 
-        $scope.pager = {};
-        $scope.setPage = setPage;
+        // $scope.pager = {};
+        // $scope.setPage = setPage;
 
-        initController();
+        // initController();
 
-        function initController() {
-            // initialize to page 1
-            $scope.setPage(1);
-        }
+        // function initController() {
+        //     // initialize to page 1
+        //     $scope.setPage(1);
+        // }
 
-        function setPage(page) {
-            if (page < 1 || page > $scope.pager.totalPages) {
-                return;
-            }
+        // function setPage(page) {
+        //     if (page < 1 || page > $scope.pager.totalPages) {
+        //         return;
+        //     }
 
-            // get pager object from service
-            $scope.pager = PagerService.GetPager($scope.footTeams.length, page, $scope.selectedRPP);
-            // get current page of items
-            $scope.items = $scope.footTeams.slice($scope.pager.startIndex, $scope.pager.endIndex + 1);
-        }
+        //     // get pager object from service
+        //     $scope.pager = PagerService.GetPager($scope.footTeams.length, page, $scope.selectedRPP);
+        //     // get current page of items
+        //     $scope.items = $scope.footTeams.slice($scope.pager.startIndex, $scope.pager.endIndex + 1);
+        // }
     });
 });

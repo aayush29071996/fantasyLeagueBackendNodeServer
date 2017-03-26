@@ -73,7 +73,7 @@ module.exports = function(app) {
 	app.post('/team/toggleStatus', TeamController.toggleTeamStatus);
 	app.post('/team/', TeamController.createTeam);
 	app.put('/team/', TeamController.updateTeam);
-	app.delete('/team/', TeamController.deleteTeam);
+	app.delete('/team/:teamId', TeamController.deleteTeam);
 	app.delete('/team/player/',TeamController.removePlayerFromTeam);
 
 	//CRUD admin routes for players
