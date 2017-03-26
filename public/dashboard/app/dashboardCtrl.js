@@ -112,7 +112,7 @@ angular.module('dashboardCtrl',['dashServices'])
     }
     else if(hash=="#/home/football/players"){
         $("#tabFootPlayers").addClass("active"); 
-        $scope.openFootFixtures();
+        $scope.openFootPlayers();
     }
     else if(hash=="#/home/football/fixtures"){
         $("#tabFootFixtures").addClass("active"); 

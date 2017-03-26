@@ -2,8 +2,8 @@
   <form ng-cloak>
     <md-toolbar>
       <div class="md-toolbar-tools" style="background: #222;">
-      <img style="height: 120px;margin-top: 11vh;margin-left: 1vw;" src="{{logo}}" alt="{{teamName}}">
-        <h2 style="width: 73%;text-align: center;">{{teamName}}</h2>
+      <!--<img style="height: 120px;margin-top: 11vh;margin-left: 1vw;" src="{{logo}}" alt="{{teamName}}">-->
+        <h2 style="width: 73%;text-align: center;">{{playerName}}</h2>
         <span flex></span>
         <md-button class="md-icon-button" ng-click="close()">
           <span>X</span>
@@ -14,42 +14,43 @@
     <md-dialog-content style="">
     <form class="form-horizontal" role="form">
         <div class="form-group" style="margin-top:20px;">
-            <label class="col-md-2 control-label" style="width: 26vw;margin-left: 22vw;">Team Id</label>
-            <label class="col-md-2 control-label" style="width: 26vw;text-align:center;">Team Status</label>
-            <label class="col-md-2 control-label" style="width: 26vw;margin-left: 22vw;">{{teamId}}</label>
-            <label class="col-md-2 control-label" style="width: 26vw;text-align:center;">{{teamStatus}}</label>
+            <label class="col-md-2 control-label" style="width: 26vw;margin-left: 22vw;">Player Id</label>
+            <label class="col-md-2 control-label" style="width: 26vw;text-align:center;">Player Status</label>
+            <label class="col-md-2 control-label" style="width: 26vw;margin-left: 22vw;">{{playerId}}</label>
+            <label class="col-md-2 control-label" style="width: 26vw;text-align:center;">{{playerStatus}}</label>
         
         </div>
-        <table ng-show="players.length!=0" class="table table-striped dataTable no-footer" style="margin-top: 15vh;margin-left: 15px;" id="datatable-editable" role="grid">
-            <thead>
-                <tr role="row">
-                <th tabindex="0" rowspan="1" colspan="1" style="width: 215px;color:#000;">
-                Player Id</th>
-                <th tabindex="0" rowspan="1" colspan="1" style="width: 283px;color:#000;">Player Name</th>
-                <th tabindex="0" rowspan="1" colspan="1" style="width: 259px;color:#000;">Status</th><!--
-                <th tabindex="0" rowspan="1" colspan="1" style="width: 259px;color:#000;">League #1</th>
-                <th tabindex="0" rowspan="1" colspan="1" style="width: 259px;color:#000;">League #2</th>-->
-                <th rowspan="1" colspan="1" style="width: 110px;color:#000;">Actions</th></tr>
-            </thead>
-            <tbody>
-            <tr class="gradeA odd" role="row" ng-repeat="guys in players | orderBy: selectedSort | filter : tableSearchQuery">
-                    <td style="color:#000;">{{guys.playerId}}</td>
-                    <td style="color:#000;">{{guys.name}}</td>
-                    <td style="color:#000;">{{guys.active}}</td><!--
-                    <td style="color:#000;">{{teams.competitions[0].name}}</td>
-                    <td style="color:#000;">{{teams.competitions[1].name}}</td>-->
-                    <td class="actions">
-                        <a href="#" class="hidden on-editing save-row"><i class="fa fa-save"></i></a>
-                        <a href="#" class="hidden on-editing cancel-row"><i class="fa fa-times"></i></a>
-                        <a href="" class="on-default edit-row" ng-click="ViewTeam(teams.teamId)"><i class="fa fa-eye"></i></a>
-                        <a class="on-default edit-row"><i class="fa fa-pencil"></i></a>
-                        <a class="on-default remove-row"><i class="fa fa-trash-o"></i></a>
-                    </td>
-                </tr>
-                </tbody>
-        </table>
+        <!--<table ng-show="players.length!=0" class="table table-striped dataTable no-footer" style="margin-top: 15vh;margin-left: 15px;" id="datatable-editable" role="grid">-->
+        <!--    <thead>-->
+        <!--        <tr role="row">-->
+        <!--        <th tabindex="0" rowspan="1" colspan="1" style="width: 215px;color:#000;">-->
+        <!--        Player Id</th>-->
+        <!--        <th tabindex="0" rowspan="1" colspan="1" style="width: 283px;color:#000;">Player Name</th>-->
+        <!--        <th tabindex="0" rowspan="1" colspan="1" style="width: 259px;color:#000;">Status</th><!---->
+        <!--        <th tabindex="0" rowspan="1" colspan="1" style="width: 259px;color:#000;">League #1</th>-->
+        <!--        <th tabindex="0" rowspan="1" colspan="1" style="width: 259px;color:#000;">League #2</th>-->
+        <!--        <th rowspan="1" colspan="1" style="width: 110px;color:#000;">Actions</th></tr>-->
+        <!--    </thead>-->
+        <!--    <tbody>-->
+        <!--    <tr class="gradeA odd" role="row" ng-repeat="guys in players | orderBy: selectedSort | filter : tableSearchQuery">-->
+        <!--            <td style="color:#000;">{{guys.playerId}}</td>-->
+        <!--            <td style="color:#000;">{{guys.name}}</td>-->
+        <!--            <td style="color:#000;">{{guys.active}}</td><!---->
+        <!--            <td style="color:#000;">{{teams.competitions[0].name}}</td>-->
+        <!--            <td style="color:#000;">{{teams.competitions[1].name}}</td>-->
+        <!--            <td class="actions">-->
+        <!--                <a href="#" class="hidden on-editing save-row"><i class="fa fa-save"></i></a>-->
+        <!--                <a href="#" class="hidden on-editing cancel-row"><i class="fa fa-times"></i></a>-->
+        <!--                <a href="" class="on-default edit-row" ng-click="ViewTeam(teams.teamId)"><i class="fa fa-eye"></i></a>-->
+        <!--                <a class="on-default edit-row"><i class="fa fa-pencil"></i></a>-->
+        <!--                <a class="on-default remove-row"><i class="fa fa-trash-o"></i></a>-->
+        <!--            </td>-->
+        <!--        </tr>-->
+        <!--        </tbody>-->
+        <!--</table>-->
         
-        <h4 ng-show="players.length==0" style="font-variant:small-caps;margin-top: 32vh;font-size: 25px;color:#000;text-align:center;">No Players available for this team!</h4>
+        <h4 ng-show="teams.length==0" style="font-variant:small-caps;margin-top: 32vh;font-size: 25px;color:#000;text-align:center;">This {{playerPosition}} is not in any team.</h4>
+        <h4 ng-show="teams.length!=0" style="font-variant:small-caps;margin-top: 32vh;font-size: 25px;color:#000;text-align:center;">This {{playerPosition}} plays for a team.</h4>
     </form>
     
     </md-dialog-content>

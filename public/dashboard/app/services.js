@@ -44,6 +44,8 @@ dashServices.factory('Football', function($http){
         return $http.get(baseURI+'/team/'+teamId);
     };
     
+    
+    
     user.getPlayerDetails=function(playerId) {
         return $http.get(baseURI+'/player/'+playerId);
     };
@@ -52,5 +54,20 @@ dashServices.factory('Football', function($http){
         return $http.get(baseURI+'/players');
     };
     
+    user.newPlayerAvailability=function(playerId){
+        return $http.post(baseURI+'/player/id',{"playerId":playerId});
+    };
+    
+    user.newPlayer=function(player){
+        return $http.post(baseURI+'/player/',player);
+    };
+    
+    user.deletePlayer=function(playerId){
+        return $http.delete(baseURI+'/player/'+playerId);
+    };
+    
+    user.updatePlayer=function(player){
+        return $http.put(baseURI+'/player/',player);
+    };
     return user;
     });

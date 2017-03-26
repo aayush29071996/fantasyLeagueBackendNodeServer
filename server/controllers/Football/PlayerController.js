@@ -111,7 +111,7 @@ exports.togglePlayerStatus = function(req, res){
 
 //check availability for new player id
 exports.getPlayerIdAvailability = function(req, res){
-	Player.findOne({teamId:req.body.playerId}, function(playerErr, player){
+	Player.findOne({playerId:req.body.playerId}, function(playerErr, player){
 		if(playerErr){
 			res.status(Codes.httpStatus.ISE).json({
 	            status: Codes.status.FAILURE,

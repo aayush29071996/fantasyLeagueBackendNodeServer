@@ -5,10 +5,21 @@ angular.module('footPlayersCtrl',['dashServices'])
         $mdDialog.hide();
     }
     $scope.createPlayer=function(player){
+        if(player.positionId==1)
+        player.position="Goalkeeper";
+        else if(player.positionId==2)
+        player.position="Defender";
+        else if(player.positionId==3)
+        player.position="Midfielder";
+        else if(player.positionId==4)
+        player.position="Forward";
+        
         var newPlayerObj={
           playerId:player.id,
           name:player.name,
-          status:false
+          status:false,
+          position:player.position,
+          positionId:player.positionId
         };
         $scope.PlayerIdAvailabilityPromise=Football.newPlayerAvailability(player.id).then(function(res){
                 $scope.playerIdNA=false;
@@ -30,10 +41,11 @@ function ViewPlayerPopupCtrl ($scope,$mdDialog,Football,playerId){
                 res=res.data.data[0];
                 console.log(res);
                 $scope.playerName=res.name;
-                $scope.logo=res.logo;
+                // $scope.logo=res.logo;
                 $scope.playerId=res.playerId;
+                $scope.playerPosition=res.position;
                 $scope.playerStatus=res.active;
-                $scope.players=res.players;
+                $scope.teams=res.teams;
         }).catch(function(e){
             });
 };
