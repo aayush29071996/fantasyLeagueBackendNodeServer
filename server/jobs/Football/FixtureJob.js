@@ -13,7 +13,8 @@ var Event = require('../../models/Football/Event');
 var Codes = require('../../Codes');
 var Validation = require('../../controllers/Validation');
 
-var API_TOKEN = "H7H9qU3lmK1UNpqQoNxBI2PkZJec2IMAcNhByMSQ1GWhAt5tUDVtobVc1ThK";
+// var API_TOKEN_OLD = "H7H9qU3lmK1UNpqQoNxBI2PkZJec2IMAcNhByMSQ1GWhAt5tUDVtobVc1ThK";
+var API_TOKEN = "EyTtWbGs9ZnUYam1xB63iXoJ4EZ4TuTKGmQaebB1tpsrxq5VcdQ3gPVgjMyz";
 var baseUrl = "https://api.soccerama.pro/v1.2/";
 
 var fireUrl = function(params, include) {
@@ -42,12 +43,12 @@ exports.updateFixturesJob = function() {
     console.log('updateFixturesJob inside')
     var fixtureAvailCheckJob = new CronJob({
 
-        cronTime: '*/120 * * * * *',
+        cronTime: '*/30 * * * * *',
         onTick: function() {
             console.log(moment().format('MMMM Do YYYY, h:mm:ss a'));
             console.log('Update Fixture Job Called')
 
-            //must be livescore/now	
+            //must be livescore/now 
             params = 'livescore'
             include = ''
 
@@ -84,9 +85,11 @@ exports.updateFixturesJob = function() {
                         // fixtureAvailCheckJob.stop();
                         console.log(data.length + ' matches to be updated');
 
+                        //var data = ["691324","691323","699154","699153","699151","699155","699152","730211","730218","683313","730217","683309","730215","730220","730219","730212","683310","730216"];
+
                         data.forEach(function(fixture, index) {
 
-                            params = 'livescore/match/' + fixture.id
+                            params = 'livescore/match/' + fixture.id;
                             include = 'lineup,events'
 
                             request.get(fireUrl(params, include), function(err, response, data) {
@@ -149,8 +152,8 @@ exports.updateFixturesJob = function() {
 
 
                                             if (updatedMatch.events.data.length > 0) {
-                                            	
-                                            	console.log('Match ' + match.matchId);
+                                                
+                                                console.log('Match ' + match.matchId);
                                                 console.log(updatedMatch.events.data.length + ' events in new data');
                                                 console.log(match.events.length + ' events in existing data');
 
@@ -219,7 +222,7 @@ exports.updateFixturesJob = function() {
 
                                                     if (newEvents.length > 0) {
 
-                                                    	console.log(newEvents.length + ' event(s) to be updated for match ' + match.matchId)
+                                                        console.log(newEvents.length + ' event(s) to be updated for match ' + match.matchId)
 
                                                         newEvents.forEach(function(event, index) {
 
@@ -285,55 +288,63 @@ exports.updateFixturesJob = function() {
                                             if (updatedMatch.lineup.data.length > 0) {
 
 
-                                            	match.lineup = [];
-                                            	match.save(function(matchUpdateErr, savedUpdatedMatch) {
+                                                match.lineup = [];
+                                                match.save(function(matchUpdateErr, savedUpdatedMatch) {
                                                     if (matchUpdateErr) {
                                                         console.log(responseToConsole(Codes.status.FAILURE, Codes.httpStatus.BR, '', Validation.validatingErrors(matchUpdateErr)));
                                                         return;
                                                     }
                                                     if (savedUpdatedMatch) {
 
-                                                    	updatedMatch.lineup.data.forEach(function(lineup, index) {
+                                                        updatedMatch.lineup.data.forEach(function(lineup, index) {
 
-                                                   		playerLP = {};
+                                                            playerLP = {};
+                                                            playerLP.playerId = lineup.player_id;
+                                                            playerLP.teamId = lineup.team_id;
+                                                            if(playerLP.teamId === match.team1Id){
+                                                                playerLP.team = "team1";
+                                                            } else if(playerLP.teamId === match.team2Id){
+                                                                playerLP.team = "team2";
+                                                            }
+                                                            
+                                                            playerLP.position = lineup.position;
+                                                            playerLP.shirtNumber = lineup.shirt_number;
+                                                            playerLP.assists = lineup.assists;
+                                                            playerLP.foulsCommited = lineup.fouls_commited;
+                                                            playerLP.foulsDrawn = lineup.fouls_drawn;
+                                                            playerLP.goals = lineup.goals;
+                                                            playerLP.offsides = lineup.offsides;
+                                                            playerLP.missedPenalties = lineup.missed_penalties;
+                                                            playerLP.scoredPenalties = lineup.scored_penalties;
+                                                            playerLP.posx = lineup.posx;
+                                                            playerLP.posy = lineup.posy;
+                                                            playerLP.redcards = lineup.redcards;
+                                                            playerLP.saves = lineup.saves;
+                                                            playerLP.shotsOnGoal = lineup.shots_on_goal;
+                                                            playerLP.shotsTotal = lineup.shots_total;
+                                                            playerLP.yellowcards = lineup.yellowcards;
+                                                            playerLP.type = lineup.type;
+                                                            
+                                                            match.lineup.push(playerLP);
 
-                                                        playerLP.position = lineup.position;
-                                                        playerLP.shirtNumber = lineup.shirt_number;
-                                                        playerLP.assists = lineup.assists;
-                                                        playerLP.foulsCommited = lineup.fouls_commited;
-                                                        playerLP.foulsDrawn = lineup.fouls_drawn;
-                                                        playerLP.goals = lineup.goals;
-                                                        playerLP.offsides = lineup.offsides;
-                                                        playerLP.missedPenalties = lineup.missed_penalties;
-                                                        playerLP.scoredPenalties = lineup.scored_penalties;
-                                                        playerLP.posx = lineup.posx;
-                                                        playerLP.posy = lineup.posy;
-                                                        playerLP.redcards = lineup.redcards;
-                                                        playerLP.saves = lineup.saves;
-                                                        playerLP.shotsOnGoal = lineup.shots_on_goal;
-                                                        playerLP.shotsTotal = lineup.shots_total;
-                                                        playerLP.yellowcards = lineup.yellowcards;
-                                                        playerLP.type = lineup.type;
-
-                                                        match.lineup.push(playerLP);
-		                                                    if(match.lineup.length == updatedMatch.lineup.data.length){
-		                                                		 match.save(function(matchUpdateErr, savedUpdatedMatch) {
-		                                                            if (matchUpdateErr) {
-		                                                                console.log(responseToConsole(Codes.status.FAILURE, Codes.httpStatus.BR, '', Validation.validatingErrors(matchUpdateErr)));
-		                                                                return;
-		                                                            }
-		                                                            if (savedUpdatedMatch) {
-		                                                                console.log(responseToConsole(Codes.status.SUCCESS, Codes.httpStatus.OK, 'lineup Added', ''));
-		                                                                return;
-		                                                            }
-		                                                   	 	});
-		                                                    }
-                                                        });      
-                                                        console.log(responseToConsole(Codes.status.SUCCESS, Codes.httpStatus.OK, 'Match ' + match.matchId + ' Updated', ''));
-                                                        return;
+                                                                if(match.lineup.length == updatedMatch.lineup.data.length){
+                                                                     match.save(function(matchUpdateErr, savedUpdatedMatch) {
+                                                                        if (matchUpdateErr) {
+                                                                            console.log(responseToConsole(Codes.status.FAILURE, Codes.httpStatus.BR, '', Validation.validatingErrors(matchUpdateErr)));
+                                                                            return;
+                                                                        }
+                                                                        if (savedUpdatedMatch) {
+                                                                            console.log(responseToConsole(Codes.status.SUCCESS, Codes.httpStatus.OK, 'lineup Added', ''));
+                                                                            return;
+                                                                        }
+                                                                    });
+                                                                }
+                                                            });      
+                                                            console.log(responseToConsole(Codes.status.SUCCESS, Codes.httpStatus.OK, 'Match ' + match.matchId + ' Updated', ''));
+                                                            return;
                                                     }
                                                 });
-                                            	}
+                                                }
                                             }
 
                                             if (updatedMatch.weather == null) {
@@ -360,7 +371,7 @@ exports.updateFixturesJob = function() {
 
                         });
                         // var fixtureUpdateJob = new CronJob({
-                        // 	cronTime: '*2/',
+                        //  cronTime: '*2/',
                         // });
                         // fixtureUpdateJob.start();
 
@@ -375,5 +386,48 @@ exports.updateFixturesJob = function() {
         start: true
     });
     fixtureAvailCheckJob.start();
-
 }
+
+
+
+//calculate points every 30 minutes
+exports.calculatePointsJob = function() {
+    console.log(moment().format('MMMM Do YYYY, h:mm:ss a'));
+    console.log('calculatePointsJob inside')
+    var calculatePointsJob = new CronJob({
+
+        cronTime: '*/10 * * * * *',
+        onTick: function() {
+
+            var oneHourAfter = moment.utc().subtract('1','h').format("YYYY-MM-DD HH:mm:ss");
+            var twoHoursAfter = moment.utc().subtract('5','d').format("YYYY-MM-DD HH:mm:ss");
+            console.log('From ' + oneHourAfter + ' To ' + twoHoursAfter);
+
+            Match.find({startingDateTime:{$lt:oneHourAfter, $gte:twoHoursAfter}}).populate('events').exec( function(matchesErr, matches){
+                matches.forEach(function(match, index){
+                    console.log(match.matchId);
+                    if(!match.pointsCalculated){
+                        console.log('For ', match.matchId);
+                        console.log(match.events);
+                        console.log(match.lineup);
+                        match.events.forEach(function(event, index){
+                            
+                        });
+                    }
+                });              
+            });
+            
+        },
+        onComplete: function() {
+            console.log('Calculate Points Job Stopped');
+        },
+        start: true
+    });
+    calculatePointsJob.start();
+}
+
+
+
+
+
+

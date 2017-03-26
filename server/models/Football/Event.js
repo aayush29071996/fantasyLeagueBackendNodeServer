@@ -5,12 +5,12 @@ var mongoose = require('mongoose');
 Schema = mongoose.Schema;
 
 var EventSchema = new mongoose.Schema({
-	eventId:{type:String, required:true},
-	matchId:{type:String, required:true},
-	teamId:{type:String, required:true},
-	playerId:{type:String, default:null},
+	eventId:{type:String},
+	matchId:{type:String},
+	teamId:{type:String},
+	playerId:{type:String},
 	minute:{type:String},
-	extraMinute:{type:String, default:null},
+	extraMinute:{type:String},
 	type:{type:String},
 	assistPlayerId:{type:String},
 	relatedEventId:{type:String},

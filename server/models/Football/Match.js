@@ -20,6 +20,8 @@ var WeatherSchema = new mongoose.Schema({
 
 var LineupSchema = new mongoose.Schema({
 	playerId:{type:String},
+	teamId:{type:String},
+	team:{type:String},
     position:{type:String},
     shirtNumber:{type:Number},
     assists:{type:Number,default:0},
@@ -36,7 +38,8 @@ var LineupSchema = new mongoose.Schema({
     shotsOnGoal:{type:Number,default:0},
     shotsTotal:{type:Number,default:0},
     yellowcards:{type:Number,default:0},
-    type:{type:String}
+    type:{type:String},
+    points:{type:Number,default:0}
 });
 
 var MatchSchema = new mongoose.Schema({
@@ -58,12 +61,14 @@ var MatchSchema = new mongoose.Schema({
 	ftScore:{type:String},
 	etScore:{type:String},
 	seasonId:{type:String, required:true},
-	stageId:{type:String, required:true},
+	stageId:{type:String},
 	roundId:{type:String},
 	venueId:{type:String},
 	weather:WeatherSchema,
 	events:[{type:Schema.Types.ObjectId, ref:'Event'}],
-	lineup:[LineupSchema]
+	lineup:[LineupSchema],
+	points:{type:Number, default:0},
+	pointsCalculated:{type:Boolean, default:false}
 		
 });
 

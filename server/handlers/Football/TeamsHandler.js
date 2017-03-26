@@ -3,11 +3,11 @@
 */
 
 var request = require('request');
+var _ = require('underscore');
 
 var Team = require('../../models/Football/Master/Team');
 var Season = require('../../models/Football/Season');
 var Competition = require('../../models/Football/Competition');
-
 
 var Codes = require('../../Codes');
 var Validation = require('../../controllers/Validation');
@@ -118,28 +118,27 @@ exports.populateTeamsForAllSeasons = function(req, res){
 
 			                    	if(teamObj.competitions.length > 0){
 			                    		console.log('adding new competition to team refernce');
-			                    		var competitionLength = teamObj.competitions.length;
-			                    		var inequalIndex = 0;
-			                    		teamObj.competitions.forEach(function(competition, index){
-			                    			if(competition.competitionId != season.competition.competitionId){
-			                    				inequalIndex = inequalIndex + 1;
-			                    				if(competitionLength == inequalIndex){
-			                    					teamObj.competitions.push(season.competition);
-						                    		teamObj.save(function(teamSaveErr, savedTeam){
-						                        	if (teamSaveErr) {
-						                                console.log('teamSaveErr')
+			                    		
+		                      				console.log('existing:' + teamObj.competitions);
+		                      				console.log('season:' + season.competition._id);
+		                      				console.log('Index Of: ' + teamObj.competitions.indexOf(season.competition._id));
+
+		                      				if(teamObj.competitions.indexOf(season.competition._id) == -1){
+		                      					console.log('new competition');
+		                      					teamObj.competitions.push(season.competition._id);
+		                      					teamObj.save(function(teamSaveErr, savedTeam){
+					                        	if (teamSaveErr) {
+					                                console.log('teamSaveErr1')
 						                                res.status(Codes.httpStatus.BR).json({
 						                                    status: Codes.status.FAILURE,
 						                                    code: Codes.httpStatus.BR,
 						                                    data: '',
 						                                    error: Validation.validatingErrors(teamSaveErr)
 						                                });
-						                                return;
-						                            }
-			                    				});
-					                    	}
-					                    }
-			                        });
+					                                return;
+					                            	}
+					                        	});
+		                      				}
 
 			                    	}
 
@@ -159,6 +158,7 @@ exports.populateTeamsForAllSeasons = function(req, res){
 			                        newTeam.competitions.push(season.competition);
 			                        newTeam.save(function(teamSaveErr, savedTeam){
 			                        	if (teamSaveErr) {
+			                        		console.log(newTeam.teamId)
 			                                console.log('teamSaveErr')
 			                                res.status(Codes.httpStatus.BR).json({
 			                                    status: Codes.status.FAILURE,
@@ -191,3 +191,28 @@ exports.populateTeamsForAllSeasons = function(req, res){
 	});
 
 }	
+
+
+
+
+exports.mergeTeamDupicates = function(req, res){
+
+	Team.find({}, function(allTeamsErr, allTeams){
+		console.log('Total No of Teams ' + allTeams.length);
+		allTeams.forEach(function(team, index){
+
+			Team.find({teamId:team.teamId}, function(teamsErr, teams){
+				if(teams.length > 1){
+					console.log(teams);
+					console.log("______________");
+				}
+			});
+
+		});
+
+	});
+}
+
+
+
+
