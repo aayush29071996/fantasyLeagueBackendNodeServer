@@ -1,77 +1,81 @@
-<div class="outer"><div class="middle"><div class="inner">
-<h4 style="padding-left: 62vh;font-variant:small-caps;">The Football Players is under development!</h4>
-</div></div></div>
+<div class="panel" style="margin-top: 15vh;">
+<div class="panel-body"> <!--style="height: 88vh;overflow-x: scroll;"-->
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="m-b-30">
+                <button id="addToTable" class="btn btn-primary waves-effect waves-light" ng-click="AddPlayer($event)">Add <i class="fa fa-plus"></i></button>
+            </div>
+        </div>
+    </div>
 
-<!--<div class="panel" style="margin-top: 15vh;">-->
-<!--<div class="panel-body"> <!--style="height: 88vh;overflow-x: scroll;"-->
-<!--    <div class="row">-->
-<!--        <div class="col-sm-6">-->
-<!--            <div class="m-b-30">-->
-<!--                <button id="addToTable" class="btn btn-primary waves-effect waves-light" ng-click="AddTeam($event)">Add <i class="fa fa-plus"></i></button>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-
-<!--    <div class="">-->
-<!--        <div id="datatable-editable_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">-->
-<!--        <div class="row"><div class="col-sm-6">-->
-<!--        <div class="dataTables_length" id="datatable-editable_length">-->
-<!--        <label>Show&nbsp;<select ng-model="selectedRPP" ng-init="selectedRPP=10" ng-change="changedRPP(selectedRPP)" name="datatable-editable_length" class="form-control input-sm">-->
-<!--        <option ng-value="10">10</option>-->
-<!--        <option ng-value="25">25</option>-->
-<!--        <option ng-value="50">50</option>-->
-<!--        <option ng-value="100">100</option>-->
-<!--        </select> entries</label>-->
+    <div class="">
+        <div id="datatable-editable_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+        <div class="row"><div class="col-sm-6">
+        <div class="dataTables_length" id="datatable-editable_length">
+        <label>Show&nbsp;<select ng-model="selectedRPP" ng-init="selectedRPP=10" ng-change="changedRPP(selectedRPP)" name="datatable-editable_length" class="form-control input-sm">
+        <option ng-value="10">10</option>
+        <option ng-value="25">25</option>
+        <option ng-value="50">50</option>
+        <option ng-value="100">100</option>
+        </select> entries</label>
         
-<!--        <label style="margin-left:7vh;">Sort By&nbsp;<select ng-model="selectedSort" name="datatable-editable_length" class="form-control input-sm">-->
-<!--        <option value="playerId">Player Id (Ascending)</option>-->
-<!--        <option value="-playerId">Player Id (Descending)</option>-->
-<!--        <option value="name">Player Name (Ascending)</option>-->
-<!--        <option value="-name">Player Name (Descending)</option>-->
-<!--        </select></label>-->
+        <label style="margin-left:7vh;">Sort By&nbsp;<select ng-model="selectedSort" name="datatable-editable_length" class="form-control input-sm">
+        <option value="playerId">Player Id (Ascending)</option>
+        <option value="-playerId">Player Id (Descending)</option>
+        <option value="name">Player Name (Ascending)</option>
+        <option value="-name">Player Name (Descending)</option>
+        <option value="active">Status (Ascending)</option>
+        <option value="-active">Status (Descending)</option>
+        </select></label>
         
-<!--        </div></div><div class="col-sm-6"><div id="datatable-editable_filter" class="dataTables_filter"><label>Search&nbsp;<input ng-model="tableSearchQuery" type="search" class="form-control input-sm" placeholder=""></label></div></div></div><div class="row"><div class="col-sm-12">-->
-<!--        <table  cg-busy="{promise:allPlayersPromise,message:'Please Wait...'}" class="table table-striped dataTable no-footer" id="datatable-editable" role="grid">-->
-<!--            <thead>-->
-<!--                <tr role="row">-->
-<!--                <th tabindex="0" rowspan="1" colspan="1" style="width: 215px;">Player Id</th>-->
-<!--                <th tabindex="0" rowspan="1" colspan="1" style="width: 283px;">Player Name</th>-->
-<!--                <th rowspan="1" colspan="1" style="width: 110px;">Actions</th></tr>-->
-<!--            </thead>-->
-<!--            <tbody>-->
-<!--            <tr class="gradeA odd" role="row" ng-repeat="teams in items | orderBy: selectedSort | filter : tableSearchQuery">-->
-<!--                    <td>{{teams.playerId}}</td>-->
-<!--                    <td>{{teams.name}}</td>-->
-<!--                    <td class="actions">-->
-                        <!--<a href="#" class="hidden on-editing save-row"><i class="fa fa-save"></i></a>
-<!--                        <a href="#" class="hidden on-editing cancel-row"><i class="fa fa-times"></i></a>-->
-<!--                        <a href="" class="on-default edit-row" ng-click="ViewPlayer(teams.playerId)"><i class="fa fa-eye"></i></a>-->
-<!--                        <a href="" class="on-default edit-row"><i class="fa fa-pencil"></i></a>-->
-<!--                        <a href="" class="on-default remove-row"><i class="fa fa-trash-o"></i></a>-->
-<!--                    </td>-->
-<!--                </tr>-->
-<!--                </tbody>-->
-<!--        </table>-->
-<!--        </div>-->
-<!--        </div>-->
-<!--        <div class="row">-->
-<!--        <div class="col-sm-6">-->
-<!--        <div class="dataTables_info" id="datatable-editable_info" role="status">-->
-<!--        Showing {{pager.startIndex + 1}} to {{pager.endIndex + 1}} of {{footTeams.length}} entries-->
-<!--        </div>-->
-<!--        </div><div class="col-sm-6">-->
-<!--        <div class="dataTables_paginate paging_simple_numbers" id="datatable-editable_paginate">-->
-<!--        <ul class="pagination" ng-if="pager.pages.length">-->
-<!--        <li ng-class="{disabled:pager.currentPage === 1}" class="paginate_button previous" tabindex="0" id="datatable-editable_previous">-->
-<!--        <a ng-click="setPage(pager.currentPage - 1)">Previous</a>-->
-<!--        </li>-->
-<!--        <li ng-repeat="page in pager.pages" ng-class="{active:pager.currentPage === page}" class="paginate_button" tabindex="0">-->
-<!--        <a ng-click="setPage(page)">{{page}}</a>-->
-<!--        </li>-->
-<!--        <li ng-class="{disabled:pager.currentPage === pager.totalPages}" class="paginate_button next" tabindex="0" id="datatable-editable_next">-->
-<!--        <a ng-click="setPage(pager.currentPage + 1)">Next</a></li></ul></div></div></div></div>-->
-<!--    </div>-->
-<!--</div>-->
-<!-- end: panel body -->
+        </div></div><div class="col-sm-6"><div id="datatable-editable_filter" class="dataTables_filter"><label>Search&nbsp;<input ng-model="tableSearchQuery" type="search" class="form-control input-sm" placeholder=""></label></div></div></div><div class="row"><div class="col-sm-12">
+        <table cg-busy="{promise:allPlayersPromise,message:'Please Wait...'}" class="table table-striped dataTable no-footer" id="datatable-editable" role="grid">
+            <thead>
+                <tr role="row">
+                <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 215px;">
+                Player Id</th>
+                <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 283px;">Player Name</th>
+                <!--<th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Status</th>-->
+                <!--<th tabindex="0" rowspan="1" colspan="1" style="width: 259px;">League #1</th>-->
+                <!--<th tabindex="0" rowspan="1" colspan="1" style="width: 259px;">League #2</th>-->
+                <!--<th tabindex="0" rowspan="1" colspan="1" style="width: 259px;">League #3</th>-->
+                <th style="text-align:center;" rowspan="1" colspan="1" style="width: 110px;">Actions</th></tr>
+            </thead>
+            <tbody>
+            <tr cg-busy="{promise:updatePlayerPromise,message:'Please Wait...'}" class="gradeA odd" role="row" id="{{players.playerId}}" dir-paginate="players in footPlayers|orderBy:selectedSort|filter:tableSearchQuery|itemsPerPage:selectedRPP">
+                    <td style="text-align:center;">{{players.playerId}}</td>
+                    <td style="text-align:center;">{{players.name}}</td>
+                    <!--<td style="text-align:center;">{{players.active}}</td>-->
+                    
+                    <td style="display:none;text-align:center;"><input ng-model="updatedPlayer.name" style="text-align:center;background: transparent;border: 1px #98a6ad dashed;" type="text" value="{{players.name}}"></td>
+                    <!--<td style="display:none;text-align:center;">-->
+                    <!--<button type="button" id="statusBtn" ng-click="clickedToggle();" class="btn btn-trans waves-effect w-md m-b-5">{{updatedPlayer.active}}</button>-->
+                    <!--<button type="button" ng-show="updatedPlayer.active" ng-click="updatedPlayer.active=false" class="btn btn-success btn-trans waves-effect w-md waves-success m-b-5">true</button>-->
+                        <!--<input ng-model="updatedPlayer.active" style="text-align:center;background: transparent;border: 1px #98a6ad dashed;" type="text" value="{{players.active}}">-->
+                    <!--</td>-->
+                    
+                    <!--<td>{{players.competitions[0].name}}</td>-->
+                    <!--<td>{{players.competitions[1].name}}</td>-->
+                    <!--<td>{{players.competitions[2].name}}</td>-->
+                    <td class="actions" style="text-align:center;text-align:-webkit-center">
+                        <a style="display:none;" href="" class="on-editing save-row" ng-click="postEdited(players)"><i class="fa fa-save"></i></a>
+                        <a style="display:none;" href="" class="on-editing cancel-row" ng-click="cancelEdit(players.playerId)"><i class="fa fa-times"></i></a>
+                        <a href="" class="on-default edit-row" ng-click="ViewPlayer(players.playerId)"><i class="fa fa-eye"></i></a>
+                        <a href="" class="on-default edit-row" ng-click="EditPlayer(players.playerId)" ><i class="fa fa-pencil"></i></a>
+                        <a href="" class="on-default remove-row" ng-click="DeletePlayer(players.playerId,players.name)"><i class="fa fa-trash-o"></i></a>
+                    </td>
+                </tr>
+                </tbody>
+        </table>
+        </div>
+        </div>
+        <div class="row">
+        <div class="col-sm-6">
+        
+        <dir-pagination-controls direction-links="true" boundary-links="true"></dir-pagination-controls>
+        
+        </div></div></div>
+    </div>
+</div>
 
-<!--</div>-->
+</div>

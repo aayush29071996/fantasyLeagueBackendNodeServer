@@ -5,6 +5,7 @@ var dashBoard = angular.module('dashBoard', [
     'angularUtils.directives.dirPagination',
     'dashboardCtrl',
     'footTeamsCtrl',
+    'footPlayersCtrl',
     'dashControllers',
     'dashServices',
     'ngMaterial',

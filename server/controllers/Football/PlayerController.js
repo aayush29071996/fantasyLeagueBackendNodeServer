@@ -11,7 +11,7 @@ var Validation = require('../Validation');
 //get list of all players as an array obj
 exports.getAllPlayers = function(req, res) {
 	
-	Player.find({}).select('playerId name').exec(function(playersErr, players){
+	Player.find({}).select('playerId name active').exec(function(playersErr, players){
 		if(playersErr){
 			res.status(Codes.httpStatus.ISE).json({
 	            status: Codes.status.FAILURE,

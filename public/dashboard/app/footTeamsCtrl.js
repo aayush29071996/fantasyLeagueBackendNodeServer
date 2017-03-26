@@ -1,6 +1,6 @@
 
 angular.module('footTeamsCtrl',['dashServices'])
-.controller('FootTeams', function ($scope, Football, PagerService, $mdDialog, $state) {
+.controller('FootTeams', function ($scope, Football, $mdDialog, $state) {
     
 function AddTeamPopupCtrl ($scope,$mdDialog,Football){
     $scope.close=function(){
