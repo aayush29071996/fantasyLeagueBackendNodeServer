@@ -36,7 +36,7 @@ dashServices.factory('Football', function($http){
         return $http.delete(baseURI+'/team/'+teamId);
     };
     
-    user.deleteTeam=function(team){
+    user.updateTeam=function(team){
         return $http.put(baseURI+'/team/',team);
     };
     

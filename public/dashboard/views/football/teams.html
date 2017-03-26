@@ -42,7 +42,7 @@
                 <th style="text-align:center;" rowspan="1" colspan="1" style="width: 110px;">Actions</th></tr>
             </thead>
             <tbody>
-            <tr class="gradeA odd" role="row" id="{{teams.teamId}}" dir-paginate="teams in footTeams|orderBy:selectedSort|filter:tableSearchQuery|itemsPerPage:selectedRPP">
+            <tr cg-busy="{promise:updateTeamPromise,message:'Please Wait...'}" class="gradeA odd" role="row" id="{{teams.teamId}}" dir-paginate="teams in footTeams|orderBy:selectedSort|filter:tableSearchQuery|itemsPerPage:selectedRPP">
                     <td style="text-align:center;">{{teams.teamId}}</td>
                     <td style="text-align:center;">{{teams.name}}</td>
                     <td style="text-align:center;">{{teams.active}}</td>

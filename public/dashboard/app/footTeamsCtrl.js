@@ -155,8 +155,11 @@ function DeleteTeamPopupCtrl ($scope,$mdDialog,Football,teamId,teamName){
     };
     
     $scope.postEdited=function(team){
-        console.log(team);
-        $scope.cancelEdit(team.teamId);
-        //window.location.reload();
+        team.name=$scope.updatedTeam.name;
+        team.active=$scope.updatedTeam.active;
+         $scope.updateTeamPromise=Football.updateTeam(team).then(function(res){
+            $scope.cancelEdit(team.teamId);
+            window.location.reload();
+         });
     };
 });
