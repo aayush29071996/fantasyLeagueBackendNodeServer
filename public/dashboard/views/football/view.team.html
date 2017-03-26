@@ -29,7 +29,7 @@
                 <th tabindex="0" rowspan="1" colspan="1" style="width: 259px;color:#000;">Status</th><!--
                 <th tabindex="0" rowspan="1" colspan="1" style="width: 259px;color:#000;">League #1</th>
                 <th tabindex="0" rowspan="1" colspan="1" style="width: 259px;color:#000;">League #2</th>-->
-                <th rowspan="1" colspan="1" style="width: 110px;color:#000;">Actions</th></tr>
+                <!--<th rowspan="1" colspan="1" style="width: 110px;color:#000;">Actions</th></tr>-->
             </thead>
             <tbody>
             <tr class="gradeA odd" role="row" ng-repeat="guys in players | orderBy: selectedSort | filter : tableSearchQuery">
@@ -38,13 +38,13 @@
                     <td style="color:#000;">{{guys.active}}</td><!--
                     <td style="color:#000;">{{teams.competitions[0].name}}</td>
                     <td style="color:#000;">{{teams.competitions[1].name}}</td>-->
-                    <td class="actions">
-                        <a href="#" class="hidden on-editing save-row"><i class="fa fa-save"></i></a>
-                        <a href="#" class="hidden on-editing cancel-row"><i class="fa fa-times"></i></a>
-                        <a href="" class="on-default edit-row" ng-click="ViewTeam(teams.teamId)"><i class="fa fa-eye"></i></a>
-                        <a class="on-default edit-row"><i class="fa fa-pencil"></i></a>
-                        <a class="on-default remove-row"><i class="fa fa-trash-o"></i></a>
-                    </td>
+                    <!--<td class="actions">-->
+                    <!--    <a href="#" class="hidden on-editing save-row"><i class="fa fa-save"></i></a>-->
+                    <!--    <a href="#" class="hidden on-editing cancel-row"><i class="fa fa-times"></i></a>-->
+                    <!--    <a href="" class="on-default edit-row" ng-click="ViewTeam(teams.teamId)"><i class="fa fa-eye"></i></a>-->
+                    <!--    <a class="on-default edit-row"><i class="fa fa-pencil"></i></a>-->
+                    <!--    <a class="on-default remove-row"><i class="fa fa-trash-o"></i></a>-->
+                    <!--</td>-->
                 </tr>
                 </tbody>
         </table>
