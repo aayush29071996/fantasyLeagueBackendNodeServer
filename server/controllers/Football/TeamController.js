@@ -192,7 +192,7 @@ exports.createTeam = function(req, res){
 
 //update team details
 exports.updateTeam = function(req, res){
-	Team.findOneAndUpdate({teamId:req.body.teamId}, {$set:{active: req.body.active,logo:req.body.logo, name:req.body.name}},{"new":true}).populate('players','playerId name active').exec(function(teamErr, team){
+	Team.findOneAndUpdate({teamId:req.body.teamId}, {$set:{active: req.body.active, name:req.body.name}},{"new":true}).populate('players','playerId name active').exec(function(teamErr, team){
 		if(teamErr){
 			res.status(Codes.httpStatus.ISE).json({
 	            status: Codes.status.FAILURE,

@@ -102,7 +102,61 @@ function DeleteTeamPopupCtrl ($scope,$mdDialog,Football,teamId,teamName){
          $scope.selectedRPP=value;  
      };
     $scope.allTeamsPromise=Football.getAllTeams().then(function(Teams){
-      $scope.footTeams = Teams.data.data; 
-
+      $scope.footTeams = Teams.data.data;
     });
+    $scope.updatedTeam={};
+    $scope.updatedTeam.active=false;
+    $scope.EditTeam=function(teamId){
+      document.getElementById(teamId).children[1].style.display="none";
+      document.getElementById(teamId).children[2].style.display="none";
+      document.getElementById(teamId).children[3].style.display="table-cell";
+      document.getElementById(teamId).children[4].style.display="table-cell";
+      $scope.updatedTeam.name=document.getElementById(teamId).children[1].innerHTML;
+      if(document.getElementById(teamId).children[2].innerHTML=="false"){
+      $scope.updatedTeam.active=false;
+            document.getElementById("statusBtn").className="btn btn-danger btn-trans waves-effect waves-danger w-md m-b-5";
+      }
+      else if(document.getElementById(teamId).children[2].innerHTML=="true"){
+      $scope.updatedTeam.active=true;
+            document.getElementById("statusBtn").className="btn btn-success btn-trans waves-effect waves-success w-md m-b-5";
+      
+      }
+      console.log($scope.updatedTeam);
+      document.getElementById(teamId).children[5].children[0].style.display="table-cell";
+      document.getElementById(teamId).children[5].children[1].style.display="table-cell";
+      document.getElementById(teamId).children[5].children[2].style.display="none";
+      document.getElementById(teamId).children[5].children[3].style.display="none";
+      document.getElementById(teamId).children[5].children[4].style.display="none";
+    };
+    
+    $scope.cancelEdit=function(teamId){
+      document.getElementById(teamId).children[1].style.display="table-cell";
+      document.getElementById(teamId).children[2].style.display="table-cell";
+      document.getElementById(teamId).children[3].style.display="none";
+      document.getElementById(teamId).children[4].style.display="none";
+      
+      document.getElementById(teamId).children[5].children[0].style.display="none";
+      document.getElementById(teamId).children[5].children[1].style.display="none";
+      document.getElementById(teamId).children[5].children[2].style.display="inline";
+      document.getElementById(teamId).children[5].children[3].style.display="inline";
+      document.getElementById(teamId).children[5].children[4].style.display="inline";
+        
+    };
+    $scope.clickedToggle=function(){
+        console.log($scope.updatedTeam.active);
+        if($scope.updatedTeam.active==true){
+            $scope.updatedTeam.active=false;
+            document.getElementById("statusBtn").className="btn btn-danger btn-trans waves-effect waves-danger w-md m-b-5";
+        }
+        else if($scope.updatedTeam.active==false){
+            $scope.updatedTeam.active=true;
+            document.getElementById("statusBtn").className="btn btn-success btn-trans waves-effect waves-success w-md m-b-5";
+        }
+    };
+    
+    $scope.postEdited=function(team){
+        console.log(team);
+        $scope.cancelEdit(team.teamId);
+        //window.location.reload();
+    };
 });
