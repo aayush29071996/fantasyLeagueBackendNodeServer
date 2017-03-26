@@ -11,10 +11,10 @@ var morgan = require('morgan');
 var mongoose = require('mongoose');
 var path = require('path');
 
-var port = process.env.PORT || 9001;
+var port = process.env.PORT || 9000;
 
-// var mongooseUri = 'mongodb://localhost/inyards';
-var mongooseUri = 'mongodb://heroku_5598ll25:egpvjohtsscsnq85friakf1260@ds157278.mlab.com:57278/heroku_5598ll25/';
+var mongooseUri = 'mongodb://localhost/inyards';
+// var mongooseUri = 'mongodb://heroku_5598ll25:egpvjohtsscsnq85friakf1260@ds157278.mlab.com:57278/heroku_5598ll25/';
 mongoose.connect(mongooseUri);
 
 //app.options('*',cors());
@@ -25,7 +25,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json());
 
 require("./server/routes.js")(app);
-// require("./server/jobs.js")(app);
+require("./server/jobs.js")(app);
 
 server.listen(port);
 console.log('App is listening on port: ' + port);

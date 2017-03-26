@@ -21,6 +21,7 @@
     "nodemailer": "^2.7.0",
     "request": "^2.79.0",
     "trimmer": "^1.0.0",
+    "underscore": "^1.8.3",
     "uuid": "^3.0.1"
   },
   "devDependencies": {},
