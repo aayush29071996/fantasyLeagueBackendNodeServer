@@ -6,6 +6,7 @@ var FixtureJob = require('./jobs/Football/FixtureJob');
 	
 
 module.exports = function(app) {
-	FixtureJob.updateFixturesJob();
+	// FixtureJob.updateFixturesJob();
+	// FixtureJob.calculatePointsJob();
 
 }
