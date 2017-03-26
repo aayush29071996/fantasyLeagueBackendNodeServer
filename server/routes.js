@@ -84,7 +84,7 @@ module.exports = function(app) {
 	app.post('/player/toggleStatus', PlayerController.togglePlayerStatus);
 	app.post('/player/', PlayerController.createPlayer);
 	app.put('/player/', PlayerController.updatePlayer);
-	app.delete('/player/', PlayerController.deletePlayer);
+	app.delete('/player/:playerId', PlayerController.deletePlayer);
 
 	//MatchCard routes
 	app.post('/createMatchCard', PointsSystemController.createMatchCard);

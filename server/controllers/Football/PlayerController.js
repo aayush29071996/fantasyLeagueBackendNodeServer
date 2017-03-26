@@ -227,7 +227,7 @@ exports.updatePlayer = function(req, res){
 
 //delete existing player
 exports.deletePlayer = function(req, res){
-	Player.findOneAndRemove({playerId:req.body.playerId}, function(playerErr, player){
+	Player.findOneAndRemove({playerId:req.params.playerId}, function(playerErr, player){
 		if(playerErr){
 			res.status(Codes.httpStatus.ISE).json({
 	            status: Codes.status.FAILURE,
