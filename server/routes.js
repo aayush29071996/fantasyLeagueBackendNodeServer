@@ -44,8 +44,9 @@ module.exports = function(app) {
 	app.get('/seedCompetitionsSeasons', FixturesHandler.populateCompetitionsAndSeasons);
 	app.get('/seedFixtures', FixturesHandler.populateSeasonsWithFixtures);
 	app.get('/seedTeams',TeamsHandler.populateTeamsForAllSeasons);
-	app.get('/mergeTeams',TeamsHandler.mergeTeamDupicates);
 	app.get('/seedPlayers',PlayersHandler.populatePlayersForAllTeams);
+
+	app.get('/mergeTeams',TeamsHandler.mergeTeamDuplicates);	
 
 	//football fixture routes
 	app.get('/historyFixtures', FixtureController.getFixturesHistory);
@@ -54,6 +55,7 @@ module.exports = function(app) {
 
 	//RUD admin routes for fixtures
 	app.get('/competions',FixtureController.getCompetitionsAndSeasons);
+	app.get('/fixtures', FixtureController.getAllFixtures);
 	app.get('/fixtures/:seasonId', FixtureController.getFixturesBySeason);
 	app.get('/fixture/:matchId',FixtureController.getFixture);
 	//TODO: app.put('/fixture/:id', FixtureController.updateFixture);
