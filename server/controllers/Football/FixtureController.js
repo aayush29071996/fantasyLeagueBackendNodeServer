@@ -507,7 +507,8 @@ exports.getFixture = function(req, res){
 
 exports.getAllFixtures = function(req, res) {
 	
-	Match.find({}).select('matchId team1Id team2Id status startingDateTime').exec(function(fixturesErr, fixtures){
+	// Match.find({}).select('matchId team1Id team2Id status startingDateTime').exec(function(fixturesErr, fixtures){
+	Match.find({}).populate('events').exec(function(fixturesErr, fixtures){
 		if(fixturesErr){
 			res.status(Codes.httpStatus.ISE).json({
 	            status: Codes.status.FAILURE,

@@ -195,16 +195,56 @@ exports.populateTeamsForAllSeasons = function(req, res){
 
 
 
-exports.mergeTeamDupicates = function(req, res){
-
+exports.mergeTeamDuplicates = function(req, res){
+	var count = 0;
 	Team.find({}, function(allTeamsErr, allTeams){
 		console.log('Total No of Teams ' + allTeams.length);
 		allTeams.forEach(function(team, index){
-
 			Team.find({teamId:team.teamId}, function(teamsErr, teams){
 				if(teams.length > 1){
-					console.log(teams);
-					console.log("______________");
+					console.log(teams[0].name);
+					console.log(teams[0].players.length);
+					console.log(teams[1].players.length);
+					var selectedTeam1 = 0;
+					if(teams[0].players.length < teams[1].players.length){
+						selectedTeam1 = 1;
+					}
+					var selectedTeam2 = (selectedTeam1 == 1) ? 0 : 1;
+
+					Team.findOne({_id:teams[selectedTeam1]._id}).exec(function(firstTeamErr, firstTeam){
+						
+						Team.findOne({_id:teams[selectedTeam2]._id}).exec(function(secondTeamErr, secondTeam){
+							count = count + 1;
+							console.log(firstTeam.name + ' :: firstTeam intial competitions :: ' + firstTeam.competitions);
+							secondTeam.competitions.forEach(function(competition, index){
+								if(firstTeam.competitions.indexOf(competition) == -1){
+									console.log('***********************************************');
+									firstTeam.competitions.push(competition);
+									if(index == secondTeam.competitions.length - 1){
+										console.log(firstTeam.name + ' :: firstTeam final competitions :: ' + firstTeam.competitions);
+										firstTeam.save(function(teamSaveErr, savedTeam){
+				                        	if (teamSaveErr) {
+				                                console.log('teamSaveErr')
+				                                res.status(Codes.httpStatus.BR).json({
+				                                    status: Codes.status.FAILURE,
+				                                    code: Codes.httpStatus.BR,
+				                                    data: '',
+				                                    error: Validation.validatingErrors(teamSaveErr)
+				                                });
+				                                return;
+				                            }
+				                            if(savedTeam){
+				                            	Team.findOneAndRemove({_id:secondTeam._id}, function(teamRemoveErr, removedTeam){
+				                            		console.log(removedTeam);
+				                            	});	
+				                            }
+				                        });	
+									}
+								}
+								
+							});
+						});
+					});
 				}
 			});
 
