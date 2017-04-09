@@ -24,7 +24,7 @@ var LineupSchema = new mongoose.Schema({
 	team:{type:String},
     position:{type:String},
     shirtNumber:{type:Number},
-    assists:{type:Number,default:0},
+    assists:{Typese:Number,default:0},
     foulsCommited:{type:Number,default:0},
     foulsDrawn:{type:Number,default:0},
     goals:{type:Number,default:0},
@@ -68,7 +68,8 @@ var MatchSchema = new mongoose.Schema({
 	events:[{type:Schema.Types.ObjectId, ref:'Event'}],
 	lineup:[LineupSchema],
 	points:{type:Number, default:0},
-	pointsCalculated:{type:Boolean, default:false}
+	pointsCalculated:{type:Boolean, default:false},
+	leaderboard:{type:Schema.Types.ObjectId, ref:'Leaderboard'}
 		
 });
 

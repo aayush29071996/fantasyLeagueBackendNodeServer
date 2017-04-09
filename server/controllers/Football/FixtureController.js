@@ -293,6 +293,286 @@ exports.getFixturesUpcoming = function(req, res) {
 }
 
 
+exports.getFixturesHistoryAdmin = function(req, res) {
+
+	var twoHoursBefore= moment.utc().subtract('2','h').format("YYYY-MM-DD HH:mm:ss");
+	var sevenDaysBefore = moment.utc().subtract('7','d').format("YYYY-MM-DD HH:mm:ss");
+	
+	console.log(twoHoursBefore)
+	console.log(sevenDaysBefore);
+
+
+	Match.find({startingDateTime:{$gte:sevenDaysBefore, $lt:twoHoursBefore}}).sort({"startingDateTime":1}).populate('events').exec( function(matchesErr, matches){
+		if(matchesErr){
+			res.status(Codes.httpStatus.ISE).json({
+	            status: Codes.status.FAILURE,
+	            code: Codes.httpStatus.ISE,
+	            data: '',
+	            error: Codes.errorMsg.UNEXP_ERROR
+	        });
+	        return;
+		}
+		if(matches.length == 0){
+			res.status(Codes.httpStatus.OK).json({
+                status: Codes.status.SUCCESS,
+                code: Codes.httpStatus.OK,
+                data: '',
+                error: Codes.errorMsg.F_NO_HIS
+            });
+            return;
+		}
+		var fixturesSet = [];
+		if(matches.length > 0){
+			matches.forEach(function(match, index){
+				Team.find({teamId:match.team1Id}, {players: 0}, function(team1Err, team1){
+					if(team1Err){
+						res.status(Codes.httpStatus.ISE).json({
+			            status: Codes.status.FAILURE,
+			            code: Codes.httpStatus.ISE,
+			            data: '',
+			            error: Codes.errorMsg.UNEXP_ERROR
+			        });
+			       	 return;
+					}
+
+						Team.find({teamId:match.team2Id},{players: 0}, function(team2Err, team2){
+						if(team2Err){
+							res.status(Codes.httpStatus.ISE).json({
+				            status: Codes.status.FAILURE,
+				            code: Codes.httpStatus.ISE,
+				            data: '',
+				            error: Codes.errorMsg.UNEXP_ERROR
+				        });
+				       	 return;
+						}
+							Season.findOne({seasonId:match.seasonId}).populate('competition').exec(function(seasonErr, season){
+							if(seasonErr){
+								res.status(Codes.httpStatus.ISE).json({
+					            status: Codes.status.FAILURE,
+					            code: Codes.httpStatus.ISE,
+					            data: '',
+					            error: Codes.errorMsg.UNEXP_ERROR
+					        });
+					       	 return;
+							}	
+
+							var fixture = [];
+							fixture.push(match)
+							var teams = {};
+							teams.team1 = team1;
+							teams.team2 = team2;
+							fixture.push(teams);
+							fixture.push(season);
+							fixturesSet.push(fixture);
+
+							if(fixturesSet.length == matches.length){
+								res.status(Codes.httpStatus.OK).json({
+									status: Codes.status.SUCCESS,
+									code: Codes.httpStatus.OK,
+									data: fixturesSet,
+									error: ''
+								});
+								return;
+							}
+
+							});
+
+						});
+					});
+
+			});
+			
+		}
+	});
+}
+
+exports.getFixturesLiveAdmin = function(req, res) {
+
+	var twoHoursBefore= moment.utc().subtract('2','h').format("YYYY-MM-DD HH:mm:ss");
+	var now = moment.utc().format("YYYY-MM-DD HH:mm:ss");
+
+	console.log(twoHoursBefore)
+	console.log(now)
+
+
+	Match.find({startingDateTime:{$gte:twoHoursBefore, $lt:now}}).sort({"startingDateTime":1}).populate('events').exec( function(matchesErr, matches){
+		if(matchesErr){
+			res.status(Codes.httpStatus.ISE).json({
+	            status: Codes.status.FAILURE,
+	            code: Codes.httpStatus.ISE,
+	            data: '',
+	            error: Codes.errorMsg.UNEXP_ERROR
+	        });
+	        return;
+		}
+		if(matches.length == 0){
+			res.status(Codes.httpStatus.OK).json({
+                status: Codes.status.SUCCESS,
+                code: Codes.httpStatus.OK,
+                data: '',
+                error: Codes.errorMsg.F_NO_LIVE
+            });
+            return;
+		} 
+
+		var fixturesSet = [];
+		if(matches.length > 0){
+			matches.forEach(function(match, index){
+				Team.find({teamId:match.team1Id}, {players: 0}, function(team1Err, team1){
+					if(team1Err){
+						res.status(Codes.httpStatus.ISE).json({
+			            status: Codes.status.FAILURE,
+			            code: Codes.httpStatus.ISE,
+			            data: '',
+			            error: Codes.errorMsg.UNEXP_ERROR
+			        });
+			       	 return;
+					}
+
+						Team.find({teamId:match.team2Id},{players: 0}, function(team2Err, team2){
+						if(team2Err){
+							res.status(Codes.httpStatus.ISE).json({
+				            status: Codes.status.FAILURE,
+				            code: Codes.httpStatus.ISE,
+				            data: '',
+				            error: Codes.errorMsg.UNEXP_ERROR
+				        });
+				       	 return;
+						}
+							Season.findOne({seasonId:match.seasonId}).populate('competition').exec(function(seasonErr, season){
+							if(seasonErr){
+								res.status(Codes.httpStatus.ISE).json({
+					            status: Codes.status.FAILURE,
+					            code: Codes.httpStatus.ISE,
+					            data: '',
+					            error: Codes.errorMsg.UNEXP_ERROR
+					        });
+					       	 return;
+							}	
+
+							var fixture = [];
+							fixture.push(match)
+							var teams = {};
+							teams.team1 = team1;
+							teams.team2 = team2;
+							fixture.push(teams);
+							fixture.push(season);
+							fixturesSet.push(fixture);
+
+							if(fixturesSet.length == matches.length){
+								res.status(Codes.httpStatus.OK).json({
+									status: Codes.status.SUCCESS,
+									code: Codes.httpStatus.OK,
+									data: fixturesSet,
+									error: ''
+								});
+								return;
+							}
+
+							});
+						});
+					});
+
+			});
+			
+		}
+	});
+}
+
+
+exports.getFixturesUpcomingAdmin = function(req, res) {
+
+	var now = moment.utc().format("YYYY-MM-DD HH:mm:ss");
+	var sevenDaysAfter = moment.utc().add('7','d').format("YYYY-MM-DD HH:mm:ss");
+	
+	console.log(now)
+	console.log(sevenDaysAfter)
+
+	Match.find({startingDateTime:{$gte:now, $lt:sevenDaysAfter}}).sort({"startingDateTime":1}).populate('events').exec( function(matchesErr, matches){
+		if(matchesErr){
+			res.status(Codes.httpStatus.ISE).json({
+	            status: Codes.status.FAILURE,
+	            code: Codes.httpStatus.ISE,
+	            data: '',
+	            error: Codes.errorMsg.UNEXP_ERROR
+	        });
+	        return;
+		}
+		if(matches.length == 0){
+			res.status(Codes.httpStatus.OK).json({
+                status: Codes.status.SUCCESS,
+                code: Codes.httpStatus.OK,
+                data: '',
+                error: Codes.errorMsg.F_NO_UP
+            });
+            return;
+		} 
+
+		var fixturesSet = [];
+		if(matches.length > 0){
+			matches.forEach(function(match, index){
+				Team.find({teamId:match.team1Id}, {players: 0}, function(team1Err, team1){
+					if(team1Err){
+						res.status(Codes.httpStatus.ISE).json({
+			            status: Codes.status.FAILURE,
+			            code: Codes.httpStatus.ISE,
+			            data: '',
+			            error: Codes.errorMsg.UNEXP_ERROR
+			        });
+			       	 return;
+					}
+
+						Team.find({teamId:match.team2Id},{players: 0}, function(team2Err, team2){
+						if(team2Err){
+							res.status(Codes.httpStatus.ISE).json({
+				            status: Codes.status.FAILURE,
+				            code: Codes.httpStatus.ISE,
+				            data: '',
+				            error: Codes.errorMsg.UNEXP_ERROR
+				        });
+				       	 return;
+						}
+							Season.findOne({seasonId:match.seasonId}).populate('competition').exec(function(seasonErr, season){
+							if(seasonErr){
+								res.status(Codes.httpStatus.ISE).json({
+					            status: Codes.status.FAILURE,
+					            code: Codes.httpStatus.ISE,
+					            data: '',
+					            error: Codes.errorMsg.UNEXP_ERROR
+					        });
+					       	 return;
+							}	
+
+							var fixture = [];
+							fixture.push(match)
+							var teams = {};
+							teams.team1 = team1;
+							teams.team2 = team2;
+							fixture.push(teams);
+							fixture.push(season);
+							fixturesSet.push(fixture);
+
+							if(fixturesSet.length == matches.length){
+								res.status(Codes.httpStatus.OK).json({
+									status: Codes.status.SUCCESS,
+									code: Codes.httpStatus.OK,
+									data: fixturesSet,
+									error: ''
+								});
+								return;
+							}
+
+							});
+
+						});
+					});
+			});
+			
+		}
+	});
+}
+
+
 exports.getCompetitionsAndSeasons = function(req, res){
 
 	Season.find({}).populate("competition").exec(function(seasErr, seas){
