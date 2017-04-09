@@ -146,6 +146,10 @@ exports.computeMatchPoints = function(req, res){
 				playerLP.points = 0;
 		});
 
+		if(match.status === "FT"){
+			computePointsCleanSheet(match);
+		}
+
 		match.events.forEach(function(event, id){
 			switch(event.type) {
 				
@@ -193,29 +197,7 @@ exports.computeMatchPoints = function(req, res){
 
 		});
 
-			if(match.team1Score == 0){
-				_.each(match.lineup, function(playerLP, index, cleanSheetEvent){
-					if(playerLP.team === "team2"){
-						var event = {};
-						event.playerId = playerLP.playerId;	
-						event.teamId = playerLP.teamId; 
-						event.type = "cleansheet";
-						cleanSheet.push(event);
-					}
-				});
-			} 
-
-			if(match.team2Score == 0){
-				_.each(match.lineup, function(playerLP, index, cleanSheetEvent){
-					if(playerLP.team === "team1"){
-						var event = {};
-						event.playerId = playerLP.playerId;	
-						event.teamId = playerLP.teamId; 
-						event.type = "cleansheet";
-						cleanSheet.push(event);
-					}
-				});
-			}
+			
 
 			console.log('-------------------------')
 			console.log('Goals : ' + goal.length);
@@ -256,6 +238,9 @@ exports.computeMatchPoints = function(req, res){
 					_.each(recordedEvent, function(_event, index, recordedEvent){
 						if(key === "substitution"){
 							_.findWhere(match.lineup,{"playerId":_event.playerInId}).points = _.findWhere(match.lineup,{"playerId":_event.playerInId}).points +  computePoints(_.findWhere(match.lineup,{"playerId":_event.playerInId}),key);
+						} else if(key === "goalByAssist"){
+							_.findWhere(match.lineup,{"playerId":_event.playerId}).points = _.findWhere(match.lineup,{"playerId":_event.playerId}).points + computePoints(_.findWhere(match.lineup,{"playerId":_event.playerId}),"goal");
+							_.findWhere(match.lineup,{"playerId":_event.assistPlayerId}).points = _.findWhere(match.lineup,{"playerId":_event.assistPlayerId}).points + computePoints(_.findWhere(match.lineup,{"playerId":_event.assistPlayerId}),"goalByAssist");
 						} else /*(key === "goal" || key === "goalByAssist" || key === "goalByPenalty" || key === "goalByPenaltyMissed")*/{
 							//console.log(_event);
 							_.findWhere(match.lineup,{"playerId":_event.playerId}).points = _.findWhere(match.lineup,{"playerId":_event.playerId}).points + computePoints(_.findWhere(match.lineup,{"playerId":_event.playerId}),key);
@@ -329,6 +314,8 @@ var computePoints = function(playerLP, event){
 var computePointsDefense = function(event){
 	if(event === "goal"){
 		return 6;
+	} else if(event === "goalByAssist"){
+		return 3;
 	} else if(event === "goalByPenalty"){
 		return 2;
 	} else if(event === "goalByPenaltyMissed"){
@@ -351,6 +338,8 @@ var computePointsDefense = function(event){
 var computePointsMidfield = function(event){
 	if(event === "goal"){
 		return 5;
+	} else if(event === "goalByAssist"){
+		return 4;
 	} else if(event === "goalByPenalty"){
 		return 2;
 	} else if(event === "goalByPenaltyMissed"){
@@ -373,6 +362,8 @@ var computePointsMidfield = function(event){
 var computePointsForward = function(event){
 	if(event === "goal"){
 		return 4;
+	} else if(event === "goalByAssist"){
+		return 3;
 	} else if(event === "goalByPenalty"){
 		return 2;
 	} else if(event === "goalByPenaltyMissed"){
@@ -395,6 +386,8 @@ var computePointsForward = function(event){
 var computePointsGoalkeeper = function(event){
 	if(event === "goal"){
 		return 6;
+	} else if(event === "goalByAssist"){
+		return 3;
 	} else if(event === "goalByPenalty"){
 		return 2;
 	} else if(event === "goalByPenaltyMissed"){
@@ -414,6 +407,32 @@ var computePointsGoalkeeper = function(event){
 	}
 }
 
+
+var computePointsCleanSheet = function(match){
+	if(match.team1Score == 0){
+		_.each(match.lineup, function(playerLP, index, cleanSheetEvent){
+			if(playerLP.team === "team2"){
+				var event = {};
+				event.playerId = playerLP.playerId;	
+				event.teamId = playerLP.teamId; 
+				event.type = "cleansheet";
+				cleanSheet.push(event);
+			}
+		});
+	} 
+
+	if(match.team2Score == 0){
+		_.each(match.lineup, function(playerLP, index, cleanSheetEvent){
+			if(playerLP.team === "team1"){
+				var event = {};
+				event.playerId = playerLP.playerId;	
+				event.teamId = playerLP.teamId; 
+				event.type = "cleansheet";
+				cleanSheet.push(event);
+			}
+		});
+	}
+}
 
 
 

@@ -48,6 +48,11 @@ module.exports = function(app) {
 
 	app.get('/mergeTeams',TeamsHandler.mergeTeamDuplicates);	
 
+	app.get('/historyFixturesAdmin', FixtureController.getFixturesHistoryAdmin);
+	app.get('/liveFixturesAdmin', FixtureController.getFixturesLiveAdmin);
+	app.get('/upcomingFixturesAdmin', FixtureController.getFixturesUpcomingAdmin);
+
+
 	//football fixture routes
 	app.get('/historyFixtures', FixtureController.getFixturesHistory);
 	app.get('/liveFixtures', FixtureController.getFixturesLive);

@@ -9,6 +9,7 @@ var Competition = require('../../models/Football/Competition');
 var Season = require('../../models/Football/Season');
 var Match = require('../../models/Football/Match');
 var Event = require('../../models/Football/Event');
+var Leaderboard = require('../../models/Football/Leaderboard');
 
 var Codes = require('../../Codes');
 var Validation = require('../../controllers/Validation');
@@ -305,6 +306,25 @@ exports.populateSeasonsWithFixtures = function(req, res) {
 	                                newMatch.stageId = fixture.stage_id;
 	                                newMatch.roundId = fixture.round_id;
 	                                newMatch.venueId = fixture.venue_id;
+
+	                                var newLeaderboard = new Leaderboard();
+	                                newLeaderboard.matchId = newMatch.matchId;
+	                                newLeaderboard.save(function(savedLBErr, savedLB) {
+                                        if (savedLBErr) {
+                                          	res.status(Codes.httpStatus.BR).json({
+		                                        status: Codes.status.FAILURE,
+		                                        code: Codes.httpStatus.BR,
+		                                        data: '',
+		                                        error: Validation.validatingErrors(savedLBErr)
+		                                    });
+		                                    return;    
+                                        }
+
+                                        if(savedLB){
+                                        	newMatch.leaderboard = savedLB._id;
+                                        }
+
+                                    });
 
 	                                if (fixture.weather == null) {
 	                                    newMatch.weather == null;
