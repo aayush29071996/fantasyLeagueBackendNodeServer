@@ -109,13 +109,14 @@ exports.getFixturesHistory = function(req, res) {
 exports.getFixturesLive = function(req, res) {
 
 	var twoHoursBefore= moment.utc().subtract('2','h').format("YYYY-MM-DD HH:mm:ss");
-	var now = moment.utc().format("YYYY-MM-DD HH:mm:ss");
+	var thirtyMinsAfter= moment.utc().add('30','m').format("YYYY-MM-DD HH:mm:ss");
+	//var now = moment.utc().format("YYYY-MM-DD HH:mm:ss");
 
 	console.log(twoHoursBefore)
-	console.log(now)
+	console.log(thirtyMinsAfter)
 
 
-	Match.find({startingDateTime:{$gte:twoHoursBefore, $lt:now}}).sort({"startingDateTime":1}).exec( function(matchesErr, matches){
+	Match.find({startingDateTime:{$gte:twoHoursBefore, $lt:thirtyMinsAfter}}).sort({"startingDateTime":1}).exec( function(matchesErr, matches){
 		if(matchesErr){
 			res.status(Codes.httpStatus.ISE).json({
 	            status: Codes.status.FAILURE,
@@ -389,13 +390,14 @@ exports.getFixturesHistoryAdmin = function(req, res) {
 exports.getFixturesLiveAdmin = function(req, res) {
 
 	var twoHoursBefore= moment.utc().subtract('2','h').format("YYYY-MM-DD HH:mm:ss");
-	var now = moment.utc().format("YYYY-MM-DD HH:mm:ss");
+	var thirtyMinsAfter= moment.utc().add('30','m').format("YYYY-MM-DD HH:mm:ss");
+	//var now = moment.utc().format("YYYY-MM-DD HH:mm:ss");
 
 	console.log(twoHoursBefore)
-	console.log(now)
+	console.log(thirtyMinsAfter)
 
 
-	Match.find({startingDateTime:{$gte:twoHoursBefore, $lt:now}}).sort({"startingDateTime":1}).populate('events').exec( function(matchesErr, matches){
+	Match.find({startingDateTime:{$gte:twoHoursBefore, $lt:thirtyMinsAfter}}).sort({"startingDateTime":1}).populate('events').exec( function(matchesErr, matches){
 		if(matchesErr){
 			res.status(Codes.httpStatus.ISE).json({
 	            status: Codes.status.FAILURE,
