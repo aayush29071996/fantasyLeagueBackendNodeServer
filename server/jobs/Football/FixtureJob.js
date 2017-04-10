@@ -6,6 +6,7 @@ var moment = require('moment');
 var request = require('request');
 var CronJob = require('cron').CronJob;
 var Subtract = require('array-subtract');
+var _ = require('underscore');
 
 var Match = require('../../models/Football/Match');
 var Event = require('../../models/Football/Event');
