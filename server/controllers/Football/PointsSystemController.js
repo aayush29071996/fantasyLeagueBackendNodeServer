@@ -6,7 +6,6 @@
  var Match = require('../../models/Football/Match');
  var MatchCard = require('../../models/Football/MatchCard');
  var Player = require('../../models/Football/Master/Player');	
-
  var moment = require('moment');
  var _ = require('underscore');
 
@@ -51,7 +50,6 @@ exports.createMatchCard = function(req, res) {
 		        });
 		        return;
 			}		
-
 			var players = []
 			req.body.players.forEach(function(playerId, index){
 				Player.findOne({playerId:playerId}, function(playerErr, player){

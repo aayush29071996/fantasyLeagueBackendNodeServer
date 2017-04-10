@@ -1,0 +1,64 @@
+<md-dialog cg-busy="{promise:PlayerIdAvailabilityPromise,message:'Please Wait...'}">
+  <form ng-cloak>
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2>Add a Player</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="close()">
+        <!--<span><i class="icon ion-ios-close"></i></span>-->
+          <!--<i class="icon ion-ios-close-outline"></i>-->
+          <span>X</span>
+        </md-button>
+      </div>
+    </md-toolbar>
+
+    <md-dialog-content>
+    <form class="form-horizontal" role="form">
+        <div class="form-group" style="margin-top:20px;">
+            <label class="col-md-2 control-label">Player Id</label>
+            <div class="col-md-10">
+                <input type="text" class="form-control" ng-model="newplayer.id" style="color:#111;background: #ddd;width: 40vw;">
+                <p style="color:red;" ng-show="playerIdNA">Player Id Not Available!</p>
+            </div>
+        </div>
+        <div class="form-group" style="margin-top:11vh;">
+            <label class="col-md-2 control-label" for="example-email">Player Name</label>
+            <div class="col-md-10">
+                <input type="text" id="example-email" style="color:#111;background: #ddd;width: 40vw;" ng-model="newplayer.name" class="form-control" placeholder="">
+            </div>
+        </div>
+        <div class="form-group" style="margin-top:21vh;">
+            <label class="col-md-2 control-label">Player Position</label>
+            <div class="col-md-10" ng-init="newplayer.positionId='4';">
+                <select ng-model="newplayer.positionId">
+                <option value="4" selected="selected">Forward</option>
+                <option value="2">Defender</option>
+                <option value="3">Midfielder</option>
+                <option value="1">Goalkeeper</option>
+                </select>
+            </div>
+        </div>
+        <!--<div class="form-group" style="margin-top:20vh;">
+            <label class="col-md-2 control-label">Status</label>
+            <div class="col-md-10">
+            <input type="checkbox" data-plugin="switchery" data-color="#1AB394" data-secondary-color="#ED5565" data-switchery="true" style="display: none;">
+                <span class="switchery switchery-default" style="box-shadow: rgb(237, 85, 101) 0px 0px 0px 0px inset; border-color: rgb(237, 85, 101); background-color: rgb(237, 85, 101); transition: border 0.4s, box-shadow 0.4s;"><small style="left: 0px; transition: background-color 0.4s, left 0.2s;"></small></span>
+            </div>
+        </div>-->
+    </form>
+    </md-dialog-content>
+
+    <md-dialog-actions layout="row">
+      <!--<md-button href="http://en.wikipedia.org/wiki/Mango" target="_blank" md-autofocus>
+        More on Wikipedia
+      </md-button>-->
+      <span flex></span>
+      <md-button ng-click="close()">
+       Cancel
+      </md-button>
+      <md-button ng-click="createPlayer(newplayer)">
+        Create
+      </md-button>
+    </md-dialog-actions>
+  </form>
+</md-dialog>

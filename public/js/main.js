@@ -541,4 +541,21 @@ $(document).ready(function() {
 		});
 	}
 	resetScrollbar();
+	
+/*	
+	// Get Invited On Form Submit
+	$("#getInvited").submit(function() {
+	 $.ajax({
+     type: "POST",
+      url: "https://inyards.herokuapp.com/invite",
+      data: $(this).serialize(),
+      success: function(res) {
+      	console.log(res);
+      	$('#emailValidAlert').html("Thanks! You'll be updated soon.");
+        $('#emailValidAlert').fadeIn(100).show();
+        $('#emailValidAlert').fadeOut(500).hide();
+
+       }
+    })
+*/
 });

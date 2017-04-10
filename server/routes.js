@@ -24,7 +24,7 @@ module.exports = function(app) {
 		});
 	});
 
-	app.all('/admin', function(req, res){
+	app.get('/admin', function(req, res){
 		res.sendFile('dashboard/index.html', {
 			root: __dirname
 		});
@@ -33,6 +33,14 @@ module.exports = function(app) {
 	//invite route
 	app.post('/invite', InviteController.save);
 
+	// Admin Authentication
+	app.post('/admin', function(req,res){
+		if(req.body.username == 'pradeepbaskaran' && req.body.password == 'fantasysportsreinvented')
+			res.send({ success: true });
+		else
+			res.send({ success: false });
+	});
+	
 	//user routes
 	app.post('/username', UserController.validate);
 	app.post('/register', UserController.save);
@@ -72,7 +80,7 @@ module.exports = function(app) {
 	app.post('/team/toggleStatus', TeamController.toggleTeamStatus);
 	app.post('/team/', TeamController.createTeam);
 	app.put('/team/', TeamController.updateTeam);
-	app.delete('/team/', TeamController.deleteTeam);
+	app.delete('/team/:teamId', TeamController.deleteTeam);
 	app.delete('/team/player/',TeamController.removePlayerFromTeam);
 
 	//CRUD admin routes for players
@@ -82,7 +90,7 @@ module.exports = function(app) {
 	app.post('/player/toggleStatus', PlayerController.togglePlayerStatus);
 	app.post('/player/', PlayerController.createPlayer);
 	app.put('/player/', PlayerController.updatePlayer);
-	app.delete('/player/', PlayerController.deletePlayer);
+	app.delete('/player/:playerId', PlayerController.deletePlayer);
 
 	//MatchCard routes
 	app.post('/createMatchCard', PointsSystemController.createMatchCard);

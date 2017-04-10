@@ -68,7 +68,7 @@ exports.getTeam = function(req, res){
             status: Codes.status.SUCCESS,
             code: Codes.httpStatus.OK,
             data: team,
-            error: ''
+            error: 's'
         });
         return;
 	});
@@ -192,7 +192,7 @@ exports.createTeam = function(req, res){
 
 //update team details
 exports.updateTeam = function(req, res){
-	Team.findOneAndUpdate({teamId:req.body.teamId}, {$set:{active: req.body.active,logo:req.body.logo, name:req.body.name}},{"new":true}).populate('players','playerId name active').exec(function(teamErr, team){
+	Team.findOneAndUpdate({teamId:req.body.teamId}, {$set:{active: req.body.active, name:req.body.name}},{"new":true}).populate('players','playerId name active').exec(function(teamErr, team){
 		if(teamErr){
 			res.status(Codes.httpStatus.ISE).json({
 	            status: Codes.status.FAILURE,
@@ -223,7 +223,7 @@ exports.updateTeam = function(req, res){
 
 //delete existing team
 exports.deleteTeam = function(req, res){
-	Team.findOneAndRemove({teamId:req.body.teamId}, function(teamErr, team){
+	Team.findOneAndRemove({teamId:req.params.teamId}, function(teamErr, team){
 		if(teamErr){
 			res.status(Codes.httpStatus.ISE).json({
 	            status: Codes.status.FAILURE,

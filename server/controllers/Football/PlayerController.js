@@ -11,7 +11,7 @@ var Validation = require('../Validation');
 //get list of all players as an array obj
 exports.getAllPlayers = function(req, res) {
 	
-	Player.find({}).select('playerId name position').exec(function(playersErr, players){
+	Player.find({}).select('playerId name active position').exec(function(playersErr, players){
 		if(playersErr){
 			res.status(Codes.httpStatus.ISE).json({
 	            status: Codes.status.FAILURE,
@@ -111,7 +111,7 @@ exports.togglePlayerStatus = function(req, res){
 
 //check availability for new player id
 exports.getPlayerIdAvailability = function(req, res){
-	Player.findOne({teamId:req.body.playerId}, function(playerErr, player){
+	Player.findOne({playerId:req.body.playerId}, function(playerErr, player){
 		if(playerErr){
 			res.status(Codes.httpStatus.ISE).json({
 	            status: Codes.status.FAILURE,
@@ -227,7 +227,7 @@ exports.updatePlayer = function(req, res){
 
 //delete existing player
 exports.deletePlayer = function(req, res){
-	Player.findOneAndRemove({playerId:req.body.playerId}, function(playerErr, player){
+	Player.findOneAndRemove({playerId:req.params.playerId}, function(playerErr, player){
 		if(playerErr){
 			res.status(Codes.httpStatus.ISE).json({
 	            status: Codes.status.FAILURE,
