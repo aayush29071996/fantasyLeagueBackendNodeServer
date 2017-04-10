@@ -680,11 +680,15 @@ exports.calculatePointsJob = function() {
                                 console.log('Calculating Points for Event: ' + key);
                                 _.each(recordedEvent, function(_event, index, recordedEvent){
                                     if(key === "substitution"){
+                                        console.log(key + " for player " + _.findWhere(match.lineup,{"playerId":_event.playerInId}));
                                         _.findWhere(match.lineup,{"playerId":_event.playerInId}).points = _.findWhere(match.lineup,{"playerId":_event.playerInId}).points +  computePoints(_.findWhere(match.lineup,{"playerId":_event.playerInId}),key);
                                     } else if(key === "goalByAssist"){
+                                        console.log(key + " - goal for player " + _.findWhere(match.lineup,{"playerId":_event.playerId}));
+                                        console.log(key + " - assist for player " + _.findWhere(match.lineup,{"playerId":_event.assistPlayerId}));
                                         _.findWhere(match.lineup,{"playerId":_event.playerId}).points = _.findWhere(match.lineup,{"playerId":_event.playerId}).points + computePoints(_.findWhere(match.lineup,{"playerId":_event.playerId}),"goal");
                                         _.findWhere(match.lineup,{"playerId":_event.assistPlayerId}).points = _.findWhere(match.lineup,{"playerId":_event.assistPlayerId}).points + computePoints(_.findWhere(match.lineup,{"playerId":_event.assistPlayerId}),"goalByAssist");
                                     } else {
+                                         console.log(key + " for player " + _.findWhere(match.lineup,{"playerId":_event.assistPlayerId}));
                                         _.findWhere(match.lineup,{"playerId":_event.playerId}).points = _.findWhere(match.lineup,{"playerId":_event.playerId}).points + computePoints(_.findWhere(match.lineup,{"playerId":_event.playerId}),key);
                                     }
                                 });
