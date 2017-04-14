@@ -66,7 +66,6 @@ module.exports = function(app) {
 	app.get('/liveFixturesAdmin', FixtureController.getFixturesLiveAdmin);
 	app.get('/upcomingFixturesAdmin', FixtureController.getFixturesUpcomingAdmin);
 
-
 	//football fixture routes
 	app.get('/historyFixtures', FixtureController.getFixturesHistory);
 	app.get('/liveFixtures', FixtureController.getFixturesLive);
@@ -101,7 +100,8 @@ module.exports = function(app) {
 
 	//MatchCard routes
 	app.post('/createMatchCard', PointsSystemController.createMatchCard);
-	app.get('/computeMatchPoints/:matchId', PointsSystemController.computeMatchPoints);
+	// app.get('/computeMatchPoints/:matchId', PointsSystemController.computeMatchPoints);
 	//app.post('/getMatchCard', PointsSystemController.getMatchCard);
+	app.get('/leaderboard/:matchId', PointsSystemController.getMatchLeaderboard);
 
 };
