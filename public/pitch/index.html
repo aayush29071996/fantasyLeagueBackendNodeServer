@@ -25,6 +25,16 @@
 	<link rel="stylesheet" href="../css/main.css">
 	<link rel="stylesheet" href="../css/color.css">
 	<link rel="stylesheet" href="../css/responsive.css">
+	
+		<!-- Magnific Popup core CSS file -->
+	<link rel="stylesheet" href="../css/magnific-popup.css">
+	
+	<!-- jQuery 1.7.2+ or Zepto.js 1.0+ -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<!--<script src="../js/zepto.min.js"></script>-->
+	<!-- Magnific Popup core JS file -->
+	<script src="../js/jquery.magnific-popup.min.js"></script>
+	
 	<script src="../js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
 </head>
 <body>
@@ -184,45 +194,66 @@
 											<div class="col-md-6 col-sm-12 col-xs-12">
 												<article class="tg-post">
 													<figure class="tg-postimg">
-														<a href="#">
+														<a href="views/post1.html" class="tg-imgpitch">
 															<img src="../images/blog/bm-rm.jpg" alt="image description">
 														</a>
 														<figcaption>
 															<ul class="tg-postmetadata">
-																<li><a href="#">by sai darshan</a></li>
-																<li><a href="#">04 views</a></li>
+																<li><a>by sai darshan</a></li>
+																<li><a>04 views</a></li>
 															</ul>
 														</figcaption>
 													</figure>
-													<div class="tg-posttitle"><h3><a href="#">Bayern – Real Madrid: The meeting of the eternal rivals</a></h3></div>
+													<div class="tg-posttitle"><h3><a href="views/post1.html" class="tg-pitchcontent">Bayern – Real Madrid: The meeting of the eternal rivals</a></h3></div>
 													<div class="tg-description">
 														<p>The limelight season has arrived. The part where football world catches it breath, the matchups that distinguish good players from the grandiose, average from geniuses, class players from world class players is now here. Yes, the UEFA Champions League quarter-finals...</p>
 													</div>
-													<a class="tg-btn" href="#">Read more</a>
+													<a href="views/post1.html" class="tg-btn">Read more</a>
 												</article>
 											</div>
 											<div class="col-md-6 col-sm-12 col-xs-12">
 												<article class="tg-post">
 													<figure class="tg-postimg">
-														<a href="#">
+														<a href="views/post2.html" class="tg-imgpitch">
 															<img src="../images/blog/ju-ba.jpg" alt="image description">
 														</a>
 														<figcaption>
 															<ul class="tg-postmetadata">
-																<li><a href="#">by sai darshan</a></li>
-																<li><a href="#">04 views</a></li>
+																<li><a>by sai darshan</a></li>
+																<li><a>04 views</a></li>
 															</ul>
 														</figcaption>
 													</figure>
-													<div class="tg-posttitle"><h3><a href="#">Juventus – Barcelona : Will the wall break or then engine stop?</a></h3></div>
+													<div class="tg-posttitle"><h3><a href="views/post2.html" class="tg-pitchcontent">Juventus – Barcelona : Will the wall break or then engine stop?</a></h3></div>
 													<div class="tg-description">
 														<p>The Juventus – Barcelona game is like a game of chess between two contrasting teams who have their own set of notions about winning. Juventus is a team that has historically been known to win ties solely on their defensive prowess.</p>
 													</div>
-													<a class="tg-btn" href="#">Read more</a>
+													<a class="tg-btn" href="views/post2.html">Read more</a>
 												</article>
 											</div>
 										</div>
 									</div>
+									<script type="text/javascript">
+									$(document).ready(function($) {
+									$('.tg-btn').magnificPopup({
+								          type: 'ajax',
+								          alignTop: true,
+								          overflowY: 'scroll'
+								    });
+								    
+									$('.tg-imgpitch').magnificPopup({
+								          type: 'ajax',
+								          alignTop: true,
+								          overflowY: 'scroll'
+								    });
+								    
+									$('.tg-pitchcontent').magnificPopup({
+								          type: 'ajax',
+								          alignTop: true,
+								          overflowY: 'scroll'
+								    });
+									});
+									</script>
 									<div class="col-md-3 col-sm-4 col-xs-12">
 										<aside id="tg-sidebar" class="tg-sidebar">
 											<!--<div class="tg-widget tg-search">-->
