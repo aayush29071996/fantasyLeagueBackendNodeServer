@@ -29,7 +29,13 @@ module.exports = function(app) {
 			root: __dirname
 		});
 	});
-
+	
+	app.get('/pitch', function(req,res){
+		res.sendFile('pitch/index.html', {
+			root: __dirname	
+		});	
+	});
+	
 	//invite route
 	app.post('/invite', InviteController.save);
 
@@ -97,6 +103,5 @@ module.exports = function(app) {
 	app.post('/createMatchCard', PointsSystemController.createMatchCard);
 	app.get('/computeMatchPoints/:matchId', PointsSystemController.computeMatchPoints);
 	//app.post('/getMatchCard', PointsSystemController.getMatchCard);
-
 
 };

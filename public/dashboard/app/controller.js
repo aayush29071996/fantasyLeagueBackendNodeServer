@@ -31,11 +31,27 @@ dashControllers.controller('Login', function ($scope, Auth, $state, $timeout) {
 dashControllers.controller('Dashboard', function () {
 });
   
-dashControllers.controller('FootFixtures', function($scope, Auth, $state, $timeout) {
-    
+
+dashControllers.controller('FootFixtures', function($scope, Football, Auth, $state, $timeout) {
+    $scope.LiveMatchPromise = Football.getLiveMatches().then(function(response){
+        $scope.liveMatches = response.data;
+        console.log($scope.liveMatches);
+            
+        $scope.UpcomingMatchPromise = Football.getUpcomingMatches().then(function(resp){
+            $scope.upcomingMatches = resp.data;
+            console.log($scope.upcomingMatches);
+                 
+                    
+            $scope.PastMatchPromise = Football.getPastMatches().then(function(res){
+                $scope.pastMatches = res.data;
+                console.log($scope.pastMatches);
+            });
+        });
+    });
 })
-dashControllers.controller('FootApis', function($scope, Auth, $state, $timeout) {
-    
+
+
+dashControllers.controller('FootApis', function($scope, Football, Auth, $state, $timeout) {
 })
 dashControllers.controller('CricTeams', function($scope, Auth, $state, $timeout) {
     

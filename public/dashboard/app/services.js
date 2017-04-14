@@ -69,5 +69,18 @@ dashServices.factory('Football', function($http){
     user.updatePlayer=function(player){
         return $http.put(baseURI+'/player/',player);
     };
+    
+    user.getLiveMatches=function(){
+        return $http.get(baseURI+'/liveFixtures');    
+    };
+    
+    user.getUpcomingMatches=function(){
+        return $http.get(baseURI+'/upcomingFixtures');    
+    };
+    
+    user.getPastMatches=function(){
+        return $http.get(baseURI+'/historyFixtures');    
+    };
+    
     return user;
     });
