@@ -30,7 +30,13 @@ module.exports = function(app) {
 			root: __dirname
 		});
 	});
-
+	
+	app.get('/pitch', function(req,res){
+		res.sendFile('pitch/index.html', {
+			root: __dirname	
+		});	
+	});
+	
 	//invite route
 	app.post('/invite', InviteController.save);
 
@@ -113,6 +119,5 @@ module.exports = function(app) {
 	app.post('/pitch/comment', PitchController.commentStory);
 	app.post('/pitch/approve', PitchController.approveStory);
 	app.post('/pitch/publish', PitchController.publishStory);
-
 
 };

@@ -2359,7 +2359,8 @@ address { font-style: italic; }
 }
 .tg-postimg a img{
 	width:100%;
-	height:auto;
+	/*height:auto;*/
+	height: 30vh;
 	display:block;
 }
 .tg-post:hover .tg-postimg a img{ opacity:0.60;}
