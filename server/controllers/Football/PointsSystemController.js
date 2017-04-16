@@ -106,9 +106,9 @@ exports.createMatchCard = function(req, res) {
 
 exports.getMatchLeaderboard = function(req, res){
 
-	Leaderboard.findOne({matchId:req.params.matchId}, function(lbErr, lb){
+	MatchCard.find({match:req.params._id}).sort("matchPoints",1).exec(function(matchCardsErr, matchCards){
 
-		if(lbErr){
+		if(matchCardsErr){
 			res.status(Codes.httpStatus.ISE).json({
 	            status: Codes.status.FAILURE,
 	            code: Codes.httpStatus.ISE,
@@ -118,7 +118,7 @@ exports.getMatchLeaderboard = function(req, res){
 	        return;
 		}
 
-		if(lb == null){
+		if(matchCards == null){
 			res.status(Codes.httpStatus.BR).json({
 	            status: Codes.status.FAILURE,
 	            code: Codes.httpStatus.BR,
@@ -131,7 +131,7 @@ exports.getMatchLeaderboard = function(req, res){
 		res.status(Codes.httpStatus.OK).json({
             status: Codes.status.SUCCESS,
             code: Codes.httpStatus.OK,
-            data: lb,
+            data: matchCards,
             error: ''
 		});
 	});

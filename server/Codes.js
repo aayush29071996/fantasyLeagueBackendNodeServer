@@ -24,7 +24,9 @@ exports.errorMsg = {
 	T_ID_INUSE : 'team id in use',
 	P_NO : 'no player',
 	P_ID_INUSE : 'player id in use',
-	F_ID_INUSE : 'fixture id in use'
+	F_ID_INUSE : 'fixture id in use',
+	ST_NO : 'currently, no pitches',
+	CT_NO : 'currently, no categories',
 }
 
 exports.status = {
