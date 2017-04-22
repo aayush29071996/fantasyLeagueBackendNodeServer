@@ -714,11 +714,14 @@ exports.calculatePointsJob = function() {
                                     }
 
                                     var lineupInMatch = {};
+                                    var matchPoints = 0;
                                     lineupInMatch = savedMatch.lineup;
                                     _.each(lineupInMatch, function(lineup, index, lineups){
                                         _.findWhere(matchCard.players,{"playerId":_lineup.playerId}).points = lineup.points;
+                                        matchPoints = matchPoints + _.findWhere(matchCard.players,{"playerId":_lineup.playerId}).points;
                                     });
 
+                                    matchCard.matchPoints = matchPoints
                                     matchCard.save(function(matchCardSaveErr, savedMatchCard){
                                     if (matchCardSaveErr) {
                                         console.log(responseToConsole(Codes.status.FAILURE, Codes.httpStatus.BR, '', Validation.validatingErrors(matchCardSaveErr)));                                    

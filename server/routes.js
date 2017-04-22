@@ -13,6 +13,7 @@ var FixtureController = require('./controllers/Football/FixtureController');
 var TeamController = require('./controllers/Football/TeamController');
 var PlayerController = require('./controllers/Football/PlayerController');
 var PointsSystemController = require('./controllers/Football/PointsSystemController');
+var PitchController = require('./controllers/PitchController');
 
 module.exports = function(app) {
 
@@ -66,7 +67,7 @@ module.exports = function(app) {
 	app.get('/liveFixturesAdmin', FixtureController.getFixturesLiveAdmin);
 	app.get('/upcomingFixturesAdmin', FixtureController.getFixturesUpcomingAdmin);
 
-	//football fixture routes
+	//football fixture routesa
 	app.get('/historyFixtures', FixtureController.getFixturesHistory);
 	app.get('/liveFixtures', FixtureController.getFixturesLive);
 	app.get('/upcomingFixtures', FixtureController.getFixturesUpcoming);
@@ -102,6 +103,21 @@ module.exports = function(app) {
 	app.post('/createMatchCard', PointsSystemController.createMatchCard);
 	// app.get('/computeMatchPoints/:matchId', PointsSystemController.computeMatchPoints);
 	//app.post('/getMatchCard', PointsSystemController.getMatchCard);
-	app.get('/leaderboard/:matchId', PointsSystemController.getMatchLeaderboard);
+	app.get('/leaderboard/', PointsSystemController.getMatchLeaderboard);
+
+
+	app.post('/category', PitchController.createCategory);
+	app.get('/categories', PitchController.getCategories);
+
+	app.get('/pitch/:storyId', PitchController.getStory);
+	app.get('/pitches', PitchController.getAllStories);
+	app.post('/pitch', PitchController.saveStory);
+	app.post('/pitchByUser', PitchController.getStoriesByUser);
+	app.post('/pitch/view', PitchController.viewStory);
+	app.post('/pitch/like', PitchController.likeStory);
+	app.post('/pitch/share', PitchController.shareStory);
+	app.post('/pitch/comment', PitchController.commentStory);
+	app.post('/pitch/approve', PitchController.approveStory);
+	app.post('/pitch/publish', PitchController.publishStory);
 
 };
