@@ -9,6 +9,9 @@ var moment = require('moment');
 var trim = require('trimmer');
 var uuid = require('uuid');
 var crypto = require('crypto');
+var md5 = require('md5');
+var nodemailer = require('nodemailer');
+var fs = require('fs');
 var key = 'jallikattu';
 
 var errorMsg = {
@@ -79,9 +82,21 @@ exports.save = function(req, res){
 			var user = new User;
 			var hash = encrypt(key, trimmed(req.body.password));
 			user.password = hash;
-			user.email = trimmed(req.body.email);
+			user.email = trimmed(req.body.email).toLowerCase();
+			user.avatar = "https://www.gravatar.com/avatar/"+md5(trimmed(req.body.email).toLowerCase()) +".jpg?s=200";
 			user.username = trimmed(req.body.username);
 			user.dob = moment.utc(req.body.dob);
+			user.location.city = req.body.city;
+			user.location.country = req.body.country[0]==""?req.body.country.join(""):req.body.country.join(",");
+			user.location.countryCode = req.body.countryCode;
+			user.location.region = req.body.region;
+			user.location.regionName = req.body.regionName;
+			user.location.isp = req.body.isp;
+			user.location.lat = req.body.lat;
+			user.location.lon = req.body.lon;
+			user.location.zip = req.body.zip;
+			user.location.timezone = req.body.timezone;
+			user.location.ip = req.body.ip;
 			user.token = uuid.v4();
 			user.status = 'ACTIVE';
 			user.createdOn = moment.utc();
@@ -95,6 +110,7 @@ exports.save = function(req, res){
 					});
 					return;
 				}
+				sendWelcomeMail(user.email);
 				user.password = null;
 				res.status(httpStatus.OK).json({
 					status: status.SUCCESS,
@@ -137,4 +153,34 @@ function trimmed(data){
 	if(data != undefined)
 		return trim(data);
 	return data;
+}
+
+function sendWelcomeMail(toAddr){
+	var transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: '', // Your email id
+            pass: '' // Your password
+        }
+    });
+    var htmlstream = fs.createReadStream('public/pitch/welcome_mail.html', {
+			root: __dirname
+		});
+    var mailOptions = {
+    from: 'Inyards Pitch <noreply@inyards.com>',
+    replyTo: 'support@inyards.com',
+    sender: 'Inyards Pitch <noreply@inyards.com>',
+    to: toAddr,
+    subject: 'You are now a Pitcher!',
+    html: htmlstream 
+};
+transporter.sendMail(mailOptions, function(error, info){
+    if(error){
+        console.log(error);
+		return;
+    }else{
+        console.log('Welcome Mail sent: ' + info.response);
+       return;
+    };
+});
 }

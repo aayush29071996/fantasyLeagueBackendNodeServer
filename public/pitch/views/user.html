@@ -1,0 +1,166 @@
+<div class="white-popup-block" style="max-width: 334px;border-radius: 33px;height: 75vh;padding-right: 85px;margin-top: 10vh;">
+
+<ul uk-tab="" class="uk-tab" style="margin: auto;width: 19vw;margin-left:4vw;">
+    <li aria-expanded="true" class="uk-active"><a href="#">Login</a></li>
+    <li aria-expanded="false" class=""><a href="#">Register</a></li>
+</ul>
+
+
+<ul class="uk-switcher uk-margin">
+<li class="uk-active">
+<form style="margin-top:35px;" id="loginForm">
+    <fieldset class="uk-fieldset">
+
+        <div class="uk-margin" style="width: 25vw;margin: auto;padding-left: 29px;">
+            <input name="email" class="uk-input" type="text" placeholder="Username/Email">
+        </div>
+        
+        <div class="uk-margin" style="width: 25vw;margin: auto;padding-left: 29px;">
+            <input name="password" class="uk-input" type="password" placeholder="Password">
+        </div>
+            
+        <p id="resLoginBox" style="margin-top: 10px;text-align: center;font-size: 14px;color: red;"></p>
+    </fieldset>
+    
+</form>
+<button id="loginUser" class="the-btn uk-button uk-button-default" style="margin-left: 8.5vw;">Login</button>
+<hr style="margin-top:35px;">
+<button style="width: 23vw;margin: auto;margin-left: 3vw;margin-top:40px;" class="the-btn-fb uk-button uk-button-default">Login with Facebook</button>
+<button style="width: 23vw;margin: auto;margin-left: 3vw;margin-top:17px;" class="the-btn-gp uk-button uk-button-default">Login with Google+</button>
+
+</li>
+
+<li class="" style="margin-top: 7vh;">
+        <form id="registerForm">
+    <fieldset class="uk-fieldset">
+
+        <div class="uk-margin" style="width: 25vw;margin: auto;padding-left: 29px;">
+            <input onblur="validateUsername()" name="username" class="uk-input" type="text" placeholder="Username">
+        </div>
+        
+        <p id="usernameBox" style="margin-top: 10px;text-align: center;font-size: 14px;color: red;"></p>
+        
+        <div class="uk-margin" style="width: 25vw;margin: auto;padding-left: 29px;">
+            <input name="email" class="uk-input" type="text" placeholder="Email">
+        </div>
+        
+        <div class="uk-margin" style="width: 25vw;margin: auto;padding-left: 29px;">
+            <input name="password" class="uk-input" type="password" placeholder="Password">
+        </div>
+        
+        <div class="uk-margin" style="width: 25vw;margin: auto;padding-left: 29px;">
+            <input name="dob" class="uk-input" type="date" placeholder="Date Of Birth">
+        </div>
+        
+        <div class="uk-margin" style="width: 25vw;margin: auto;padding-left: 29px;">
+            <input style="display:none;" name="country" class="uk-input" type="text">
+        </div>
+        <p id="responseBox" style="margin-top: 10px;text-align: center;font-size: 14px;color: red;"></p>
+    </fieldset>
+</form>
+<button id="registerUser" class="the-btn uk-button uk-button-default" style="margin-left: 8.5vw;margin-top: 2px;">Register</button>
+    <script>
+    function validateUsername(){
+        $('#usernameBox').html('');
+        $.ajax({
+          type: "POST",
+          url: '/username',
+          data: $('#registerForm').serializeArray(),
+          success: function(res){
+              console.log(res.code);
+              if(res.code==400){
+                $('#usernameBox').css("color","red");
+                $('#usernameBox').html('Username not available!');
+              }
+              else{
+                $('#usernameBox').css("color","green");
+                $('#usernameBox').html('Username available!');
+              }
+          },
+          error: function(err){
+                $('#usernameBox').html('Username not available!');
+            }
+        });
+    }
+    var baseUri = 'http://inyards.com';
+    $('#loginUser').click(function() {
+        
+        $('#resLoginBox').html('');
+        $('#loginUser').html('Logging In...');
+        var temp = $('#loginForm').serializeArray();
+        var ajaxData = { password : temp[1].value };
+        if(temp[0].value.match(/@/)!=null)
+            ajaxData.email = temp[0].value;
+        else
+            ajaxData.username = temp[0].value;
+        $.ajax({
+          type: "POST",
+          url: '/authenticate',
+          data: ajaxData,
+          success: function(res){
+              $('#loginUser').html('Login');
+              $('#resLoginBox').css("color","green");
+              $('#resLoginBox').html('Login Successful!');
+              console.log(res.data);
+              window.localStorage.setItem("userId",res.data._id);
+              window.localStorage.setItem("username",res.data.username);
+              window.localStorage.setItem("userAvatar",res.data.avatar);
+              window.location.reload();
+            },
+          error: function(err){
+              $('#resLoginBox').css("color","red");
+              $('#loginUser').html('Login');
+              console.log((JSON.parse(err.responseText).error));
+              $('#resLoginBox').html('Invalid Credentials!');
+        }
+        });
+        
+    });
+    
+    $('#registerUser').click(function() {
+        $('#responseBox').html('');
+        $('#registerUser').html('Registering...');
+     $.get('http://ip-api.com/json', function(response){
+              var reqData = $('#registerForm').serializeArray();
+              reqData.push({name:"city", value:response.city});
+              reqData.push({name:"country", value:response.country});
+              reqData.push({name:"countryCode", value:response.countryCode});
+              reqData.push({name:"region", value:response.region});
+              reqData.push({name:"regionName", value:response.regionName});
+              reqData.push({name:"ip", value:response.query});
+              reqData.push({name:"timezone", value:response.timezone});
+              reqData.push({name:"zip", value:response.zip});
+              reqData.push({name:"lat", value:response.lat});
+              reqData.push({name:"lon", value:response.lon});
+              reqData.push({name:"isp", value:response.isp});
+              console.log(reqData);
+             $.ajax({
+                  type: "POST",
+                  url: '/register',
+                  data: reqData,
+                  success: function(res){
+                      $('#registerUser').html('Register');
+                      $('#responseBox').css("color","green");
+                      $('#responseBox').html('You\'re one of us now!');
+                      console.log(res.data);
+                      window.localStorage.setItem("userId",res.data._id);
+                      window.localStorage.setItem("username",res.data.username);
+                      window.localStorage.setItem("userAvatar",res.data.avatar);
+                      window.location.reload();
+                    },
+                  error: function(err){
+                       $('#responseBox').css("color","red");
+                      $('#registerUser').html('Register');
+                      console.log((JSON.parse(err.responseText).error));
+                      $('#responseBox').html('Something doesn\'t feel right!');
+                }
+                });
+          });
+     });
+    </script>
+</li>
+</ul>
+
+
+<button style="color:#333;position: absolute;background: #fff;opacity: 1;border-radius: 50%;margin-right: -60px;margin-top: -20px;" title="Close" type="button" class="mfp-close">×</button>
+</div>

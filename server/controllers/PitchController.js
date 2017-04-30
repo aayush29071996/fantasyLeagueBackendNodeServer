@@ -7,6 +7,7 @@ var Category = require('../models/Category');
 var Story = require('../models/Story');
 var StoryCoverPicture = require('../models/StoryCoverPicture');
 
+var cheerio = require('cheerio')
 var moment = require('moment');
 
 var Codes = require('../Codes');
@@ -81,12 +82,46 @@ exports.getCategories = function(req, res){
 
 exports.saveStory = function(req, res){
 	
+	// Recognize Cover Picture from Content
+	var pictureURI;
+	var images = cheerio('img', req.body.content);
+	if(images[0].attribs.src != undefined)
+		pictureURI = images[0].attribs.src;
+	else
+		pictureURI = "";
+	// 
+	
+	// Parse Teaser Content
+	var teaserContent;
+	var ptags = cheerio('p', req.body.content);
+	if(ptags[0].children[0].data != undefined){
+		if(ptags[0].children[0].data.length>80)
+			teaserContent = ptags[0].children[0].data.slice(0,80) + "...";
+		else
+			teaserContent = ptags[0].children[0].data;
+	}
+	else
+		teaserContent = "";
+	// 
+	
+	// Parse Title Teaser
+	var titleTeaser;
+	if(req.body.title.length>51)
+		titleTeaser = req.body.title.slice(0,51) + "...";
+	else
+		titleTeaser = req.body.title;
+	// 
+	
+	
 	var newStory = new Story;
 	newStory.user = req.body.userid;
 	newStory.category = req.body.categoryId;
 	newStory.title = req.body.title;
+	newStory.titleTeaser = titleTeaser;
 	newStory.status = 'CREATED';
 	newStory.content = req.body.content;
+	newStory.coverPicture = pictureURI;
+	newStory.teaserContent = teaserContent;
 	newStory.createdOn = moment.utc();
 
 	newStory.save(function(storySaveErr, savedStory){
