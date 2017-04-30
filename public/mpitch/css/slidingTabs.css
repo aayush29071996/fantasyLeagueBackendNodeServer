@@ -31,7 +31,7 @@ ion-slide:nth-child(2n) {
     text-align: center;
     float: left;
     margin: 0;
-    padding: 0 12px 20px 54px;
+    padding: 0 12px 20px 12px;
     font-size: 15px;
     color: rgba(255, 255, 255, 0.4);
     -webkit-transition: color .25s ease-in-out;
@@ -40,6 +40,7 @@ ion-slide:nth-child(2n) {
     overflow: hidden;
     font-family: 'Josefin Sans', sans-serif;
     text-transform: capitalize;
+    padding-left: 16vw;
 }
 
 .slidingTabs ul li.tab-active {
@@ -49,7 +50,7 @@ ion-slide:nth-child(2n) {
 .slidingTabs ul li .ink {
     display: block;
     position: absolute;
-    background: rgba(56, 147, 245, 0.8);
+    background: transparent;
     border-radius: 100%;
     transform: scale(0);
 }
@@ -71,7 +72,7 @@ ion-slide:nth-child(2n) {
     height: 100%;
     background-color: #ffcc33;
     width: 70px;
-    margin-left: 20px;
+    margin-left: 7vw;
     position: relative;
 }
 
