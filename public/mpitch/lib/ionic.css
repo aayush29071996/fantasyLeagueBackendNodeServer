@@ -8592,9 +8592,9 @@ progress {
   .button:hover {
     color: #444;
     text-decoration: none; }
-  .button.active, .button.activated {
+  /*.button.active, .button.activated {
     border-color: #a2a2a2;
-    background-color: #e5e5e5; }
+    background-color: #e5e5e5; }*/
   .button:after {
     position: absolute;
     top: -6px;

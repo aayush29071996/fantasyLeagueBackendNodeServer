@@ -52,7 +52,7 @@ $ionicConfigProvider.tabs.style("standard");
       url: '/write',
       views: {
         'home-write': {
-          templateUrl: 'templates/write.html',
+          templateUrl: 'templates/membership.html',
           controller: 'WriteCtrl'
         }
       }
@@ -62,7 +62,7 @@ $ionicConfigProvider.tabs.style("standard");
     url: '/account',
     views: {
       'home-account': {
-        templateUrl: 'templates/account.html',
+        templateUrl: 'templates/membership.html',
         controller: 'AccountCtrl'
       }
     }
