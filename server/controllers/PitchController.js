@@ -12,7 +12,17 @@ var moment = require('moment');
 
 var Codes = require('../Codes');
 var Validation = require('./Validation');
-
+var request = require('request');
+var moment = require('moment');
+var Season = require('../models/Football/Season');
+var Match = require('../models/Football/Match');
+//var Pitch = require('../models/Pitch/Comm');
+ 
+var APIkey = 'EyTtWbGs9ZnUYam1xB63iXoJ4EZ4TuTKGmQaebB1tpsrxq5VcdQ3gPVgjMyz';
+//var Codes = require('../Codes');
+ 
+var baseUrl = "http://localhost:9000/";
+var num = 3;
 
 
 exports.createCategory = function(req, res){
@@ -563,7 +573,339 @@ exports.commentStory = function(req, res){
 	});
 }
 
-
+module.exports.LiveScores = function(req,res){//
+ 
+    var url = 'https://api.soccerama.pro/v1.2/livescore?api_token=' + APIkey;
+    request({url:url , json:true},function(err,data){
+        if(err ||data.statusCode!=200){
+            res.status(Codes.httpStatus.ISE).json({
+                status : Codes.status.FAILURE,
+                code : Codes.httpStatus.ISE,
+                data : '',
+                error : Codes.errorMsg.INVALID_REQ
+            });
+            return;
+        }
+        res.status(Codes.httpStatus.OK).json({
+                 
+            status : Codes.status.SUCCESS,
+            code : Codes.httpStatus.OK,
+            data : data.body.data,
+            error : ''
+             
+        });
+        return;
+    });
+};
+ 
+module.exports.Commentary = function(req,res){//
+ 
+    var n = num + 1;
+    var currentDate = moment.utc().subtract('1','d').format("YYYY-MM-DD HH:mm:ss");
+    Match.find({startingDateTime : { $lt : currentDate}},'matchId startingDateTime').sort({startingDateTime:-1}).exec(function(err,data){
+ 
+        if(err){
+            res.status(Codes.httpStatus.ISE).json({
+                status : Codes.status.FAILURE,
+                code : Codes.httpStatus.ISE,
+                data : '',
+                error : Codes.errorMsg.UNEXP_ERROR
+            });
+            return;
+        }
+        data = data.slice(0,n);
+        var head = [];
+        var count = 0;
+        var len = Object.keys(data).length;
+        console.log(data);
+        for(var i = 0;i<len;i++){
+             
+            var url = 'https://api.soccerama.pro/v1.2/commentaries/match/' + data[i].matchId + '?api_token=' + APIkey;
+            console.log(url);
+            request({url:url , json:true},function(err,response,com){
+ 
+                console.log(response.statusCode);
+                if(err || response.statusCode!=200){
+                    res.status(Codes.httpStatus.ISE).json({
+                        status : Codes.status.FAILURE,
+                        code : Codes.httpStatus.ISE,
+                        data : '',
+                        error : Codes.errorMsg.INVALID_REQ
+                    });
+                    return;
+                    console.log("hello");
+ 
+                }
+ 
+                //com.data.push({matchId : data[i].matchId});
+                head.push(com.data);
+                count++;
+                if(count == n - 1){
+                    res.status(Codes.httpStatus.ISE).json({
+                        status : Codes.status.SUCCESS,
+                        code : Codes.httpStatus.OK,
+                        data : head,
+                        error : ''
+                    });
+                    return;
+                }
+            });
+        }
+        return;
+         
+    });
+};
+ 
+module.exports.Stats = function(req,res){//
+     
+    //
+    var n = num + 1;
+    var currentDate = moment.utc().subtract('1','d').format("YYYY-MM-DD HH:mm:ss");
+    Match.find({startingDateTime : { $lt : currentDate}},'matchId startingDateTime').sort({startingDateTime:-1}).exec(function(err,data){
+ 
+        console.log("sdjf");
+        if(err){
+            res.status(Codes.httpStatus.ISE).json({
+                status : Codes.status.FAILURE,
+                code : Codes.httpStatus.ISE,
+                data : '',
+                error : Codes.errorMsg.UNEXP_ERROR
+            });
+            return;
+        }
+        data = data.slice(0,n);
+        var head = [];
+        var count = 0;
+        var len = Object.keys(data).length;
+        console.log(data);
+        for(var i = 0;i<len;i++){
+             
+            var url = 'https://api.soccerama.pro/v1.2/statistics/match/' + data[i].matchId + '?api_token=' + APIkey;
+            console.log(url);
+            request({url:url , json:true},function(err,response,com){
+ 
+                console.log(response.statusCode);
+                if(err || response.statusCode!=200){
+                    res.status(Codes.httpStatus.ISE).json({
+                        status : Codes.status.FAILURE,
+                        code : Codes.httpStatus.ISE,
+                        data : '',
+                        error : Codes.errorMsg.INVALID_REQ
+                    });
+                    return;
+                    console.log("hello");
+ 
+                }
+                head.push(com);
+                count++;
+                if(count == n - 1){
+                    res.status(Codes.httpStatus.ISE).json({
+                        status : Codes.status.SUCCESS,
+                        code : Codes.httpStatus.OK,
+                        data : head,
+                        error : ''
+                    });
+                    return;
+                }
+            });
+        }
+        return;
+         
+    });   
+ 
+};
+ 
+module.exports.Standings = function(req,res){
+    //
+    var count = 0;
+    var head = [];
+    Season.find({},'seasonId',function(err,data){
+        if(err){
+            res.status(Codes.httpStatus.ISE).json({
+                status : Codes.status.FAILURE,
+                code : Codes.httpStatus.ISE,
+                data : '',
+                error : Codes.errorMsg.UNEXP_ERROR
+            });
+            return;
+        }
+        var len =  Object.keys(data).length;
+        len = parseInt(len);
+ 
+        for(var i = 0;i<len;i++){
+            var url = 'https://api.soccerama.pro/v1.2/standings/season/' + data[i].seasonId + '?api_token=' + APIkey;
+            console.log(url);
+            request({url:url , json:true},function(err,response,com){
+                console.log(response.statusCode);
+                console.log(count);
+                if(err||response.statusCode!=200){
+                    res.status(Codes.httpStatus.ISE).json({
+                        status : Codes.status.FAILURE,
+                        code : Codes.httpStatus.ISE,
+                        data : '',
+                        error : Codes.errorMsg.INVALID_REQ
+                    });
+                    return;
+                }
+                head.push(com.data);
+                count++;
+                if(count == len - 1){
+                    res.status(Codes.httpStatus.ISE).json({
+                        status : Codes.status.SUCCESS,
+                        code : Codes.httpStatus.OK,
+                        data : head,
+                        error : ''
+                    });
+                    return;
+                }
+            });
+        }  
+        return;  
+    });
+};
+ 
+module.exports.Videos = function(req,res){
+ 
+    //
+    var n = num + 1;
+    var currentDate = moment.utc().subtract('1','d').format("YYYY-MM-DD HH:mm:ss");
+    Match.find({startingDateTime : { $lt : currentDate}},'matchId startingDateTime').sort({startingDateTime:-1}).exec(function(err,data){
+ 
+        console.log("sdjf");
+        if(err){
+            res.status(Codes.httpStatus.ISE).json({
+                status : Codes.status.FAILURE,
+                code : Codes.httpStatus.ISE,
+                data : '',
+                error : Codes.errorMsg.UNEXP_ERROR
+            });
+            return;
+        }
+        data = data.slice(0,n);
+        var head = [];
+        var count = 0;
+        var len = Object.keys(data).length;
+        console.log(data);
+        for(var i = 0;i<len;i++){
+             
+            var url = 'https://api.soccerama.pro/v1.2/videos/match/' + data[i].matchId + '?api_token=' + APIkey;
+            request({url:url , json:true},function(err,response,com){
+ 
+                console.log(response.statusCode);
+                if(err || response.statusCode!=200){
+                    res.status(Codes.httpStatus.ISE).json({
+                        status : Codes.status.FAILURE,
+                        code : Codes.httpStatus.ISE,
+                        data : '',
+                        error : Codes.errorMsg.INVALID_REQ
+                    });
+                    return;
+                    console.log("hello");
+ 
+                }
+ 
+                //com.data.push({matchId : data[i].matchId});
+                console.log(com);
+                head.push(com.data);
+                count++;
+                if(count == n - 1){
+                    res.status(Codes.httpStatus.ISE).json({
+                        status : Codes.status.SUCCESS,
+                        code : Codes.httpStatus.OK,
+                        data : head,
+                        error : ''
+                    });
+                    return;
+                }
+            });
+        }
+        return;
+         
+    });
+ 
+};
+ 
+module.exports.TopScorers = function(req,res){
+ 
+    var count = 0;
+    var head = [];
+    Season.find({},'seasonId',function(err,data){
+        if(err){
+            res.status(Codes.httpStatus.ISE).json({
+                status : Codes.status.FAILURE,
+                code : Codes.httpStatus.ISE,
+                data : '',
+                error : Codes.errorMsg.UNEXP_ERROR
+            });
+            return;
+        }
+        var len =  Object.keys(data).length;
+        len = parseInt(len);
+ 
+        for(var i = 0;i<len;i++){
+            var url = 'https://api.soccerama.pro/v1.2/topscorers/season/' + data[i].seasonId + '?api_token=' + APIkey;
+            console.log(url);
+            request({url:url , json:true},function(err,response,com){
+                console.log(response.statusCode);
+                console.log(count);
+                if(err||response.statusCode!=200){
+                    res.status(Codes.httpStatus.ISE).json({
+                        status : Codes.status.FAILURE,
+                        code : Codes.httpStatus.ISE,
+                        data : '',
+                        error : Codes.errorMsg.INVALID_REQ
+                    });
+                    return;
+                }
+                head.push(com.data);
+                count++;
+                if(count == len - 1){
+                    res.status(Codes.httpStatus.ISE).json({
+                        status : Codes.status.SUCCESS,
+                        code : Codes.httpStatus.OK,
+                        data : head,
+                        error : ''
+                    });
+                    return;
+                }
+ 
+            });
+        }  
+        return;  
+    });
+};
+ 
+module.exports.Fixtures = function(req,res){
+ 
+    var startDate = moment.utc().format("YYYY-MM-DD");
+    var endDate = moment.utc().add('7','d').format("YYYY-MM-DD");
+ 
+    console.log(startDate);
+    console.log(endDate);
+ 
+    var url = 'https://api.soccerama.pro/v1.2/matches/'+ startDate + '/'+ endDate +'?api_token=' + APIkey;
+    console.log(url);
+    request({url:url , json:true},function(err,data){
+        console.log(data.statusCode);
+        if(err || data.statusCode!=200){
+            res.status(Codes.httpStatus.ISE).json({
+                status : Codes.status.FAILURE,
+                code : Codes.httpStatus.ISE,
+                data : '',
+                error : Codes.errorMsg.INVALID_REQ
+            });
+            return;
+        }
+        res.status(Codes.httpStatus.ISE).json({
+                 
+            status : Codes.status.SUCCESS,
+            code : Codes.httpStatus.OK,
+            data : data.body.data,
+            error : ''
+        });
+        return;
+    });
+};
 
 
 

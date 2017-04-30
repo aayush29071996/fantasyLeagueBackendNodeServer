@@ -37,6 +37,12 @@ module.exports = function(app) {
 		});	
 	});
 	
+	app.get('/mpitch', function(req,res){
+		res.sendFile('mpitch/index.html', {
+			root: __dirname	
+		});	
+	});
+	
 	//invite route
 	app.post('/invite', InviteController.save);
 
@@ -120,4 +126,11 @@ module.exports = function(app) {
 	app.post('/pitch/approve', PitchController.approveStory);
 	app.post('/pitch/publish', PitchController.publishStory);
 
+	app.get('/Live',PitchController.LiveScores);
+	app.get('/Fixture',PitchController.Fixtures);
+	app.get('/Commentary',PitchController.Commentary);
+	app.get('/Stats',PitchController.Stats);
+	app.get('/Standings',PitchController.Standings);
+	app.get('/Videos',PitchController.Videos);
+	app.get('/TopScorers',PitchController.TopScorers);
 };

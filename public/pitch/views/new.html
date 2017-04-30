@@ -69,7 +69,7 @@
               console.log(res.data);
               $('#theSpinner').css("display","none");
               $('#notTheSpinner').css("display","initial");
-              //window.location.reload();
+              window.location.reload();
             },
           error: function(err){
               console.log((JSON.parse(err.responseText).error));
