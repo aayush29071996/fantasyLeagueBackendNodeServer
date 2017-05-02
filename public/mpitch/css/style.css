@@ -49,3 +49,39 @@ ion-tabs.tabs-color-active-light .tab-item.tab-item-active, ion-tabs.tabs-color-
 ion-tabs.tabs-color-active-light .tab-item {
     color: rgba(255,255,255,0.4) !important;
 }
+
+.inputbox{
+  display: block;
+  margin: auto;
+  padding-left: 15px!important;
+  margin-top: 20px;
+  width: 70%;
+  background: rgba(27,27,27,0.2);
+  color: #ffcc33 !important;
+  border-radius: 5px;  
+}
+
+.submitbtn{
+  color: #333;
+  background: #ffcc33;
+  display: block;
+  margin: auto;
+  margin-top: 30px;
+  font-weight: 500;
+  width: 50%;
+  border: 0;
+  height: 35px;
+  border-radius: 30px;  
+}
+
+.tab-btn-active{
+  color: #ffcc33 !important;
+  background: #333; 
+}
+
+.tab-btn-inactive{
+  color: rgba(255,255,255,0.3) !important;
+  background: #333;
+  outline: none;
+  font-size: 13px;  
+}

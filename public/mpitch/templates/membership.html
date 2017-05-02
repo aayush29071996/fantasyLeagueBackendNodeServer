@@ -1,0 +1,25 @@
+<ion-view style="background:#444;" ng-init="login=true;">
+  <ion-content>
+  <div class="button-bar">
+  <a class="button" ng-class="login?'tab-btn-active':'tab-btn-inactive'" ng-click="login=true;">Login</a>
+  <a class="button" ng-class="!login?'tab-btn-active':'tab-btn-inactive'" ng-click="login=false;">Register</a>
+  </div>
+  
+  <div ng-show="login" style="margin-top:28vh;">
+  <input type="text" class="inputbox" placeholder="Username or Email">
+  <input type="password" class="inputbox" placeholder="Password">
+  <button class="submitbtn">Login</button>
+  </div>
+  
+  <div ng-show="!login" style="margin-top:22vh;">
+  <input type="text" class="inputbox" placeholder="Username">
+  <input type="text" class="inputbox" placeholder="Email">
+  <input type="password" class="inputbox" placeholder="Password">
+  <input type="text" class="inputbox" placeholder="Date Of Birth">
+  <button class="submitbtn">Register</button>
+  </div>
+  
+  
+  
+  </ion-content>
+</ion-view>
