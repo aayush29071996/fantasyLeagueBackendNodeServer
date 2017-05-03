@@ -21,8 +21,8 @@ mongoose.connect(mongooseUri);
 app.use(cors({origin: '*'}));
 app.use(express.static('public'));
 app.use(morgan('dev'));
-app.use(bodyParser.urlencoded({ extended: false }))
-app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false, limit: '50mb' }));
+app.use(bodyParser.json({limit: '50mb'}));
 
 require("./server/routes.js")(app);
 require("./server/jobs.js")(app);

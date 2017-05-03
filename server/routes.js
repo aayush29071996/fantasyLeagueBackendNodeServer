@@ -36,6 +36,21 @@ module.exports = function(app) {
 			root: __dirname	
 		});	
 	});
+	app.get('/pitch/all', function(req,res){
+		res.sendFile('pitch/views/all.html', {
+			root: __dirname	
+		});	
+	});
+	app.get('/pitch/trending', function(req,res){
+		res.sendFile('pitch/views/trending.html', {
+			root: __dirname	
+		});	
+	});
+	app.get('/pitch/recent', function(req,res){
+		res.sendFile('pitch/views/recent.html', {
+			root: __dirname	
+		});	
+	});
 	
 	app.get('/mpitch', function(req,res){
 		res.sendFile('mpitch/index.html', {

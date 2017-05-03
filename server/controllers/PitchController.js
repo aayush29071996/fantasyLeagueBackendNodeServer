@@ -95,7 +95,7 @@ exports.saveStory = function(req, res){
 	// Recognize Cover Picture from Content
 	var pictureURI;
 	var images = cheerio('img', req.body.content);
-	if(images[0].attribs.src != undefined)
+	if(images[0] != undefined)
 		pictureURI = images[0].attribs.src;
 	else
 		pictureURI = "";
