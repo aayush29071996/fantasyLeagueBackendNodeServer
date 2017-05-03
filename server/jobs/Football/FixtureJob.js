@@ -90,6 +90,8 @@ exports.updateFixturesJob = function() {
 
                         data.forEach(function(fixture, index) {
 
+                            console.log('update started for match id ' + fixture.id);
+                                
                             params = 'livescore/match/' + fixture.id;
                             include = 'lineup,events'
 
@@ -127,7 +129,7 @@ exports.updateFixturesJob = function() {
                                         }
 
                                         if (match == null) {
-                                            console.log(responseToConsole(Codes.status.SUCCESS, Codes.httpStatus.OK, '', Codes.errorMsg.F_INV_MID));
+                                            console.log(responseToConsole(Codes.status.FAILURE, Codes.httpStatus.BR, '', Codes.errorMsg.F_INV_MID));
                                             return;
                                         }
 
