@@ -257,8 +257,9 @@ font-family: 'Reem Kufi', sans-serif;
         
         $.ajax({
           type: "GET",
-          url: '/pitches',
+          url: '/pitchesByRecent',
           success: function(res){
+              res.data=res.data.reverse();
               console.log(res.data);
         
             var str = "";

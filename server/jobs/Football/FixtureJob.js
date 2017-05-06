@@ -10,6 +10,7 @@ var _ = require('underscore');
 
 var Match = require('../../models/Football/Match');
 var Event = require('../../models/Football/Event');
+var MatchCard = require('../../models/Football/MatchCard');
 
 var Codes = require('../../Codes');
 var Validation = require('../../controllers/Validation');

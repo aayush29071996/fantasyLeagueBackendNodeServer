@@ -1,12 +1,326 @@
-<div id="custom-content" class="white-popup-block" style="max-width:600px; margin: 20px auto;">
-    <h1 class="test" style="font-size: 30px;">Juventus – Barcelona : Will the wall break or then engine stop?</h1>
-    <img src="../images/blog/ju-ba.jpg">
-    <style>
-    #custom-content img {max-width: 100%;margin-bottom: 10px;}
-    </style>
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pitch | Inyards Fantasy Sports</title>
     
-    <p style="text-align:justify;text-indent: 4%;">The Juventus – Barcelona game is like a game of chess between two contrasting teams who have their own set of notions about winning. Juventus is a team that has historically been known to win ties solely on their defensive prowess. Especially Max Allegri seems to be master tactician when it comes to knockout two legged ties. Though they have lost Pirlo, Pogba and Vidal, their midfield with Marchisio, Khedira and Pjanic still looks indomitable and all three seem to be in fine form for both their club and country. In addition to them are Dybala, Higuaín and Mandzukic who can’t stop scoring goals. But it is their defense of Barzagli, Chiellini and Bonucci who neither seem to get tired or lose focus even when playing 50 matches per season. They defend, defend, and defend and know when to pass through the lines when the opposition midfield goes sleeping. This might pose a major headache for Luis Enrique and his midfield.</p>
-	<p style="text-align:justify;text-indent: 4%;">Barcelona have been rejuvenated since the historic comeback against PSG and the team is also under less pressure since their manager’s announcement to leave at the end of the season. This has given them a new spring in the stead and their attack seems to be gelling together again. But it is their backline which seems to have become shaky conceding goals out of nowhere. Neymar has been their standout player this season, with Messi and Suarez chipping in with important goals. They haven’t lost a match with Umtiti, so he may as well start the quarterfinals with Pique provided he isn’t injured.</p>
-    <p style="text-align:justify;text-indent: 4%;">This Juventus – Barcelona tie is like when an unstoppable force meets an indestructible wall.</p>
-    <p style="text-align:justify;text-indent: 4%;">May the better force win.</p>
-<button title="Close (Esc)" type="button" class="mfp-close">×</button></div>
+	
+    <link rel="stylesheet" href="../css/uikit-rtl.css">
+    <link rel="stylesheet" href="../css/uikit.css">
+    <link rel="stylesheet" href="../css/uikit-theme.css">
+	<link href="https://fonts.googleapis.com/css?family=Reem+Kufi|Yesteryear" rel="stylesheet">
+<script>
+  if(window.screen.width<1366)
+  window.location.href="../../../../mpitch";
+</script>
+
+	<style>
+	.test:focus{
+	  outline:none;   
+	 }
+	.ql-editor{
+	  overflow-x:hidden;
+	}
+	.ql-toolbar.ql-snow {
+    border: 0px;
+    background: #fff;
+    position: absolute;
+    z-index: 100;
+    width: 49px;
+    left: 14vw;
+    top: 3vh;
+    height: 95vh;
+    border-radius: 74px;
+    padding-top: 33px !important;
+    }
+    .ql-snow.ql-toolbar button, .ql-snow .ql-toolbar button {
+        margin-top: 20px;
+    }
+    .ql-toolbar.ql-snow .ql-picker-label {
+        font-size: 0px;
+        width: 0px;
+    }
+    .ql-snow .ql-picker:not(.ql-color-picker):not(.ql-icon-picker) svg {
+    right: -13.82px !important;
+    }
+    .ql-editor{
+        overflow-y:scroll;    
+    }
+    h1{
+    font-size: 34px;
+    }
+    p{
+        font-size:20px;
+    }
+    
+    
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    /*-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.8);*/ 
+    -webkit-border-radius: 10px;
+    background:transparent !important;
+    border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background:#ddd; 
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+}
+.nav-link,.nav-head,.nav-btn{
+font-family: 'Reem Kufi', sans-serif !important;    
+}
+#newPost{
+color:#333;background: #ffcc33;border: 0;text-transform: capitalize;font-weight: 600;
+}
+#newPost:hover{
+    border:1px solid #ffcc33;
+    background:transparent;
+    color:#ffcc33;
+    transition:.4s all ease;
+}
+#newUser{
+    text-transform: capitalize;font-weight: 600;color: #ffcc33;border-color: #ffcc33;   
+    transition:.4s all ease;
+}
+#newUser:hover{
+    border:0px;
+    background:#ffcc33;
+    color:#333;
+}
+.nav-link:hover{
+    color:#ffcc33 !important;    
+}
+
+.nav-head{
+    color:#ffcc33 !important;    
+}
+
+.nav-head:hover{
+    text-decoration:none;    
+}
+.thefont{
+font-family: 'Reem Kufi', sans-serif;    
+}
+
+.the-btn{
+    display: block;
+    margin: auto;
+    margin-top: 20px;
+    background: #ffcc33;
+    border-radius: 20px;
+    width: 150px;
+    text-transform: capitalize;
+    font-weight: 600;
+    transition:.2s all ease;    
+}
+.the-btn:hover{
+    /*width:250px;*/
+    border:1px solid #ffcc33;
+    color:#ffcc33;
+    transition:.2s all ease;
+}
+/*.outer {*/
+/*    display: table;*/
+/*    position: absolute;*/
+/*    height: 100%;*/
+/*    width: 100%;*/
+/*}*/
+
+/*.middle {*/
+/*    display: table-cell;*/
+/*    vertical-align: middle;*/
+/*}*/
+
+/*.inner {*/
+/*    margin-left: auto;*/
+/*    margin-right: auto; */
+/*    width: 95%;*/
+/*}*/
+.the-btn-fb{
+    display: block;
+    margin: auto;
+    background: #3b5998;
+    color:#fff;
+    border-radius: 30px;
+    text-transform: capitalize;
+    font-weight: 700;    
+}
+.the-btn-gp{
+    display: block;
+    margin: auto;
+    background: #d34836;
+    color:#fff;
+    border-radius: 30px;
+    text-transform: capitalize;
+    font-weight: 700;    
+}
+</style>
+	
+		<!-- Magnific Popup core CSS file -->
+	<link rel="stylesheet" href="../css/magnific-popup.css">
+	<link href="https://cdn.quilljs.com/1.2.3/quill.snow.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    
+    <script src="../js/date.js"></script>
+    <script src="../js/uikit.min.js"></script>
+    <script src="../js/uikit-icons.min.js"></script>
+<!-- Magnific Popup core JS file -->
+	<script src="../js/jquery.magnific-popup.min.js"></script>
+</head>
+<body style="background:#33333b;background-image: url(../../images/bg-pattran.png);background-size: cover;height:100vh;overflow-x: hidden;">
+
+<div class="uk-container uk-container-expand" style="height: 22vh;padding-left: 5vw;padding-right: 5vw;opacity:0.9;">
+    <!--Nav Bar-->    
+        <nav class="uk-navbar-container uk-light" uk-navbar style="background:transparent;">
+            <div class="uk-navbar-left">
+                <a class="uk-navbar-item uk-logo" href="/" style="font-family: 'Yesteryear', cursive;font-size:30px;">In<img src="../images/logo.png" style="width: 32px;">ards</a>
+            
+    </div>
+            <div class="uk-navbar-right" style="right: 60px;position: absolute;top:10vh;">
+            <div class="uk-navbar-item">
+                <a href="views/new.html" id="newPost" class="uk-button uk-button-secondary tm-button-default uk-visible@s nav-btn">Start Pitching!</a>
+            </div>
+            <div class="uk-navbar-item" id="notAnUser">
+                <a href="views/user.html" id="newUser" class="uk-button uk-button-default tm-button-default uk-visible@s nav-btn">Become a Pitcher</a>
+            </div>
+            <div class="uk-navbar-item" id="anUser" style="display:none;">
+               <div class="uk-inline">
+                    <!--<p id="usernameContent" style="font-size: 14px;display: inline;font-weight: 500;"></p>-->
+                    <!--<img class="uk-border-circle" width="40" height="40" id="userAvatar">-->
+                    <button id="usernameContent" style="text-transform: lowercase;display: flex;width: 45px;padding: 0;border: 0;" class="uk-button uk-button-default" type="button" uk-icon="icon:chevron-down;ratio:0.75;"></button>
+                    <div style="top: 38px;left: -43.406px;" uk-dropdown="pos: bottom-justify;mode: click">
+                        <ul class="uk-nav uk-dropdown-nav"><!--
+                            <li class="uk-active"><a href="#">Active</a></li>
+                            <li><a href="#">Item</a></li>-->
+                            <!--<li class="uk-nav-header">Header</li>-->
+                            <li><a href="#">My Profile</a></li>
+                            <li class="uk-nav-divider"></li>
+                            <li><a id="logoutUser">Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            </div>
+    </nav>
+</div>
+
+<!--Main-->
+
+<div class="uk-container" uk-grid style="padding-top: 15px;display: block;">
+
+<!--Ad-->
+<!--  <div class="uk-card uk-card-default uk-card-body" style="margin: auto;width: 800px;height: 90px;text-align:center;">-->
+<!--    <h3 class="uk-card-title" style="color:#bbb;font-variant:small-caps;">Advertisement</h3>-->
+<!--</div>-->
+
+  <!--Football-->
+  <div style="padding-left: 10vw;padding-top: 10vh;" id="footballPosts">
+  <a class="nav-head" style="font-size: 35px;" uk-icon="icon:chevron-right;ratio:1.25;">Trending Pitches&nbsp;</a>
+      
+  </div>
+  <!---->
+  
+</div>
+    <script>
+    $(document).ready(function() {
+        
+       var userId = window.localStorage.getItem("userId");
+       var username = window.localStorage.getItem("username");
+       var userAvatar = window.localStorage.getItem("userAvatar");
+       if (userId!="" && username!=""){
+            $('#usernameContent').html(username +"<img class='uk-border-circle' style='margin-left: 5px;' id='userAvatar' src="+ userAvatar +">" );
+            $('#notAnUser').css("display","none");
+            $('#anUser').css("display","inherit"); 
+            $("#newPost")[0].attributes.href.value="views/new.html";
+            // if(window.location.protocol=="http:")
+            //     window.location.protocol="https:";
+            
+            // $("#userAvatar")[0].src=userAvatar;
+        }
+        else{
+            $('#usernameContent').html(username);
+            $('#notAnUser').css("display","inherit");
+            $('#anUser').css("display","none");    
+            $("#newPost")[0].attributes.href.value="views/user.html";
+            $("#userAvatar")[0].src=userAvatar;
+            if(window.location.protocol=="https:")
+                window.location.protocol="http:";
+            
+        }
+        
+        $.ajax({
+          type: "GET",
+          url: '/pitchesByTrend',
+          success: function(res){
+              console.log(res.data);
+        
+            var str = "";
+              for(var i=0;i<res.data.length;i++){
+                  if(i==0)
+                    str += "<div style=\"margin-top:30px;\" class=\"uk-child-width-expand@s uk-text-center\" uk-grid>";
+                
+                if(res.data[i].coverPicture=="")
+                    str += "<div><div style=\"padding:0;box-shadow: 0px 0px 20px #000;border-radius: 10px;\" class=\"uk-card uk-card-default uk-card-body\"><h3 class=\"uk-card-title\" style=\"font-weight:900;font-size:24px;line-height: 1.1!important;padding: 20px;text-align: center;min-height: 53px;padding-left: 20px;max-height: 53px;position: inherit;z-index: 0;padding-top: 55px;\">"+ res.data[i].titleTeaser +"</h3><img class=\"uk-border-circle\" style=\"width: 40px;position: absolute;left: 20px;bottom: 27px;\" id=\"userAvatar\" src=\""+ res.data[i].user.avatar + "\"><p style=\"padding-left: 20px;padding-right: 30px;font-size: 15px;padding-bottom: 20px;margin-top: -12px;min-height: 42px;max-height: 42px;position: inherit;background:#fff;line-height:1.4;\">"+ res.data[i].teaserContent +"</p><div><p style=\"color: #000;text-align: left;padding-left: 68px;font-size: 12px;padding-top: 10px;\">" + res.data[i].user.username + "</p><p style=\"text-align: left;font-size: 11px;padding-left: 68px;margin-top: -14px;padding-bottom: 18px;\">Few Seconds ago</p></div><div style=\"position: absolute;right: 35px;margin-top: -9.6vh;\"><span style=\"display: inline;color: #f12e45;\" uk-icon=\"icon:heart;\"></span><div style=\"display: inline;border-right: 1px solid rgba(0,0,0,.25)!important;padding-right: 7px;padding-left: 1px;color: rgba(0,0,0,0.6);font-size: 13px;\">32</div><span style=\"display: inline;color: #1e87f0;;padding-left: 4px;\" uk-icon=\"icon:comment;\"></span><div style=\"display: inline;border-right: 1px solid rgba(0,0,0,.25)!important;padding-right: 7px;padding-left: 1px;color: rgba(0,0,0,0.6);font-size: 13px;\">5</div><span style=\"padding-left: 3px;color: #555;\" uk-icon=\"icon:social;\"></span></div></div></div>";
+                else
+                    str += "<div><div style=\"padding:0;box-shadow: 0px 0px 20px #000;border-radius: 10px;\" class=\"uk-card uk-card-default uk-card-body\"><img style=\"height: 15vh;object-fit: cover;width: 100%;object-position: top center;border-top-left-radius: 10px;border-top-right-radius: 10px;\" src="+ res.data[i].coverPicture +"><h3 class=\"uk-card-title\" style=\"font-weight:900;font-size:24px;line-height: 1.1!important;padding: 20px;text-align: center;min-height: 53px;max-height: 53px;position: inherit;z-index: 0;padding-left: 20px;\">"+ res.data[i].titleTeaser +"</h3><div style=\"position: inherit;background: #fff;\"><img class=\"uk-border-circle\" style=\"width: 40px;position: absolute;left: 20px;bottom: 17px;\" id=\"userAvatar\" src=\""+ res.data[i].user.avatar + "\"><p style=\"color: #000;text-align: left;padding-left: 68px;font-size: 12px;padding-top: 10px;\">"+ res.data[i].user.username + "</p><p style=\"text-align: left;font-size: 11px;padding-left: 68px;margin-top: -14px;padding-bottom: 18px;\">Few Seconds ago</p></div><div style=\"position: absolute;right: 35px;margin-top: -9.6vh;\"><span style=\"display: inline;color: #f12e45;\" uk-icon=\"icon:heart;\"></span><div style=\"display: inline;border-right: 1px solid rgba(0,0,0,.25)!important;padding-right: 7px;padding-left: 1px;color: rgba(0,0,0,0.6);font-size: 13px;\">32</div><span style=\"display: inline;color: #1e87f0;;padding-left: 4px;\" uk-icon=\"icon:comment;\"></span><div style=\"display: inline;border-right: 1px solid rgba(0,0,0,.25)!important;padding-right: 7px;padding-left: 1px;color: rgba(0,0,0,0.6);font-size: 13px;\">5</div><span style=\"padding-left: 3px;color: #555;\" uk-icon=\"icon:social;\"></span></div></div></div>";
+              
+              
+              if((i+1)%3==0 && (i+1)!=res.data.length)
+                    str += "</div><div style=\"margin-top:30px;\" class=\"uk-child-width-expand@s uk-text-center\" uk-grid>";
+                
+                if((i+1)==res.data.length){
+                    if(res.data.length % 3 !=0 ){
+                        for(var j=0;j<(res.data.length % 3 == 1 ? 2: 1 );j++){
+                            str +="<div style=\"background: transparent;\"><div style=\"padding:0;background: transparent;box-shadow: 0px 0px 0px transparent;\" class=\"uk-card uk-card-default uk-card-body\"></div></div>";
+                        }
+                    }
+                    str += "</div>";
+                }
+              }
+            $('#footballPosts').append(str);
+            }});
+            
+    // Write New Article
+	$('#newPost').magnificPopup({
+          type: 'ajax',
+          alignTop: true,
+          overflowY: 'scroll',
+          modal: true
+    });
+    $('#newUser').magnificPopup({
+          type: 'ajax',
+          alignTop: true,
+          overflowY: 'scroll',
+          modal: true
+    });
+    $('#logoutUser').click(function(){
+       window.localStorage.setItem("userId","");
+       window.localStorage.setItem("username","");
+       window.location.reload();
+    });
+    });
+    function whenWasIt(){
+        var today = new Date();
+        var past = new Date("2017-04-30 06:34:12.218Z");
+        var dt = new timezoneJS.Date("2012/04/10 10:10:30 +0000", 'Europe/London');
+        console.log(dt);
+        var diffMs = (past - today);
+        var diffDays = Math.floor(diffMs / 86400000); // days
+        var diffHrs = Math.floor((diffMs % 86400000) / 3600000); // hours
+        var diffMins = Math.floor(((diffMs % 86400000) % 3600000) / 60000); // minutes
+        console.log(diffDays + " days, " + diffHrs + " hours, " + diffMins + " minutes");    
+    }
+    
+    </script>
+</body>
+
+	
+	<script src="https://cdn.quilljs.com/1.2.3/quill.js"></script>
+</html>

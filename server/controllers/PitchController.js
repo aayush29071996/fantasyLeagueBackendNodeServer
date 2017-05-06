@@ -246,7 +246,7 @@ exports.getRecentStories = function(req, res){
 	var now = moment.utc().format("YYYY-MM-DD HH:mm:ss");
 	var sevenDaysBefore = moment.utc().subtract('7','d').format("YYYY-MM-DD HH:mm:ss");
 
-	Story.find({createdOn:{$gte:sevenDaysBefore, $lt: now},status: {$ne:'REPORTED'}}).sort({"createdOn":1}).populate('user category comments likes shares').exec(function(storiesErr, stories){
+	Story.find({createdOn:{$gte:sevenDaysBefore, $lt: now},status: {$ne:'REPORTED'}}).sort({"createdOn":-1}).populate('user category comments likes shares').exec(function(storiesErr, stories){
 		if(storiesErr){
 			res.status(Codes.httpStatus.ISE).json({
 	            status: Codes.status.FAILURE,
