@@ -19,6 +19,7 @@
     "mongoose": "^4.7.5",
     "mongoose-unique-validator": "^1.0.3",
     "morgan": "^1.7.0",
+    "newrelic": "^1.39.1",
     "node-fs": "^0.1.7",
     "nodemailer": "^2.7.2",
     "nodemon": "^1.11.0",

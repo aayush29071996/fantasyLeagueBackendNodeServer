@@ -2,6 +2,8 @@
 * Created by harirudhra on Sun 1 Jan 2017
 */
 
+require('newrelic');
+
 var express = require('express');
 var app = express();
 var server = require('http').Server(app);
