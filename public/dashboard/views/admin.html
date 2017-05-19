@@ -94,6 +94,11 @@
                 <li>
                     <a id="tabUsers" ng-click="openUsers()"class="sa-na waves-effect"><i class="zmdi zmdi-accounts"></i> <span> Users </span> </a>
                 </li>
+                
+                <li>
+                    <a id="tabPoints" ng-click="openPoints()"class="sa-na waves-effect"><i class="zmdi zmdi-border-clear"></i> <span> Points Table </span> </a>
+                </li>
+                
                 <li class="text-muted menu-title"><i class="fa fa-soccer-ball-o"></i> Football </li>
                 <!--<li class="has_sub">-->
                 <!--    <a id="tabFootball" ng-click="openFootball()" class="waves-effect"><i class="fa fa-soccer-ball-o"></i> <span> Football </span> <span class="menu-arrow"></span></a>-->
@@ -132,6 +137,8 @@
 <div class="content-page" style="height:99%;" ui-view name="admin-users" ng-show="showUsers">
 </div>
 
+<div class="content-page" style="height:99%;" ui-view name="admin-points" ng-show="showPointsTable">
+</div>
 
 <div class="content-page" style="height:99%;" ui-view name="admin-football-teams" ng-show="showFootTeams">
 </div>

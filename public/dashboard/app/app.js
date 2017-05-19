@@ -9,7 +9,8 @@ var dashBoard = angular.module('dashBoard', [
     'dashControllers',
     'dashServices',
     'ngMaterial',
-    'cgBusy'
+    'cgBusy',
+    'angularMoment'
 ]);
 dashBoard.run(function($rootScope){
   $rootScope._ = _;
@@ -44,6 +45,15 @@ dashBoard.config(function($stateProvider, $locationProvider, $urlRouterProvider)
               'admin-users': {
                 templateUrl: 'dashboard/views/admin-users.html',
                 controller: 'Users'
+              }
+            }
+          })
+          .state('admin.points', {
+            url: '/points',
+            views: {
+              'admin-points': {
+                templateUrl: 'dashboard/views/admin-points.html',
+                controller: 'Points'
               }
             }
           })

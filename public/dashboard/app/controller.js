@@ -32,7 +32,7 @@ dashControllers.controller('Dashboard', function () {
 });
   
 
-dashControllers.controller('FootFixtures', function($scope, Football, Auth, $state, $timeout) {
+dashControllers.controller('FootFixtures', function($scope, Football, Auth, $state, $timeout, moment) {
     $scope.LiveMatchPromise = Football.getLiveMatches().then(function(response){
         $scope.liveMatches = response.data;
         console.log($scope.liveMatches);
@@ -48,8 +48,14 @@ dashControllers.controller('FootFixtures', function($scope, Football, Auth, $sta
             });
         });
     });
+    $scope.returnIST = function(date){
+        return moment(date).utcOffset('+0530').format('YYYY-MM-DD HH:mm');
+    };
 })
 
+
+dashControllers.controller('Points', function($scope) {
+})
 
 dashControllers.controller('FootApis', function($scope, Football, Auth, $state, $timeout) {
 })

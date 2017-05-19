@@ -5,6 +5,7 @@ angular.module('dashboardCtrl',['dashServices'])
   function removeActiveCSS(){
         $("#tabDashboard").removeClass("active");
         $("#tabUsers").removeClass("active");
+        $("#tabPoints").removeClass("active");
         $("#tabFootTeams").removeClass("active");
         $("#tabFootPlayers").removeClass("active");
         $("#tabFootFixtures").removeClass("active");
@@ -17,6 +18,7 @@ angular.module('dashboardCtrl',['dashServices'])
     function hideAllViews(){
         $scope.showDashboard = false;
         $scope.showUsers = false;
+        $scope.showPointsTable = false;
         $scope.showFootTeams = false;
         $scope.showFootPlayers = false;
         $scope.showFootFixtures = false;
@@ -40,6 +42,13 @@ angular.module('dashboardCtrl',['dashServices'])
         hideAllViews();
         $scope.showUsers = true;
         $state.go('admin.users');
+    }
+    $scope.openPoints = function(){
+        removeActiveCSS();
+        $("#tabPoints").addClass("active"); 
+        hideAllViews();
+        $scope.showPointsTable = true;
+        $state.go('admin.points');
     }
      $scope.openFootTeams = function(){
         removeActiveCSS();
