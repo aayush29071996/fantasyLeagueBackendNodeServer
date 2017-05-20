@@ -106,7 +106,7 @@ exports.createMatchCard = function(req, res) {
 
 exports.getMatchLeaderboard = function(req, res){
 
-	MatchCard.find({match:req.params._id}).sort("matchPoints",1).exec(function(matchCardsErr, matchCards){
+	MatchCard.find({match:req.params._id}).sort({"matchPoints":1}).exec(function(matchCardsErr, matchCards){
 
 		if(matchCardsErr){
 			res.status(Codes.httpStatus.ISE).json({
