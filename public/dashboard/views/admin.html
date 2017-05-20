@@ -82,34 +82,40 @@
                 </li>
             </ul>
         </div>
-        
+
         <div id="sidebar-menu">
             <ul>
             	<li class="text-muted menu-title">Navigation</li>
-                
+
                 <li>
                     <a id="tabDashboard" ng-click="openDashboard()" class="sa-na waves-effect"><i class="zmdi zmdi-view-dashboard"></i> <span> Dashboard </span> </a>
                 </li>
-                
-                <li>
-                    <a id="tabUsers" ng-click="openUsers()"class="sa-na waves-effect"><i class="zmdi zmdi-accounts"></i> <span> Users </span> </a>
-                </li>
-                
+
                 <li>
                     <a id="tabPoints" ng-click="openPoints()"class="sa-na waves-effect"><i class="zmdi zmdi-border-clear"></i> <span> Points Table </span> </a>
                 </li>
-                
+
+
+                    <li class="text-muted menu-title"><i class="zmdi zmdi-accounts"></i> Users </li>
+                    <!-- <a href="javascript:void(0);" class="waves-effect"><i class="zmdi zmdi-accounts"></i> <span> Users </span><span class="menu-arrow"></span> </a> -->
+                              <ul class="list-unstyled">
+                                  <li id="tabUserCust" style="cursor:pointer;"><a ng-click="openUserCust()">Customers</a></li>
+                                  <li id="tabUserVendors" style="cursor:pointer;"><a ng-click="openUserVendors()" class="sa-na">Vendors</a></li>
+                                  <li id="tabUserEmp" style="cursor:pointer;"><a ng-click="openUserEmp()" class="sa-na">Employees</a></li>
+                              </ul>
+
+
                 <li class="text-muted menu-title"><i class="fa fa-soccer-ball-o"></i> Football </li>
                 <!--<li class="has_sub">-->
                 <!--    <a id="tabFootball" ng-click="openFootball()" class="waves-effect"><i class="fa fa-soccer-ball-o"></i> <span> Football </span> <span class="menu-arrow"></span></a>-->
                   <ul class="list-unstyled">
-                        <li id="tabFootTeams" style="cursor:pointer;"><a ng-click="openFootTeams()">Teams</a></li>
-                        <li id="tabFootPlayers" style="cursor:pointer;"><a ng-click="openFootPlayers()">Players</a></li>
-                        <li id="tabFootFixtures" style="cursor:pointer;"><a ng-click="openFootFixtures()" class="sa-na">Fixtures</a></li>
-                        <li id="tabFootApis" style="cursor:pointer;"><a ng-click="openFootApis()" class="sa-na">API Control</a></li>
-                    </ul>
+                      <li id="tabFootTeams" style="cursor:pointer;"><a ng-click="openFootTeams()">Teams</a></li>
+                      <li id="tabFootPlayers" style="cursor:pointer;"><a ng-click="openFootPlayers()">Players</a></li>
+                      <li id="tabFootFixtures" style="cursor:pointer;"><a ng-click="openFootFixtures()" class="sa-na">Fixtures</a></li>
+                      <li id="tabFootApis" style="cursor:pointer;"><a ng-click="openFootApis()" class="sa-na">API Control</a></li>
+                  </ul>
                 <li class="text-muted menu-title"><i class="zmdi zmdi-input-composite"></i> Cricket </li>
-                
+
                 <!--</li>-->
                 <!--<li class="has_sub">-->
                 <!--    <a id="tabCricket" ng-click="openCricket()" class="waves-effect"><i class="zmdi zmdi-input-composite"></i> <span> Cricket </span> <span class="menu-arrow"></span></a>-->
@@ -120,7 +126,7 @@
                         <li id="tabCricApis" style="cursor:pointer;"><a ng-click="openCricApis()" class="sa-na">API Control</a></li>
                     </ul>
                 <!--</li>-->
-                
+
             </ul>
             <div class="clearfix"></div>
         </div>
@@ -134,10 +140,19 @@
 <div class="content-page" style="height:99%;" ui-view name="admin-dashboard" ng-show="showDashboard">
 </div>
 
-<div class="content-page" style="height:99%;" ui-view name="admin-users" ng-show="showUsers">
-</div>
+<!-- <div class="content-page" style="height:99%;" ui-view name="admin-users" ng-show="showUsers">
+</div> -->
 
 <div class="content-page" style="height:99%;" ui-view name="admin-points" ng-show="showPointsTable">
+</div>
+
+<div class="content-page" style="height:99%;" ui-view name="admin-users-customers" ng-show="showUserCust">
+</div>
+
+<div class="content-page" style="height:99%;" ui-view name="admin-users-employees" ng-show="showUserEmp">
+</div>
+
+<div class="content-page" style="height:99%;" ui-view name="admin-users-vendors" ng-show="showUserVendors">
 </div>
 
 <div class="content-page" style="height:99%;" ui-view name="admin-football-teams" ng-show="showFootTeams">

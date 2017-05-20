@@ -1,0 +1,138 @@
+<div class="content">
+      <div class="container">
+            <div class="row">
+                  <div class="col-lg-4 col-md-6">
+                    		<div class="card-box">
+                          <h4 class="header-title m-t-0 m-b-30">Number of users registered</h4>
+                              <div class="widget-box-2">
+                                  <div class="widget-detail-2">
+                                      <span class="badge badge-success pull-left m-t-19">32% <i class="zmdi zmdi-trending-up"></i> </span>
+                                      <h2 class="m-b-0"> 8451 </h2>
+                                      <br>
+                                  </div>
+                                  <div id="myfirstchart" style="height: 180px;"></div>
+                              </div>
+                        </div>
+                  </div>
+                  <div class="col-lg-4 col-md-6">
+                        <div class="card-box">
+                          <h4 class="header-title m-t-0 m-b-30">Number of users online</h4>
+                              <div class="widget-box-2">
+                                  <div class="widget-detail-2">
+                                      <span class="badge badge-success pull-left m-t-19">12% <i class="zmdi zmdi-trending-up"></i> </span>
+                                      <h2 class="m-b-0"> 4461 </h2>
+                                      <br>
+                                  </div>
+                                  <div id="mysecondchart" style="height: 180px;"></div>
+                              </div>
+                        </div>
+                  </div>
+                  <div class="col-lg-4 col-md-6">
+                        <div class="card-box">
+                          <h4 class="header-title m-t-0 m-b-30">Number of active users for the week</h4>
+                              <div class="widget-box-2">
+                                  <div class="widget-detail-2">
+                                      <span class="badge badge-success pull-left m-t-19">20% <i class="zmdi zmdi-trending-up"></i> </span>
+                                      <h2 class="m-b-0"> 6651 </h2>
+                                      <br>
+                                  </div>
+                                  <div id="mythirdchart" style="height: 180px;"></div>
+                              </div>
+                        </div>
+                  </div>
+            </div>
+      </div>
+</div>
+<br><br>
+<div class="panel">
+<div class="panel-body"> <!--style="height: 88vh;overflow-x: scroll;"-->
+    <!-- <div class="row">
+        <div class="col-sm-6">
+            <div class="m-b-30">
+                <button id="addToTable" class="btn btn-primary waves-effect waves-light" ng-click="AddTeam($event)">Add <i class="fa fa-plus"></i></button>
+            </div>
+        </div>
+    </div> -->
+
+    <div class="">
+        <div id="datatable-editable_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+        <div class="row"><div class="col-sm-6">
+        <div class="dataTables_length" id="datatable-editable_length">
+        <label>Show&nbsp;<select ng-model="selectedRPP" ng-init="selectedRPP=10" ng-change="changedRPP(selectedRPP)" name="datatable-editable_length" class="form-control input-sm">
+        <option ng-value="10">10</option>
+        <option ng-value="25">25</option>
+        <option ng-value="50">50</option>
+        <option ng-value="100">100</option>
+        </select> entries</label>
+
+        <label style="margin-left:7vh;">Sort By&nbsp;<select ng-model="selectedSort" name="datatable-editable_length" class="form-control input-sm">
+        <option value="sNo">S.No (Ascending)</option>
+        <option value="-sNo">S.No Id (Descending)</option>
+        <option value="userId">User Id(Ascending)</option>
+        <option value="-userId">User Id (Descending)</option>
+        <option value="userName">User Name (Ascending)</option>
+        <option value="-userName">User Name (Descending)</option>
+        <!-- <option value="email">E-Mail</option>
+        <option value="pNo">Phone Number</option> -->
+        <option value="country">Country (Ascending)</option>
+        <option value="-country">Country (Descending)</option>
+        <!-- <option value="addRec">Address</option> -->
+        </select></label>
+
+        </div></div><div class="col-sm-6"><div id="datatable-editable_filter" class="dataTables_filter"><label>Search&nbsp;<input ng-model="tableSearchQuery" type="search" class="form-control input-sm" placeholder=""></label></div></div></div><div class="row"><div class="col-sm-12">
+        <table cg-busy="{promise:allTeamsPromise,message:'Please Wait...'}" class="table table-striped dataTable no-footer" id="datatable-editable" role="grid">
+            <thead>
+                <tr role="row">
+                <th tabindex="0" rowspan="1" colspan="1" style="width: 110px;">S.No </th>
+                <th tabindex="0" rowspan="1" colspan="1" style="width: 150px;">User Id </th>
+                <th tabindex="0" rowspan="1" colspan="1" style="width: 253px;">User Name</th>
+                <th tabindex="0" rowspan="1" colspan="1" style="width: 230px;">E-Mail</th>
+                <th tabindex="0" rowspan="1" colspan="1" style="width: 180px;">Phone Number</th>
+                <th tabindex="0" rowspan="1" colspan="1" style="width: 130px;">Country</th>
+                <th rowspan="1" colspan="1" style="width: 180px;">Address</th>
+
+              </tr>
+            </thead>
+            <tbody>
+            <tr class="gradeA odd" role="row" ng-repeat="teams in items | orderBy: selectedSort | filter : tableSearchQuery">
+                    <td>{{users.userId}}</td>
+                    <td>{{users.userName}}</td>
+                    <td>{{users.email}}</td>
+                    <td>{{users.pno}}</td>
+                    <td>{{users.country}}</td>
+                    <td class="actions">
+                        <!--<a href="#" class="hidden on-editing save-row"><i class="fa fa-save"></i></a>-->
+                        <!--<a href="#" class="hidden on-editing cancel-row"><i class="fa fa-times"></i></a>-->
+                        <a href="" class="on-default edit-row" ng-click="ViewUser(teams.userId)"><i class="fa fa-eye"></i></a>
+                        <a class="on-default edit-row"><i class="fa fa-pencil"></i></a>
+                        <a class="on-default remove-row"><i class="fa fa-trash-o"></i></a>
+                    </td>
+                </tr>
+                </tbody>
+        </table>
+        </div>
+        </div>
+        <div class="row">
+        <div class="col-sm-6">
+        <div class="dataTables_info" id="datatable-editable_info" role="status">
+            Showing {{pager.startIndex + 1}} to {{pager.endIndex + 1}} of {{footTeams.length}} entries
+        </div>
+        </div><div class="col-sm-6">
+        <div class="dataTables_paginate paging_simple_numbers" id="datatable-editable_paginate">
+        <ul class="pagination" ng-if="pager.pages.length">
+        <li ng-class="{disabled:pager.currentPage === 1}" class="paginate_button previous" tabindex="0" id="datatable-editable_previous">
+        <a ng-click="setPage(pager.currentPage - 1)">Previous</a>
+        </li>
+        <li ng-repeat="page in pager.pages" ng-class="{active:pager.currentPage === page}" class="paginate_button" tabindex="0">
+        <a ng-click="setPage(page)">{{page}}</a>
+        </li>
+        <li ng-class="{disabled:pager.currentPage === pager.totalPages}" class="paginate_button next" tabindex="0" id="datatable-editable_next">
+        <a ng-click="setPage(pager.currentPage + 1)">Next</a></li></ul></div></div>
+        </div>
+    </div>
+
+</div>
+
+<!-- end: panel body -->
+</div>
+</div>

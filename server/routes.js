@@ -5,6 +5,8 @@ var LoginController = require('./controllers/LoginController');
 var UserController = require('./controllers/UserController');
 var InviteController = require('./controllers/InviteController');
 
+// var UsersHandler = require('./handlers/User/UsersHandler')
+
 var FixturesHandler = require('./handlers/Football/FixturesHandler');
 var TeamsHandler = require('./handlers/Football/TeamsHandler');
 var PlayersHandler = require('./handlers/Football/PlayersHandler');
@@ -30,19 +32,19 @@ module.exports = function(app) {
 			root: __dirname
 		});
 	});
-	
+
 	app.get('/pitch', function(req,res){
 		res.sendFile('pitch/index.html', {
-			root: __dirname	
-		});	
+			root: __dirname
+		});
 	});
-	
+
 	app.get('/mpitch', function(req,res){
 		res.sendFile('mpitch/index.html', {
-			root: __dirname	
-		});	
+			root: __dirname
+		});
 	});
-	
+
 	//invite route
 	app.post('/invite', InviteController.save);
 
@@ -53,7 +55,7 @@ module.exports = function(app) {
 		else
 			res.send({ success: false });
 	});
-	
+
 	//user routes
 	app.post('/username', UserController.validate);
 	app.post('/register', UserController.save);
@@ -67,7 +69,7 @@ module.exports = function(app) {
 	app.get('/seedTeams',TeamsHandler.populateTeamsForAllSeasons);
 	app.get('/seedPlayers',PlayersHandler.populatePlayersForAllTeams);
 
-	app.get('/mergeTeams',TeamsHandler.mergeTeamDuplicates);	
+	app.get('/mergeTeams',TeamsHandler.mergeTeamDuplicates);
 
 	app.get('/historyFixturesAdmin', FixtureController.getFixturesHistoryAdmin);
 	app.get('/liveFixturesAdmin', FixtureController.getFixturesLiveAdmin);
