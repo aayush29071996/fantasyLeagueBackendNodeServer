@@ -21,7 +21,8 @@ var errorMsg = {
 	USERNAME_IN_USE : 'username already in use',
 	MOBILE_IN_USE : 'mobile number in use',
 	INVALID_TOKEN : 'invalid reset password token',
-	OLD_PASS_DOESNT_MATCH: 'Old Password does not match'
+	OLD_PASS_DOESNT_MATCH: 'Old Password does not match',
+	NO_USERS_FOUND : 'no users found'
 }
 
 var status = {
@@ -305,6 +306,68 @@ exports.changePassword = function(req, res){
 				});
 			});
 		
+	});
+}
+
+
+
+exports.getAllUsers = function(req, res){
+	User.find({},function(err, users){
+		if(err){
+			res.status(httpStatus.ISE).json({
+				status: status.FAILURE,
+				code: httpStatus.ISE,
+				data: '',
+				error: errorMsg.UNEXP_ERROR
+			});
+			return;
+		}
+		if(users.length > 0){
+			res.status(httpStatus.OK).json({
+				status:status.SUCCESS,
+				code: httpStatus.OK,
+				data: users,
+				error: ''
+			});
+			return;
+		}
+		res.status(httpStatus.OK).json({
+			status:status.FAILURE,
+			code: httpStatus.BR,
+			data: '',
+			error: errorMsg.NO_USERS_FOUND
+		});
+	});
+}
+
+
+exports.getUser = function(req, res){
+	User.findOne({_id:req.body._id}, function(err, user){
+		if(err){
+			res.status(httpStatus.ISE).json({
+				status: status.FAILURE,
+				code: httpStatus.ISE,
+				data: '',
+				error: errorMsg.UNEXP_ERROR
+			})
+			return;
+		}
+		user.password = null;
+		if(user == null){
+			res.status(httpStatus.BR).json({
+				status: status.FAILURE,
+				code: httpStatus.BR,
+				data: '',
+				error: errorMsg.USER_NOT_FOUND
+			})
+			return;
+		}
+		res.status(httpStatus.OK).json({
+			status: status.SUCCESS,
+			code: httpStatus.OK,
+			data: user,
+			error:''
+		});
 	});
 }
 

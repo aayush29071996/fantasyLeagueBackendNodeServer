@@ -76,6 +76,8 @@ module.exports = function(app) {
 	app.get('/reset/:token', UserController.resetPasswordResponse);
 	app.post('/reset/:token', UserController.resetPassword);
 	app.post('/changePassword', UserController.changePassword);
+	app.post('/getAllUsers', UserController.getAllUsers);
+	app.post('/getUser', UserController.getUser);
 
 	//login routes
 	app.post('/authenticate', LoginController.authenticate);
