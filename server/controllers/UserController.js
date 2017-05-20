@@ -97,7 +97,7 @@ exports.save = function(req, res){
 			// user.location.zip = req.body.zip;
 			// user.location.timezone = req.body.timezone;
 			// user.location.ip = req.body.ip;
-			// user.token = uuid.v4();
+			user.token = uuid.v4();
 			user.status = 'ACTIVE';
 			user.createdOn = moment.utc();
 			user.save(function (saveErr, saveUser){
