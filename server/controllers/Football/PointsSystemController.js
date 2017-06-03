@@ -106,9 +106,10 @@ exports.createMatchCard = function(req, res) {
 
 exports.getMatchLeaderboard = function(req, res){
 
-	MatchCard.find({match:req.params._id}).sort({"matchPoints":1}).exec(function(matchCardsErr, matchCards){
-
-		if(matchCardsErr){
+	var matchObjectId;
+	console.log(req.params.matchId);
+	Match.find({matchId:req.params.matchId}).exec(function(matchErr, match){
+		if(matchErr){
 			res.status(Codes.httpStatus.ISE).json({
 	            status: Codes.status.FAILURE,
 	            code: Codes.httpStatus.ISE,
@@ -118,7 +119,7 @@ exports.getMatchLeaderboard = function(req, res){
 	        return;
 		}
 
-		if(matchCards == null){
+		if(match == null){
 			res.status(Codes.httpStatus.BR).json({
 	            status: Codes.status.FAILURE,
 	            code: Codes.httpStatus.BR,
@@ -127,14 +128,42 @@ exports.getMatchLeaderboard = function(req, res){
 	        });
 	        return;
 		}
+		console.log(match);
+		matchObjectId=match[0]._id;
+		console.log(matchObjectId);
+		
+	MatchCard.find({match:matchObjectId}).sort({"matchPoints":1}).populate('user').exec(function(matchCardsErr, matchCards){
 
-		res.status(Codes.httpStatus.OK).json({
-            status: Codes.status.SUCCESS,
-            code: Codes.httpStatus.OK,
-            data: matchCards,
-            error: ''
+			if(matchCardsErr){
+				res.status(Codes.httpStatus.ISE).json({
+		            status: Codes.status.FAILURE,
+		            code: Codes.httpStatus.ISE,
+		            data: '',
+		            error: Codes.errorMsg.UNEXP_ERROR
+		        });
+		        return;
+			}
+	
+			if(matchCards == null){
+				res.status(Codes.httpStatus.BR).json({
+		            status: Codes.status.FAILURE,
+		            code: Codes.httpStatus.BR,
+		            data: '',
+		            error: Codes.errorMsg.F_INV_MID
+		        });
+		        return;
+			}
+	
+			res.status(Codes.httpStatus.OK).json({
+	            status: Codes.status.SUCCESS,
+	            code: Codes.httpStatus.OK,
+	            data: matchCards,
+	            error: ''
+			});
 		});
+		
 	});
+	
 }
 
 
