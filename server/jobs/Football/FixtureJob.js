@@ -16,7 +16,7 @@ var Validation = require('../../controllers/Validation');
 
 // var API_TOKEN_OLD = "H7H9qU3lmK1UNpqQoNxBI2PkZJec2IMAcNhByMSQ1GWhAt5tUDVtobVc1ThK";
 var API_TOKEN = "EyTtWbGs9ZnUYam1xB63iXoJ4EZ4TuTKGmQaebB1tpsrxq5VcdQ3gPVgjMyz";
-var baseUrl = /*"https://api.soccerama.pro/v1.2/"*/ "https://soccer.sportmonks.com/api/v2.0/";
+var baseUrl = "https://api.soccerama.pro/v1.2/";
 
 var fireUrl = function(params, include) {
     return baseUrl + params + "?api_token=" + API_TOKEN + "&include=" + include;

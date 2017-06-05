@@ -8,6 +8,7 @@
  var Player = require('../../models/Football/Master/Player');	
  var moment = require('moment');
  var _ = require('underscore');
+ var sortBy = require('array-sort-by');
 
  var Codes = require('../../Codes');
  var Validation = require('../Validation');
@@ -166,5 +167,87 @@ exports.getMatchLeaderboard = function(req, res){
 	
 }
 
-
-
+exports.getPlayerHistory = function(req, res){
+	var userObjectId;
+	var userPoint;
+	
+	User.find({username:req.params.username}).select("-__v -name -email -password -avatar -location -dob -token -status -createdOn").exec(function(err,user){
+		if(err){
+			res.status(Codes.httpStatus.ISE).json({
+	            status: Codes.status.FAILURE,
+	            code: Codes.httpStatus.ISE,
+	            data: '',
+	            error: Codes.errorMsg.UNEXP_ERROR
+	        });
+	        return;
+			}	
+			if(user.length>0){
+				userObjectId=user[0]._id;
+				userPoint=user[0].userPoints;
+			}
+			else{
+			res.status(Codes.httpStatus.ISE).json({
+	            status: Codes.status.FAILURE,
+	            code: Codes.httpStatus.ISE,
+	            data: '',
+	            error: Codes.errorMsg.UNEXP_ERROR
+	        });
+	        return;	
+			}
+			
+		MatchCard.find({user:userObjectId}).select("-__v -_id -players -createdOn").populate('match','startingDateTime _id', null, { sort: { startingDateTime: -1 } }).exec(function(error,cards){
+			if(error){
+			res.status(Codes.httpStatus.ISE).json({
+	            status: Codes.status.FAILURE,
+	            code: Codes.httpStatus.ISE,
+	            data: '',
+	            error: Codes.errorMsg.UNEXP_ERROR
+	        });
+	        return;
+			}
+			var previousMatches=[];
+			var theHistory=[];
+			if(cards.length>0){
+			for(var i=0;i<cards.length;i++){
+				previousMatches.push(cards[i].match._id);
+				theHistory.push({playedOn:cards[i].match.startingDateTime, points:cards[i].matchPoints});
+				}
+			}
+			sortBy(theHistory, (s) => -new Date(s.playedOn));
+			User.find().select("-__v -_id -name -email -password -avatar -location -dob -token -status -createdOn").sort([['userPoints', 'descending']]).exec(function(allErr,all){
+				if(allErr){
+				res.status(Codes.httpStatus.ISE).json({
+		            status: Codes.status.FAILURE,
+		            code: Codes.httpStatus.ISE,
+		            data: '',
+		            error: Codes.errorMsg.UNEXP_ERROR
+		        });
+		        return;
+				}
+				res.status(Codes.httpStatus.OK).json({
+		            status: Codes.status.SUCCESS,
+		            code: Codes.httpStatus.OK,
+		            data: {
+		            	matchCards:previousMatches,
+		            	performance:{
+		            		matchesPlayed: previousMatches.length,
+		            		points:{
+		            			userPoints: userPoint,
+		            			topPoints: all[0].userPoints
+	            			},
+	            			globalRank: all.map(function(d){return d['username'].indexOf(req.params.username);}).indexOf(0)+1,
+	            			recentPlay:theHistory.slice(0,5),
+	            			leaderboard:theHistory.length>50?theHistory.slice(0,50):theHistory
+		            	}
+	            	},
+		            error: ''
+				});
+				
+				
+			});
+		
+		
+		});
+			
+	});
+};

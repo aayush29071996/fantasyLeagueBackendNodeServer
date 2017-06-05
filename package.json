@@ -4,6 +4,7 @@
   "description": "A simple webpage for Inyards Fantasy Sports",
   "main": "server.js",
   "dependencies": {
+    "array-sort-by": "^1.0.3-a",
     "array-subtract": "^2.0.0",
     "body-parser": "^1.15.2",
     "bower": "^1.8.0",

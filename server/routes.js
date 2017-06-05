@@ -59,6 +59,8 @@ module.exports = function(app) {
 	//user routes
 	app.post('/username', UserController.validate);
 	app.post('/register', UserController.save);
+	
+	app.get('/playerHistory/:username', PointsSystemController.getPlayerHistory);
 
 	//login routes
 	app.post('/authenticate', LoginController.authenticate);
