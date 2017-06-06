@@ -3,6 +3,7 @@
 */
 var LoginController = require('./controllers/LoginController');
 var UserController = require('./controllers/UserController');
+var ResetController = require('./controllers/ResetController');
 var InviteController = require('./controllers/InviteController');
 
 // var UsersHandler = require('./handlers/User/UsersHandler')
@@ -44,6 +45,12 @@ module.exports = function(app) {
 			root: __dirname
 		});
 	});
+	
+	app.get('/logo',function(req,res){
+		res.sendFile('logo.png', {
+			root: __dirname
+		});
+	});
 
 	//invite route
 	app.post('/invite', InviteController.save);
@@ -59,6 +66,14 @@ module.exports = function(app) {
 	//user routes
 	app.post('/username', UserController.validate);
 	app.post('/register', UserController.save);
+	// app.post('/reset', UserController.resetPasswordRequest);
+	// app.get('/reset/:token', UserController.resetPasswordResponse);
+	// app.post('/reset/:token', UserController.resetPassword);
+	// app.post('/changePassword', UserController.changePassword);
+	app.post('/reset', ResetController.resetPasswordRequest)
+	app.get('/reset/:token', ResetController.resetPasswordResponse);
+	app.post('/reset/:token', UserController.resetPassword);
+	app.post('/changePassword', UserController.changePassword);
 	
 	app.get('/playerHistory/:username', PointsSystemController.getPlayerHistory);
 
@@ -111,8 +126,6 @@ module.exports = function(app) {
 
 	//MatchCard routes
 	app.post('/createMatchCard', PointsSystemController.createMatchCard);
-	// app.get('/computeMatchPoints/:matchId', PointsSystemController.computeMatchPoints);
-	//app.post('/getMatchCard', PointsSystemController.getMatchCard);
 	app.get('/leaderboard/:matchId', PointsSystemController.getMatchLeaderboard);
 
 
@@ -121,20 +134,24 @@ module.exports = function(app) {
 
 	app.get('/pitch/:storyId', PitchController.getStory);
 	app.get('/pitches', PitchController.getAllStories);
+	app.get('/pitchesByRecent', PitchController.getRecentStories);
+	app.get('/pitchesByTrend', PitchController.getTrendingStories);
 	app.post('/pitch', PitchController.saveStory);
-	app.post('/pitchByUser', PitchController.getStoriesByUser);
+	app.post('/pitchesByUser', PitchController.getStoriesByUser);
 	app.post('/pitch/view', PitchController.viewStory);
 	app.post('/pitch/like', PitchController.likeStory);
 	app.post('/pitch/share', PitchController.shareStory);
 	app.post('/pitch/comment', PitchController.commentStory);
-	app.post('/pitch/approve', PitchController.approveStory);
-	app.post('/pitch/publish', PitchController.publishStory);
+	app.post('/pitch/report', PitchController.reportStory);
+	// app.post('/pitch/approve', PitchController.approveStory);
+	// app.post('/pitch/publish', PitchController.publishStory);
 
-	app.get('/Live',PitchController.LiveScores);
-	app.get('/Fixture',PitchController.Fixtures);
-	app.get('/Commentary',PitchController.Commentary);
-	app.get('/Stats',PitchController.Stats);
-	app.get('/Standings',PitchController.Standings);
-	app.get('/Videos',PitchController.Videos);
-	app.get('/TopScorers',PitchController.TopScorers);
+	// app.get('/Live',PitchController.LiveScores);
+	// app.get('/Fixture',PitchController.Fixtures);
+	// app.get('/Commentary',PitchController.Commentary);
+	// app.get('/Stats',PitchController.Stats);
+	// app.get('/Standings',PitchController.Standings);
+	// app.get('/Videos',PitchController.Videos);
+	// app.get('/TopScorers',PitchController.TopScorers);
+
 };

@@ -89,7 +89,8 @@ exports.updateFixturesJob = function() {
                         //var data = ["691324","691323","699154","699153","699151","699155","699152","730211","730218","683313","730217","683309","730215","730220","730219","730212","683310","730216"];
 
                         data.forEach(function(fixture, index) {
-
+                            console.log('update started for match id ' + fixture.id);
+                             
                             params = 'livescore/match/' + fixture.id;
                             include = 'lineup,events'
 
@@ -127,7 +128,7 @@ exports.updateFixturesJob = function() {
                                         }
 
                                         if (match == null) {
-                                            console.log(responseToConsole(Codes.status.SUCCESS, Codes.httpStatus.OK, '', Codes.errorMsg.F_INV_MID));
+                                            console.log(responseToConsole(Codes.status.FAILURE, Codes.httpStatus.BR, '', Codes.errorMsg.F_INV_MID));
                                             return;
                                         }
 

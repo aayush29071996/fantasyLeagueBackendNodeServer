@@ -12,8 +12,8 @@ var CommentSchema = new mongoose.Schema({
 });
 
 var StorySchema = new mongoose.Schema({
-	user:{type:Schema.Types.ObjectId, ref:'User'},
-	status:{type:String, enum:['CREATED', 'APPROVED' ,'PUBLISHED'], default:'CREATED'},
+	user:{type:Schema.Types.ObjectId, ref:'User', required:true},
+	status:{type:String, enum:['CREATED', 'APPROVED' ,'PUBLISHED','REPORTED'], default:'CREATED'},
 	category:{type:Schema.Types.ObjectId, ref:'Category'},
 	title:{type:String},
 	content:{type:String},
@@ -22,12 +22,11 @@ var StorySchema = new mongoose.Schema({
 	coverPicture:{type:String},
 	//coverPicture:{type:Schema.Types.ObjectId, ref:'StoryCoverPicture'},
 	countsView:{type:Number,default:0},
-	countsLike:{type:Number,default:0},
-	countsShare:{type:Number,default:0},
-	countsComment:{type:Number,default:0},
 	likes:[{type:Schema.Types.ObjectId, ref:'User'}],
 	shares:[{type:Schema.Types.ObjectId, ref:'User'}],
+	trendIndex:{type:Number, default:0},
 	comments:[CommentSchema],
+	reports:[CommentSchema],
 	createdOn:{type:Date},
 	approvedOn:{type:Date},
 	publishedOn:{type:Date}
