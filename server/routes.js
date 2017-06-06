@@ -5,7 +5,7 @@ var LoginController = require('./controllers/LoginController');
 var UserController = require('./controllers/UserController');
 var ResetController = require('./controllers/ResetController');
 var InviteController = require('./controllers/InviteController');
-
+var ContactController = require('./controllers/ContactController');
 // var UsersHandler = require('./handlers/User/UsersHandler')
 
 var FixturesHandler = require('./handlers/Football/FixturesHandler');
@@ -74,6 +74,10 @@ module.exports = function(app) {
 	app.get('/reset/:token', ResetController.resetPasswordResponse);
 	app.post('/reset/:token', UserController.resetPassword);
 	app.post('/changePassword', UserController.changePassword);
+	
+	app.post('/feedback', ContactController.sendFeedback);
+	//app.post('/complaint', ContactController.sendComplaint);
+	
 	
 	app.get('/playerHistory/:username', PointsSystemController.getPlayerHistory);
 
