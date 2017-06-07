@@ -27,6 +27,7 @@ exports.errorMsg = {
 	F_ID_INUSE : 'fixture id in use',
 	ST_NO : 'currently, no pitches',
 	CT_NO : 'currently, no categories',
+	PS_INV_ID: 'invalid point system id'
 }
 
 exports.status = {
