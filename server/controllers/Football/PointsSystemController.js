@@ -6,6 +6,7 @@
  var Match = require('../../models/Football/Match');
  var MatchCard = require('../../models/Football/MatchCard');
  var Player = require('../../models/Football/Master/Player');	
+ var Team = require('../../models/Football/Master/Team');	
  var moment = require('moment');
  var _ = require('underscore');
  var sortBy = require('array-sort-by');
@@ -13,6 +14,7 @@
  var Codes = require('../../Codes');
  var Validation = require('../Validation');
 
+var HistoryCount = require('../../modules/getHistoryCount');
 
 exports.createMatchCard = function(req, res) {
 
@@ -195,7 +197,7 @@ exports.getPlayerHistory = function(req, res){
 	        return;	
 			}
 			
-		MatchCard.find({user:userObjectId}).select("-__v -_id -players -createdOn").populate('match','startingDateTime _id', null, { sort: { startingDateTime: -1 } }).exec(function(error,cards){
+		MatchCard.find({user:userObjectId}).select("-__v -_id -players -createdOn").populate('match','startingDateTime matchId team1Id team2Id').exec(function(error,cards){
 			if(error){
 			res.status(Codes.httpStatus.ISE).json({
 	            status: Codes.status.FAILURE,
@@ -210,7 +212,7 @@ exports.getPlayerHistory = function(req, res){
 			if(cards.length>0){
 			for(var i=0;i<cards.length;i++){
 				previousMatches.push(cards[i].match._id);
-				theHistory.push({playedOn:cards[i].match.startingDateTime, points:cards[i].matchPoints});
+				theHistory.push({playedOn:cards[i].match.startingDateTime, points:cards[i].matchPoints, match:cards[i].match});
 				}
 			}
 			sortBy(theHistory, (s) => -new Date(s.playedOn));
@@ -224,13 +226,24 @@ exports.getPlayerHistory = function(req, res){
 		        });
 		        return;
 				}
-				res.status(Codes.httpStatus.OK).json({
+				HistoryCount.getHistoryCount(function(countErr,totalMatches){
+					if(countErr){
+						res.status(Codes.httpStatus.ISE).json({
+			            status: Codes.status.FAILURE,
+			            code: Codes.httpStatus.ISE,
+			            data: '',
+			            error: Codes.errorMsg.UNEXP_ERROR
+			        });
+			        return;	
+					}
+					res.status(Codes.httpStatus.OK).json({
 		            status: Codes.status.SUCCESS,
 		            code: Codes.httpStatus.OK,
 		            data: {
 		            	matchCards:previousMatches,
 		            	performance:{
 		            		matchesPlayed: previousMatches.length,
+		            		totalMatches: totalMatches,
 		            		points:{
 		            			userPoints: userPoint,
 		            			topPoints: all[0].userPoints
@@ -242,7 +255,9 @@ exports.getPlayerHistory = function(req, res){
 	            	},
 		            error: ''
 				});
-				
+				return;
+					
+				});
 				
 			});
 		

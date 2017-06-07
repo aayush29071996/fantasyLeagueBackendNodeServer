@@ -66,7 +66,7 @@ exports.sendFeedback = function(req, res){
 		});
 }
 
-exports.resetPasswordResponse = function(req, res){
+exports.sendComplaint = function(req, res){
 	User.findOne({resetPasswordToken:req.params.token, resetPasswordExpires:{$gt: moment.utc()}}, function(err, user){
 		if(err){
 			res.status(httpStatus.ISE).json({
@@ -86,40 +86,6 @@ exports.resetPasswordResponse = function(req, res){
 			});
 			return;
 		}
-
-		res.status(httpStatus.OK).json({
-			status: status.SUCCESS,
-			code: httpStatus.OK,
-			data: user.email,
-			error: ''
-		});
-		
-	});
-}
-
-exports.resetPassword = function(req, res){
-	User.findOne({resetPasswordToken:req.params.token, resetPasswordExpires:{$gt: moment.utc()}}, function(err, user){
-		if(err){
-			res.status(httpStatus.ISE).json({
-				status: status.FAILURE,
-				code: httpStatus.ISE,
-				data: '',
-				error: errorMsg.UNEXP_ERROR
-			});
-			return;
-		}
-		if(user == null){
-			res.status(httpStatus.BR).json({
-				status: status.FAILURE,
-				code: httpStatus.BR,
-				data: '',
-				error: errorMsg.INVALID_TOKEN
-			});
-			return;
-		}
-
-		var hash = encrypt(key, trimmed(req.body.password));
-		user.password = hash;
 		user.resetPasswordToken = undefined;
 		user.resetPasswordExpires = undefined;
 
@@ -145,49 +111,6 @@ exports.resetPassword = function(req, res){
 	});
 }
 
-
-exports.changePassword = function(req, res){
-	User.findOne({email:req.body.email, password:encrypt(key, req.body.oldPassword)}).exec(function(err, user){
-		if(err){
-			res.status(httpStatus.ISE).json({
-				status: status.FAILURE,
-				code: httpStatus.ISE,
-				data: '',
-				error: errorMsg.UNEXP_ERROR
-			});
-			return;
-		}
-		if(user == null){
-			res.status(httpStatus.BR).json({
-				status:status.FAILURE,
-				code: httpStatus.BR,
-				data: '',
-				error: errorMsg.OLD_PASS_DOESNT_MATCH
-			});
-			return;
-		}
-
-		user.password = encrypt(key, req.body.newPassword);
-		user.save(function (saveErr, saveUser){
-				if(saveErr){
-					res.status(httpStatus.BR).json({
-						status: status.FAILURE,
-						code: httpStatus.BR,
-						data: '',
-						error: Validation.validatingErrors(saveErr)
-					});
-					return;
-				}
-				res.status(httpStatus.OK).json({
-					status: status.SUCCESS,
-					code: httpStatus.OK,
-					data: '',
-					error: ''
-				});
-			});
-		
-	});
-}
 
 function sendFeedbackMail(toAddr, feedback,user){
 var date1 = new Date(user.createdOn);

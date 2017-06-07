@@ -12,6 +12,8 @@ var FixturesHandler = require('./handlers/Football/FixturesHandler');
 var TeamsHandler = require('./handlers/Football/TeamsHandler');
 var PlayersHandler = require('./handlers/Football/PlayersHandler');
 
+
+var RosterController = require('./controllers/Football/RosterController');
 var FixtureController = require('./controllers/Football/FixtureController');
 var TeamController = require('./controllers/Football/TeamController');
 var PlayerController = require('./controllers/Football/PlayerController');
@@ -76,6 +78,9 @@ module.exports = function(app) {
 	app.post('/changePassword', UserController.changePassword);
 	
 	app.post('/feedback', ContactController.sendFeedback);
+	
+	
+	app.get('/roster/:matchId', RosterController.getRoster);
 	//app.post('/complaint', ContactController.sendComplaint);
 	
 	
