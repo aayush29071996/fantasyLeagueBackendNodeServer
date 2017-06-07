@@ -134,16 +134,16 @@ var gk=[];
 function getRosterColorCode(pos){
 	var cc;
 	switch(pos){
-		case 1:
+		case '1':
 			cc="#e67e22";
 			break;
-		case 2:
+		case '2':
 			cc="#f1c40f";
 			break;
-		case 3:
+		case '3':
 			cc="#2ecc71";
 			break;
-		case 4:
+		case '4':
 			cc="#3498db";
 			break;
 		default:
