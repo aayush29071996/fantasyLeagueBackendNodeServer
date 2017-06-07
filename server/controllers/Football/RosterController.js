@@ -85,10 +85,22 @@ exports.getRoster = function(req, res){
 						});
 					
 				}
+				var totalRoster=splitRoster(players);
+				var fwd=totalRoster[0];
+				var mid=totalRoster[1];
+				var def=totalRoster[2];
+				var gk=totalRoster[3];
+				
 					res.status(Codes.httpStatus.OK).json({
 						status: Codes.status.SUCCESS,
 						code: Codes.httpStatus.OK,
-						data: shuffleJSON(players),
+						data: {
+							all: shuffleJSON(players),
+							fwd: shuffleJSON(fwd),
+							mid: shuffleJSON(mid),
+							def: shuffleJSON(def),
+							gk: shuffleJSON(gk)
+						},
 						error: ''
 					});
 					return;
@@ -99,6 +111,25 @@ exports.getRoster = function(req, res){
 		});
 }
 
+function splitRoster(players){
+var fwd=[];
+var mid=[];
+var def=[];
+var gk=[];
+	for(var i=0;i<players.length;i++){
+		var pos=players[i].position;
+		if(pos==1)
+			gk.push(players[i]);
+		else if(pos==2)
+			def.push(players[i]);
+		else if(pos==3)
+			mid.push(players[i]);
+		else if(pos==4)
+			fwd.push(players[i]);
+	}
+	
+	return [fwd,mid,def,gk];
+};
 
 function getRosterColorCode(pos){
 	var cc;
