@@ -3,12 +3,17 @@
 */
 var LoginController = require('./controllers/LoginController');
 var UserController = require('./controllers/UserController');
+var ResetController = require('./controllers/ResetController');
 var InviteController = require('./controllers/InviteController');
+var ContactController = require('./controllers/ContactController');
+// var UsersHandler = require('./handlers/User/UsersHandler')
 
 var FixturesHandler = require('./handlers/Football/FixturesHandler');
 var TeamsHandler = require('./handlers/Football/TeamsHandler');
 var PlayersHandler = require('./handlers/Football/PlayersHandler');
 
+
+var RosterController = require('./controllers/Football/RosterController');
 var FixtureController = require('./controllers/Football/FixtureController');
 var TeamController = require('./controllers/Football/TeamController');
 var PlayerController = require('./controllers/Football/PlayerController');
@@ -30,12 +35,13 @@ module.exports = function(app) {
 			root: __dirname
 		});
 	});
-	
+
 	app.get('/pitch', function(req,res){
 		res.sendFile('pitch/index.html', {
-			root: __dirname	
-		});	
+			root: __dirname
+		});
 	});
+
 	app.get('/pitch/all', function(req,res){
 		res.sendFile('pitch/views/all.html', {
 			root: __dirname	
@@ -54,10 +60,16 @@ module.exports = function(app) {
 	
 	app.get('/mpitch', function(req,res){
 		res.sendFile('mpitch/index.html', {
-			root: __dirname	
-		});	
+			root: __dirname
+		});
 	});
 	
+	app.get('/logo',function(req,res){
+		res.sendFile('logo.png', {
+			root: __dirname
+		});
+	});
+
 	//invite route
 	app.post('/invite', InviteController.save);
 
@@ -68,16 +80,32 @@ module.exports = function(app) {
 		else
 			res.send({ success: false });
 	});
-	
+
 	//user routes
 	app.post('/username', UserController.validate);
 	app.post('/register', UserController.save);
-	app.post('/reset', UserController.resetPasswordRequest);
-	app.get('/reset/:token', UserController.resetPasswordResponse);
-	app.post('/reset/:token', UserController.resetPassword);
-	app.post('/changePassword', UserController.changePassword);
+
 	app.post('/getAllUsers', UserController.getAllUsers);
 	app.post('/getUser', UserController.getUser);
+
+	// app.post('/reset', UserController.resetPasswordRequest);
+	// app.get('/reset/:token', UserController.resetPasswordResponse);
+	// app.post('/reset/:token', UserController.resetPassword);
+	// app.post('/changePassword', UserController.changePassword);
+	app.post('/reset', ResetController.resetPasswordRequest)
+	app.get('/reset/:token', ResetController.resetPasswordResponse);
+	app.post('/reset/:token', UserController.resetPassword);
+	app.post('/changePassword', UserController.changePassword);
+	
+	app.post('/feedback', ContactController.sendFeedback);
+	
+	
+	app.get('/roster/:matchId', RosterController.getRoster);
+	//app.post('/complaint', ContactController.sendComplaint);
+	
+	
+	app.get('/playerHistory/:username', PointsSystemController.getPlayerHistory);
+
 
 	//login routes
 	app.post('/authenticate', LoginController.authenticate);
@@ -88,7 +116,7 @@ module.exports = function(app) {
 	app.get('/seedTeams',TeamsHandler.populateTeamsForAllSeasons);
 	app.get('/seedPlayers',PlayersHandler.populatePlayersForAllTeams);
 
-	app.get('/mergeTeams',TeamsHandler.mergeTeamDuplicates);	
+	app.get('/mergeTeams',TeamsHandler.mergeTeamDuplicates);
 
 	app.get('/historyFixturesAdmin', FixtureController.getFixturesHistoryAdmin);
 	app.get('/liveFixturesAdmin', FixtureController.getFixturesLiveAdmin);
@@ -154,4 +182,5 @@ module.exports = function(app) {
 	// app.get('/Standings',PitchController.Standings);
 	// app.get('/Videos',PitchController.Videos);
 	// app.get('/TopScorers',PitchController.TopScorers);
+
 };

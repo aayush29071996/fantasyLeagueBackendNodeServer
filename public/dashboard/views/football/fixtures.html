@@ -1,133 +1,98 @@
-<div class="row" style="margin-top: 75px;">
-    <div class="col-lg-4">
-        <div class="panel panel-custom panel-border">
-            <div class="panel-heading">
-                <h3 class="panel-title">Lorem ipsum</h3>
-            </div>
-            <div class="panel-body">
-                <p>
-                    Lorem ipsum dolor sit amet, consectetuer adipiscing elit,
-                    sed diam nonummy nibh euismod tincidunt ut laoreet dolore
-                    magna aliquam erat volutpat. Ut wisi enim ad minim veniam,
-                    quis nostrud exerci tation ullamcorper suscipit
-                </p>
-            </div>
-        </div>
+<div class="panel panel-color panel-tabs panel-success" style="margin-top:75px;padding: 29px;" ng-init="upcomingActive=true;liveActive=false;historyActive=false;">
+    <div class="panel-heading">
+        <ul class="nav nav-pills" style="display: block;margin: auto;width: 25vw;">
+			<li ng-class="upcomingActive?'active':''">
+				<a style="cursor: pointer;" ng-click="upcomingActive=true;liveActive=false;historyActive=false;">Upcoming</a>
+			</li>
+			<li ng-class="liveActive?'active':''">
+				<a style="cursor: pointer;" ng-click="upcomingActive=false;liveActive=true;historyActive=false;">Live</a>
+			</li>
+			<li ng-class="historyActive?'active':''">
+				<a style="cursor: pointer;" ng-click="upcomingActive=false;liveActive=false;historyActive=true;">History</a>
+			</li>
+		</ul>
     </div>
-
-    <div class="col-lg-4">
-        <div class="panel panel-border panel-pink">
-            <div class="panel-heading">
-                <h3 class="panel-title">Lorem ipsum</h3>
-            </div>
-            <div class="panel-body">
-                <p>
-                    Lorem ipsum dolor sit amet, consectetuer adipiscing elit,
-                    sed diam nonummy nibh euismod tincidunt ut laoreet dolore
-                    magna aliquam erat volutpat. Ut wisi enim ad minim veniam,
-                    quis nostrud exerci tation ullamcorper suscipit
-                </p>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-4">
-        <div class="panel panel-border panel-success">
-            <div class="panel-heading">
-                <h3 class="panel-title">Live</h3>
-            </div>
-            <div class="panel-body">
-                <table cg-busy="{promise:LiveMatchPromise,message:'Please Wait...'}" class="table table-striped dataTable no-footer" id="datatable-editable" role="grid">
+    <div class="panel-body">
+		<div class="tab-content">
+			<div ng-show="upcomingActive" class="tab-pane active in">
+				<div class="row">
+                    <div class="col-md-12">
+                        
+                        <table cg-busy="{promise:UpcomingMatchPromise,message:'Please Wait...'}" class="table table-striped dataTable no-footer" id="datatable-editable" role="grid">
+            <thead>
+                <tr role="row">
+                <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Match Id</th>
+                <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Date</th>
+                <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Home</th>
+                <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Away</th>
+                <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Play</th>
+            </thead>
             <tbody>
-            <tr class="gradeA odd" role="row" ng-repeat="matches in liveMatches">
-                    <td style="text-align:center;">{{matches.homeTeam.logo}}</td>
-                    <td style="text-align:center;">{{matches.homeTeam.name}}</td>
-                    <td style="text-align:center;">{{matches.active}}</td>                    
-            </tr>
-            </tbody>
-        </table>
-        
-            </div>
-        </div>
-    </div>
-    
-</div>
-<table cg-busy="{promise:UpcomingMatchesPromise,message:'Please Wait...'}" class="table table-striped dataTable no-footer" id="datatable-editable" role="grid">
-            <!--<thead>-->
-            <!--    <tr role="row">-->
-            <!--    <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 215px;">-->
-            <!--    Team Id</th>-->
-            <!--    <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 283px;">Team Name</th>-->
-            <!--    <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Status</th>-->
-                <!--<th tabindex="0" rowspan="1" colspan="1" style="width: 259px;">League #1</th>-->
-                <!--<th tabindex="0" rowspan="1" colspan="1" style="width: 259px;">League #2</th>-->
-                <!--<th tabindex="0" rowspan="1" colspan="1" style="width: 259px;">League #3</th>-->
-            <!--    <th style="text-align:center;" rowspan="1" colspan="1" style="width: 110px;">Actions</th></tr>-->
-            <!--</thead>-->
-            <tbody>
-            <tr class="gradeA odd" role="row" ng-repeat="umatch in upcomingMatches">
-                    
-                    <td style="text-align:center;">{{umatch[1].team1[0].logo}}</td>
-                    <td style="text-align:center;">{{umatch[1].team1[0].name}}</td>
-                    <td style="text-align:center;">{{umatch[1].team2[0].name}}</td>
-                    <td style="text-align:center;">{{umatch[1].team2[0].logo}}</td>
-                    
-                    <!--<td style="display:none;text-align:center;"><input ng-model="updatedTeam.name" style="text-align:center;background: transparent;border: 1px #98a6ad dashed;" type="text" value="{{teams.name}}"></td>-->
-                    <!--<td style="display:none;text-align:center;">-->
-                    <!--<button type="button" id="statusBtn" ng-click="clickedToggle();" class="btn btn-trans waves-effect w-md m-b-5">{{updatedTeam.active}}</button>-->
-                    <!--<button type="button" ng-show="updatedTeam.active" ng-click="updatedTeam.active=false" class="btn btn-success btn-trans waves-effect w-md waves-success m-b-5">true</button>-->
-                        <!--<input ng-model="updatedTeam.active" style="text-align:center;background: transparent;border: 1px #98a6ad dashed;" type="text" value="{{teams.active}}">-->
-                    <!--</td>-->
-                    
-                    <!--<td>{{teams.competitions[0].name}}</td>-->
-                    <!--<td>{{teams.competitions[1].name}}</td>-->
-                    <!--<td>{{teams.competitions[2].name}}</td>-->
-                    <!--<td class="actions" style="text-align:center;text-align:-webkit-center">-->
-                    <!--    <a style="display:none;" href="" class="on-editing save-row" ng-click="postEdited(teams)"><i class="fa fa-save"></i></a>-->
-                    <!--    <a style="display:none;" href="" class="on-editing cancel-row" ng-click="cancelEdit(teams.teamId)"><i class="fa fa-times"></i></a>-->
-                    <!--    <a href="" class="on-default edit-row" ng-click="ViewTeam(teams.teamId)"><i class="fa fa-eye"></i></a>-->
-                    <!--    <a href="" class="on-default edit-row" ng-click="EditTeam(teams.teamId)" ><i class="fa fa-pencil"></i></a>-->
-                    <!--    <a href="" class="on-default remove-row" ng-click="DeleteTeam(teams.teamId,teams.name)"><i class="fa fa-trash-o"></i></a>-->
-                    <!--</td>-->
+            <tr class="gradeA odd" role="row" id="{{match[0].matchId}}" ng-repeat="match in upcomingMatches.data">
+                    <td style="text-align:center;">{{match[0].matchId}}</td>
+                    <td style="text-align:center;">{{returnIST(match[0].startingDateTime)}}</td>
+                    <td style="text-align:center;">{{match[1].team1[0].name}}</td>
+                    <td style="text-align:center;">{{match[1].team2[0].name}}</td>
+                    <td style="text-align:center;">{{match[0].active}}</td>
                 </tr>
                 </tbody>
         </table>
         
-        <!--<table cg-busy="{promise:PastMatchPromise,message:'Please Wait...'}" class="table table-striped dataTable no-footer" id="datatable-editable" role="grid">-->
-            <!--<thead>-->
-            <!--    <tr role="row">-->
-            <!--    <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 215px;">-->
-            <!--    Team Id</th>-->
-            <!--    <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 283px;">Team Name</th>-->
-            <!--    <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Status</th>-->
-                <!--<th tabindex="0" rowspan="1" colspan="1" style="width: 259px;">League #1</th>-->
-                <!--<th tabindex="0" rowspan="1" colspan="1" style="width: 259px;">League #2</th>-->
-                <!--<th tabindex="0" rowspan="1" colspan="1" style="width: 259px;">League #3</th>-->
-            <!--    <th style="text-align:center;" rowspan="1" colspan="1" style="width: 110px;">Actions</th></tr>-->
-            <!--</thead>-->
-            <!--<tbody>-->
-            <!--<tr class="gradeA odd" role="row" ng-repeat="pmatch in pastMatches">-->
-            <!--        <td style="text-align:center;">{{teams.teamId}}</td>-->
-            <!--        <td style="text-align:center;">{{teams.name}}</td>-->
-            <!--        <td style="text-align:center;">{{teams.active}}</td>-->
-                    
-                    <!--<td style="display:none;text-align:center;"><input ng-model="updatedTeam.name" style="text-align:center;background: transparent;border: 1px #98a6ad dashed;" type="text" value="{{teams.name}}"></td>-->
-                    <!--<td style="display:none;text-align:center;">-->
-                    <!--<button type="button" id="statusBtn" ng-click="clickedToggle();" class="btn btn-trans waves-effect w-md m-b-5">{{updatedTeam.active}}</button>-->
-                    <!--<button type="button" ng-show="updatedTeam.active" ng-click="updatedTeam.active=false" class="btn btn-success btn-trans waves-effect w-md waves-success m-b-5">true</button>-->
-                        <!--<input ng-model="updatedTeam.active" style="text-align:center;background: transparent;border: 1px #98a6ad dashed;" type="text" value="{{teams.active}}">-->
-                    <!--</td>-->
-                    
-                    <!--<td>{{teams.competitions[0].name}}</td>-->
-                    <!--<td>{{teams.competitions[1].name}}</td>-->
-                    <!--<td>{{teams.competitions[2].name}}</td>-->
-                    <!--<td class="actions" style="text-align:center;text-align:-webkit-center">-->
-                    <!--    <a style="display:none;" href="" class="on-editing save-row" ng-click="postEdited(teams)"><i class="fa fa-save"></i></a>-->
-                    <!--    <a style="display:none;" href="" class="on-editing cancel-row" ng-click="cancelEdit(teams.teamId)"><i class="fa fa-times"></i></a>-->
-                    <!--    <a href="" class="on-default edit-row" ng-click="ViewTeam(teams.teamId)"><i class="fa fa-eye"></i></a>-->
-                    <!--    <a href="" class="on-default edit-row" ng-click="EditTeam(teams.teamId)" ><i class="fa fa-pencil"></i></a>-->
-                    <!--    <a href="" class="on-default remove-row" ng-click="DeleteTeam(teams.teamId,teams.name)"><i class="fa fa-trash-o"></i></a>-->
-                    <!--</td>-->
-        <!--        </tr>-->
-        <!--        </tbody>-->
-        <!--</table>-->
-        
+                        
+                    </div>
+				</div>
+			</div>
+			<div ng-show="liveActive" class="tab-pane active in">
+				<div class="row">
+					<div class="col-md-12">
+                        
+                        <table cg-busy="{promise:LiveMatchPromise,message:'Please Wait...'}" class="table table-striped dataTable no-footer" id="datatable-editable" role="grid">
+            <thead ng-show="liveMatches.data!=''">
+                <tr role="row">
+                <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Match Id</th>
+                <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Home</th>
+                <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Away</th>
+                <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Score</th>
+            </thead>
+            <tbody ng-show="liveMatches.data!=''">
+            <tr class="gradeA odd" role="row" id="{{match[0].matchId}}" ng-repeat="match in liveMatches.data">
+                    <td style="text-align:center;">{{match[0].matchId}}</td>
+                    <td style="text-align:center;">{{match[1].team1[0].name}}</td>
+                    <td style="text-align:center;">{{match[1].team2[0].name}}</td>
+                    <td style="text-align:center;">{{match[0].team1Score + ' ' + match[0].team1Score}}</td>
+                </tr>
+                </tbody>
+        </table>
+          <p ng-show="liveMatches.data==''" style="color: #fff;width: 100%;text-align: center;">The Stadium is Empty</p>
+					</div>
+				</div>
+			</div>
+			<div ng-show="historyActive" class="tab-pane active in">
+				<div class="row">
+					<div class="col-md-12">
+                        
+                        <table cg-busy="{promise:PastMatchPromise,message:'Please Wait...'}" class="table table-striped dataTable no-footer" id="datatable-editable" role="grid">
+            <thead>
+                <tr role="row">
+                <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Match Id</th>
+                <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Date</th>
+                <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Home</th>
+                <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Away</th>
+                <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Actions</th>
+            </thead>
+            <tbody>
+            <tr class="gradeA odd" role="row" id="{{match[0].matchId}}" ng-repeat="match in pastMatches.data">
+                    <td style="text-align:center;">{{match[0].matchId}}</td>
+                    <td style="text-align:center;">{{returnIST(match[0].startingDateTime)}}</td>
+                    <td style="text-align:center;" ng-style="{color: match[0].team1Score==match[0].team2Score? '#cd9400' : (match[0].team1Score>match[0].team2Score? '#5acd5a' : '#cd5a5a')}">{{match[1].team1[0].name + ' (' + match[0].team1Score + ')'}}</td>
+                    <td style="text-align:center;" ng-style="{color: match[0].team1Score==match[0].team2Score? '#cd9400' : (match[0].team1Score>match[0].team2Score? '#cd5a5a' : '#5acd5a')}">{{match[1].team2[0].name + ' (' + match[0].team2Score + ')'}}</td>
+                    <td style="text-align:center;"><button style="color: #ffcc33;background: transparent;border: solid 1px #ffcc33;border-radius: 30px;width: 9vw;">Leaderboard</button></td>
+                </tr>
+                </tbody>
+        </table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

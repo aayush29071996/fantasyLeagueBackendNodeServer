@@ -1,15 +1,19 @@
 'use strict';
-        
+
 var dashBoard = angular.module('dashBoard', [
     'ui.router',
     'angularUtils.directives.dirPagination',
     'dashboardCtrl',
+    'userCustCtrl',
+    'userEmpCtrl',
+    'userVendorsCtrl',
     'footTeamsCtrl',
     'footPlayersCtrl',
     'dashControllers',
     'dashServices',
     'ngMaterial',
-    'cgBusy'
+    'cgBusy',
+    'angularMoment'
 ]);
 dashBoard.run(function($rootScope){
   $rootScope._ = _;
@@ -28,7 +32,7 @@ dashBoard.config(function($stateProvider, $locationProvider, $urlRouterProvider)
             templateUrl: 'dashboard/views/admin.html',
             controller: 'Admin'
           })
-        
+
           .state('admin.dashboard', {
             url: '/dashboard',
             views: {
@@ -38,15 +42,51 @@ dashBoard.config(function($stateProvider, $locationProvider, $urlRouterProvider)
               }
             }
           })
-          .state('admin.users', {
-            url: '/users',
+          // .state('admin.users', {
+          //   url: '/users',
+          //   views: {
+          //     'admin-users': {
+          //       templateUrl: 'dashboard/views/admin-users.html',
+          //       controller: 'Users'
+          //     }
+          //   }
+          // })
+          .state('admin.points', {
+            url: '/points',
             views: {
-              'admin-users': {
-                templateUrl: 'dashboard/views/admin-users.html',
-                controller: 'Users'
+              'admin-points': {
+                templateUrl: 'dashboard/views/admin-points.html',
+                controller: 'Points'
               }
             }
           })
+          .state('admin.usercust', {
+              url:'/users/customers',
+              views: {
+                'admin-users-customers': {
+                  templateUrl: 'dashboard/views/users/customers.html',
+                  controller:'UserCust'
+                }
+              }
+            })
+          .state('admin.useremp', {
+             url:'/users/employees',
+             views: {
+              'admin-users-employees': {
+                templateUrl: 'dashboard/views/users/employees.html',
+                controller:'UserEmp'
+              }
+            }
+          })
+          .state('admin.uservendors', {
+              url:'/users/vendors',
+              views: {
+                'admin-users-vendors': {
+                  templateUrl: 'dashboard/views/users/vendors.html',
+                  controller:'UsersVendors'
+                }
+              }
+            })
           .state('admin.footteams', {
             url: '/football/teams',
             views: {
@@ -119,8 +159,8 @@ dashBoard.config(function($stateProvider, $locationProvider, $urlRouterProvider)
               }
             }
           })
-        
+
         $urlRouterProvider.otherwise('/login');
-        
+
         $locationProvider.hashPrefix('');
     });

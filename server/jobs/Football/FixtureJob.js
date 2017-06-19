@@ -90,9 +90,14 @@ exports.updateFixturesJob = function() {
                         //var data = ["691324","691323","699154","699153","699151","699155","699152","730211","730218","683313","730217","683309","730215","730220","730219","730212","683310","730216"];
 
                         data.forEach(function(fixture, index) {
+<<<<<<< HEAD
 
                             console.log('update started for match id ' + fixture.id);
                                 
+=======
+                            console.log('update started for match id ' + fixture.id);
+                             
+>>>>>>> 2d8b616a125deeb00beb8be7933282c1ee3087b5
                             params = 'livescore/match/' + fixture.id;
                             include = 'lineup,events'
 
