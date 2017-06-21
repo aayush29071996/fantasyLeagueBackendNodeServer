@@ -345,16 +345,10 @@ exports.createMatchCard = function(req, res) {
 
 exports.getMatchLeaderboard = function(req, res){
 
-<<<<<<< HEAD
-	MatchCard.find({match:req.params.matchId}).sort("matchPoints",1).populate('user').exec(function(matchCardsErr, matchCards){
-
-		if(matchCardsErr){
-=======
 	var matchObjectId;
 	console.log(req.params.matchId);
 	Match.find({matchId:req.params.matchId}).exec(function(matchErr, match){
 		if(matchErr){
->>>>>>> 2d8b616a125deeb00beb8be7933282c1ee3087b5
 			res.status(Codes.httpStatus.ISE).json({
 	            status: Codes.status.FAILURE,
 	            code: Codes.httpStatus.ISE,

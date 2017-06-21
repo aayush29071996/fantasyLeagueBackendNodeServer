@@ -15,16 +15,18 @@ var Validation = require('../../controllers/Validation');
 
 // var API_TOKEN_OLD = "H7H9qU3lmK1UNpqQoNxBI2PkZJec2IMAcNhByMSQ1GWhAt5tUDVtobVc1ThK";
 var API_TOKEN = "EyTtWbGs9ZnUYam1xB63iXoJ4EZ4TuTKGmQaebB1tpsrxq5VcdQ3gPVgjMyz";
-var baseUrl = "https://api.soccerama.pro/v1.2/";
+// var baseUrl = "https://api.soccerama.pro/v1.2/";
+var baseUrl = "https://soccer.sportmonks.com/api/v2.0/";
 
 var fireUrl = function(params, include) {
+	console.log('firing url : ' + baseUrl + params + "?api_token=" + API_TOKEN + "&include=" + include);
     return baseUrl + params + "?api_token=" + API_TOKEN + "&include=" + include;
 };
 
 exports.populateCompetitionsAndSeasons = function(req, res) {
 
-    params = 'competitions';
-    include = 'currentSeason';
+    params = 'leagues';
+    include = 'season';
 
     request.get(fireUrl(params, include), function(err, response, data) {
 
@@ -97,8 +99,8 @@ exports.populateCompetitionsAndSeasons = function(req, res) {
                         var newCompetiton = new Competition();
                         newCompetiton.competitionId = competiton.id;
                         newCompetiton.name = competiton.name;
-                        newCompetiton.active = competiton.active;
-                        newCompetiton.currentSeason = competiton.currentSeason.id;
+                        newCompetiton.active = true;
+                        newCompetiton.currentSeason = competiton.current_season_id;
                         newCompetiton.save(function(compSaveErr, savedComp) {
                             if (compSaveErr) {
                                 console.log('compSaveErr')
@@ -129,10 +131,10 @@ exports.populateCompetitionsAndSeasons = function(req, res) {
                                 if (seas == null) {
                                     console.log('adding new season')
                                     var newSeason = new Season();
-                                    newSeason.seasonId = competiton.currentSeason.id;
+                                    newSeason.seasonId = competiton.season.data.id;
                                     newSeason.competitionId = competiton.id;
-                                    newSeason.name = competiton.currentSeason.name;
-                                    newSeason.active = competiton.currentSeason.active;
+                                    newSeason.name = competiton.season.data.name;
+                                    newSeason.active = true;
                                     newSeason.competition = savedComp;
 
                                     newSeason.save(function(seasSaveErr, savedSeas) {
@@ -201,7 +203,7 @@ exports.populateSeasonsWithFixtures = function(req, res) {
 	            //fixtures - future
 	            //matches - all
 	            // must change below also in getting data: data = data.matches.data;
-	            include = 'matches.events,matches.lineup';
+	            include = 'fixtures.events,fixtures.lineup';
 
 	            request.get(fireUrl(params, include), function(err, response, data) {
 
@@ -286,39 +288,39 @@ exports.populateSeasonsWithFixtures = function(req, res) {
 	                               // console.log('adding new match')
 	                                var newMatch = new Match();
 	                                newMatch.matchId = fixture.id;
-	                                newMatch.team1Id = fixture.home_team_id;
-	                                newMatch.team2Id = fixture.away_team_id;
-	                                newMatch.status = fixture.status;
-	                                newMatch.team1Score = fixture.home_score;
-	                                newMatch.team2Score = fixture.away_score;
-	                                newMatch.team1Penalties = fixture.home_score_penalties;
-	                                newMatch.team2Penalties = fixture.away_score_penalties;
-	                                if (fixture.date_time_tba == 1 || fixture.date_time_tba == true) {
-	                                    newMatch.dateTimeTBA = true;
-	                                } else if (fixture.date_time_tba == 0 || fixture.date_time_tba == false) {
-	                                    newMatch.dateTimeTBA = false;
-	                                }
-	                                newMatch.startingDateTime = moment.utc(fixture.starting_date + ' ' + fixture.starting_time);
-	                                newMatch.minute = fixture.minute;
-	                                newMatch.extraMinute = fixture.extra_time;
+	                                newMatch.team1Id = fixture.localteam_id;
+	                                newMatch.team2Id = fixture.visitorteam_id;
+	                                newMatch.status = fixture.time.status;
+	                                newMatch.team1Score = fixture.scores.localteam_score;
+	                                newMatch.team2Score = fixture.scores.visitorteam_score;
+	                                newMatch.team1Penalties = fixture.scores.localteam_pen_score;
+	                                newMatch.team2Penalties = fixture.scores.visitorteam_pen_score;
+	                                // if (fixture.date_time_tba == 1 || fixture.date_time_tba == true) {
+	                                //     newMatch.dateTimeTBA = true;
+	                                // } else if (fixture.date_time_tba == 0 || fixture.date_time_tba == false) {
+	                                //     newMatch.dateTimeTBA = false;
+	                                // }
+	                                newMatch.startingDateTime = moment.utc(fixture.time.starting_at.date_time);
+	                                newMatch.minute = fixture.time.minute;
+	                                newMatch.extraMinute = fixture.time.extra_minute;
 	                                newMatch.seasonId = fixture.season_id;
 	                                newMatch.stageId = fixture.stage_id;
 	                                newMatch.roundId = fixture.round_id;
 	                                newMatch.venueId = fixture.venue_id;
 
-	                                if (fixture.weather == null) {
+	                                if (fixture.weather_report == null) {
 	                                    newMatch.weather == null;
 	                                } else {	                                
 	                                	newMatch.weather = {};
-	                                	newMatch.weather.code = fixture.weather.code;
-	                                    newMatch.weather.type = fixture.weather.type;
-	                                    newMatch.weather.icon = fixture.weather.icon;
-	                                    newMatch.weather.temperature = fixture.weather.temperature.temp;
-	                                    newMatch.weather.temperatureUnit = fixture.weather.temperature.unit;
-	                                    newMatch.weather.clouds = fixture.weather.clouds;
-	                                    newMatch.weather.humidity = fixture.weather.humidity;
-	                                    newMatch.weather.windSpeed = fixture.weather.windSpeed;
-	                                    newMatch.weather.windDegree = fixture.weather.windDegree;
+	                                	newMatch.weather.code = fixture.weather_report.code;
+	                                    newMatch.weather.type = fixture.weather_report.type;
+	                                    newMatch.weather.icon = fixture.weather_report.icon;
+	                                    newMatch.weather.temperature = fixture.weather_report.temperature.temp;
+	                                    newMatch.weather.temperatureUnit = fixture.weather_report.temperature.unit;
+	                                    newMatch.weather.clouds = fixture.weather_report.clouds;
+	                                    newMatch.weather.humidity = fixture.weather_report.humidity;
+	                                    newMatch.weather.windSpeed = fixture.weather_report.wind.speed;
+	                                    newMatch.weather.windDegree = fixture.weather_report.wind.degree;
 	                                }
 
 	                                if(fixture.lineup.data.length > 0){
@@ -328,29 +330,29 @@ exports.populateSeasonsWithFixtures = function(req, res) {
 		                                    playerLP = {};
 		                                    playerLP.playerId = lineup.player_id;
 		                                    playerLP.teamId = lineup.team_id;
-		                                    if(lineup.team_id === fixture.home_team_id){
+		                                    if(lineup.team_id === fixture.localteam_id){
 		                                        playerLP.team = "team1";
-		                                    } else if(lineup.team_id === fixture.away_team_id){
+		                                    } else if(lineup.team_id === fixture.visitorteam_id){
 		                                        playerLP.team = "team2";
 		                                    }
 		                                    playerLP.position = lineup.position;
-		                                    playerLP.shirtNumber = lineup.shirt_number;
-		                                    playerLP.assists = lineup.assists;
-		                                    playerLP.foulsCommited = lineup.fouls_commited;
-		                                    playerLP.foulsDrawn = lineup.fouls_drawn;
-		                                    playerLP.goals = lineup.goals;
-		                                    playerLP.offsides = lineup.offsides;
-		                                    playerLP.missedPenalties = lineup.missed_penalties;
-		                                    playerLP.scoredPenalties = lineup.scored_penalties;
+		                                    playerLP.shirtNumber = lineup.number;
+		                                    playerLP.assists = lineup.stats.other.assists;
+		                                    playerLP.foulsCommited = lineup.stats.fouls.commited;
+		                                    playerLP.foulsDrawn = lineup.stats.fouls.drawn;
+		                                    playerLP.goals = lineup.stats.goals.scored;
+		                                    playerLP.offsides = lineup.stats.other.offsides;
+		                                    playerLP.missedPenalties = lineup.stats.other.pen_missed;
+		                                    playerLP.scoredPenalties = lineup.stats.other.pen_scored;
 		                                    playerLP.posx = lineup.posx;
 		                                    playerLP.posy = lineup.posy;
-		                                    playerLP.redcards = lineup.redcards;
-		                                    playerLP.saves = lineup.saves;
-		                                    playerLP.shotsOnGoal = lineup.shots_on_goal;
-		                                    playerLP.shotsTotal = lineup.shots_total;
-		                                    playerLP.yellowcards = lineup.yellowcards;
-		                                    playerLP.type = lineup.type;
-		                                    
+		                                    playerLP.redcards = lineup.stats.cards.redcards;
+		                                    playerLP.saves = lineup.stats.other.saves;
+		                                    playerLP.shotsOnGoal = lineup.stats.shots.shots_on_goal;
+		                                    playerLP.shotsTotal = lineup.stats.shots.shots_total;
+		                                    playerLP.yellowcards = lineup.stats.cards.yellowcards;
+		                                    // playerLP.type = lineup.type;
+		                                   
 		                                    newMatch.lineup.push(playerLP);
 	                                    });      
 		                            }
@@ -361,26 +363,26 @@ exports.populateSeasonsWithFixtures = function(req, res) {
 
                                             var newEvent = new Event();
                                             newEvent.eventId = event.id;
-                                            newEvent.matchId = event.match_id;
+                                            newEvent.matchId = event.fixture_id;
                                             newEvent.teamId = event.team_id;
                                             newEvent.minute = event.minute;
-                                            newEvent.extraMinute = event.extra_min;
+                                            newEvent.extraMinute = event.extra_minute;
                                             newEvent.type = event.type;
                                             if (event.hasOwnProperty("player_id")) {
                                                 newEvent.playerId = event.player_id;
                                             }
-                                            if (event.hasOwnProperty("assist_id")) {
-                                                newEvent.assistPlayerId = event.assist_id;
+                                            if (event.hasOwnProperty("related_player_id")) {
+                                                newEvent.assistPlayerId = event.related_player_id;
                                             }
-                                            if (event.hasOwnProperty("related_event_id")) {
-                                                newEvent.relatedEventId = event.related_event_id;
-                                            }
-                                            if (event.hasOwnProperty("player_in_id")) {
-                                                newEvent.playerInId = event.player_in_id;
-                                            }
-                                            if (event.hasOwnProperty("player_out_id")) {
-                                                newEvent.playerOutId = event.player_out_id;
-                                            }
+                                            // if (event.hasOwnProperty("related_event_id")) {
+                                            //     newEvent.relatedEventId = event.related_event_id;
+                                            // }
+                                            // if (event.hasOwnProperty("player_in_id")) {
+                                            //     newEvent.playerInId = event.player_in_id;
+                                            // }
+                                            // if (event.hasOwnProperty("player_out_id")) {
+                                            //     newEvent.playerOutId = event.player_out_id;
+                                            // }
 
                                             newEvent.save(function(savedEventErr, savedEvent) {
                                                 if (savedEventErr) {

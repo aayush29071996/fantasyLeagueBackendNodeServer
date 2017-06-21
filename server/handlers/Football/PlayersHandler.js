@@ -13,9 +13,11 @@ var Validation = require('../../controllers/Validation');
 
 // var API_TOKEN_OLD = "H7H9qU3lmK1UNpqQoNxBI2PkZJec2IMAcNhByMSQ1GWhAt5tUDVtobVc1ThK";
 var API_TOKEN = "EyTtWbGs9ZnUYam1xB63iXoJ4EZ4TuTKGmQaebB1tpsrxq5VcdQ3gPVgjMyz";
-var baseUrl = "https://api.soccerama.pro/v1.2/";
+// var baseUrl = "https://api.soccerama.pro/v1.2/";
+var baseUrl = "https://soccer.sportmonks.com/api/v2.0/";
 
 var fireUrl = function(params, include) {
+    console.log('firing url : ' + baseUrl + params + "?api_token=" + API_TOKEN + "&include=" + include);
     return baseUrl + params + "?api_token=" + API_TOKEN + "&include=" + include;
 };
 
@@ -46,8 +48,8 @@ exports.populatePlayersForAllTeams = function(req, res) {
         if (teams.length > 0) {
             teams.forEach(function(team, teamIndex) {
 
-                include = 'position'
-                params = 'players/team/' + team.teamId;
+                include = 'squad.player'
+                params = 'team/' + team.teamId;
 
                 request.get(fireUrl(params, include), function(err, response, data) {
 
@@ -98,11 +100,15 @@ exports.populatePlayersForAllTeams = function(req, res) {
                             }
                         }
 
-                        data = data.data;
+                        data = data.data.squad.data;
 
                         data.forEach(function(player, playerIndex) {
 
-                            Player.findOne({ playerId: player.id }).exec(function(playerErr, playerObj) {
+                            var playerx = player;
+                            player = player.player.data;
+
+
+                            Player.findOne({ playerId: player.player_id }).exec(function(playerErr, playerObj) {
                                 if (playerErr) {
                                     res.status(Codes.httpStatus.ISE).json({
                                         status: Codes.status.FAILURE,
@@ -150,13 +156,13 @@ exports.populatePlayersForAllTeams = function(req, res) {
                                 if (playerObj == null) {
                                     console.log('adding new player')
                                     var newPlayer = new Player();
-                                    newPlayer.playerId = player.id;
-                                    newPlayer.name = player.name;
+                                    newPlayer.playerId = player.player_id;
+                                    newPlayer.name = player.common_name;
                                     newPlayer.teams.push(team);
-                                    if (player.hasOwnProperty('position')) {
-                                        newPlayer.positionId = player.position.id;
-                                        newPlayer.position = player.position.name;
-                                    }
+                                    // if (player.hasOwnProperty('position')) {
+                                        newPlayer.positionId = playerx.position_id;
+                                        // newPlayer.position = player.position.name;
+                                    // }
                                     newPlayer.save(function(playerSaveErr, savedPlayer) {
                                         if (playerSaveErr) {
                                             console.log('playerSaveErr')

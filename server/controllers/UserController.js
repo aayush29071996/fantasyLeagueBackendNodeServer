@@ -21,12 +21,8 @@ var errorMsg = {
 	USERNAME_IN_USE : 'username already in use',
 	MOBILE_IN_USE : 'mobile number in use',
 	INVALID_TOKEN : 'invalid reset password token',
-<<<<<<< HEAD
 	OLD_PASS_DOESNT_MATCH: 'Old Password does not match',
 	NO_USERS_FOUND : 'no users found'
-=======
-	OLD_PASS_DOESNT_MATCH: 'Old Password does not match'
->>>>>>> 2d8b616a125deeb00beb8be7933282c1ee3087b5
 }
 
 var status = {
@@ -43,13 +39,8 @@ var httpStatus = {
 var transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-<<<<<<< HEAD
-        user: '', // Your email id
-        pass: '' // Your password
-=======
         user: 'reachinyards@gmail.com', // Your email id
         pass: 'dev-2017' // Your password
->>>>>>> 2d8b616a125deeb00beb8be7933282c1ee3087b5
     }
 });
 
@@ -318,7 +309,6 @@ exports.changePassword = function(req, res){
 	});
 }
 
-<<<<<<< HEAD
 
 
 exports.getAllUsers = function(req, res){
@@ -381,8 +371,6 @@ exports.getUser = function(req, res){
 	});
 }
 
-=======
->>>>>>> 2d8b616a125deeb00beb8be7933282c1ee3087b5
 
 function encrypt(key, data){
 	var cipher = crypto.createCipher('aes-256-cbc', key);
@@ -476,7 +464,3 @@ function sendResetPasswordMail(toAddr){
 	    };
 	});
 }
-<<<<<<< HEAD
-
-=======
->>>>>>> 2d8b616a125deeb00beb8be7933282c1ee3087b5

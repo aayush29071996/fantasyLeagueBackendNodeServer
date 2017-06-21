@@ -246,11 +246,7 @@ exports.getRecentStories = function(req, res){
 	var now = moment.utc().format("YYYY-MM-DD HH:mm:ss");
 	var sevenDaysBefore = moment.utc().subtract('7','d').format("YYYY-MM-DD HH:mm:ss");
 
-<<<<<<< HEAD
-	Story.find({createdOn:{$gte:sevenDaysBefore, $lt: now},status: {$ne:'REPORTED'}}).sort({"createdOn":-1}).populate('user category comments likes shares').exec(function(storiesErr, stories){
-=======
 	Story.find({createdOn:{$gte:sevenDaysBefore, $lt: now},status: {$ne:'REPORTED'}}).sort({"createdOn":1}).populate('user category comments likes shares').exec(function(storiesErr, stories){
->>>>>>> 2d8b616a125deeb00beb8be7933282c1ee3087b5
 		if(storiesErr){
 			res.status(Codes.httpStatus.ISE).json({
 	            status: Codes.status.FAILURE,
@@ -327,39 +323,6 @@ exports.getTrendingStories = function(req, res){
 
 }
 
-<<<<<<< HEAD
-=======
-
-
-
-
-exports.getAllStories = function(req, res) {
-	
-	Story.find({status: {$ne:'REPORTED'}}).populate('user category comments likes shares').exec(function(storiesErr, stories){
-		if(storiesErr){
-			res.status(Codes.httpStatus.ISE).json({
-	            status: Codes.status.FAILURE,
-	            code: Codes.httpStatus.ISE,
-	            data: '',
-	            error: Codes.errorMsg.UNEXP_ERROR
-	        });
-        	return;
-		}
->>>>>>> 2d8b616a125deeb00beb8be7933282c1ee3087b5
-
-		if(stories == null){
-			res.status(Codes.httpStatus.OK).json({
-	            status: Codes.status.SUCCESS,
-	            code: Codes.httpStatus.OK,
-	            data: '',
-	            error: Codes.errorMsg.ST_NO
-	        });
-	        return;
-		}	
-
-
-<<<<<<< HEAD
-
 exports.getAllStories = function(req, res) {
 	
 	Story.find({status: {$ne:'REPORTED'}}).populate('user category comments likes shares').exec(function(storiesErr, stories){
@@ -383,9 +346,6 @@ exports.getAllStories = function(req, res) {
 	        return;
 		}	
 
-
-=======
->>>>>>> 2d8b616a125deeb00beb8be7933282c1ee3087b5
         if(stories){
         	res.status(Codes.httpStatus.OK).json({
 	            status: Codes.status.SUCCESS,
@@ -497,15 +457,6 @@ exports.getAllStories = function(req, res) {
 // 	});
 // }
 
-<<<<<<< HEAD
-
-
-
-=======
-
-
-
->>>>>>> 2d8b616a125deeb00beb8be7933282c1ee3087b5
 exports.viewStory = function(req, res){
 	Story.findOne({_id:req.body.storyId}, function(storyErr, story){
 		if(storyErr){
@@ -1128,10 +1079,6 @@ function sendStoryReportAbuseMail(story){
 //         return;
 //     });
 // };
-<<<<<<< HEAD
-
-=======
->>>>>>> 2d8b616a125deeb00beb8be7933282c1ee3087b5
 
 
 
