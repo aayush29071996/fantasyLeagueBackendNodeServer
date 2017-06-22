@@ -260,8 +260,8 @@ exports.populateSeasonsWithFixtures = function(req, res) {
 	                    // } else if(include = 'fixtures'){
 	                    // 	  data = data.fixtures.data;
 	                    // }
-
-	                    data = data.matches.data;
+	                    console.log(Object.keys(data));
+	                    data = data.data.fixtures.data;
 	                    console.log(data.length + ' matches for the competition ' + season.competition.name + ' of season ' + season.name  + ' with index ' + sIndex);  
 	                    if(data.length > 0){
 	                    	// console.log(data.length + ' matches for the competition ' + season.competition.name + ' of season ' + season.name  + ' with index ' + sIndex);

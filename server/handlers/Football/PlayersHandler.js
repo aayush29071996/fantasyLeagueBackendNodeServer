@@ -16,8 +16,8 @@ var API_TOKEN = "EyTtWbGs9ZnUYam1xB63iXoJ4EZ4TuTKGmQaebB1tpsrxq5VcdQ3gPVgjMyz";
 // var baseUrl = "https://api.soccerama.pro/v1.2/";
 var baseUrl = "https://soccer.sportmonks.com/api/v2.0/";
 
-var fireUrl = function(params, include) {
-    console.log('firing url : ' + baseUrl + params + "?api_token=" + API_TOKEN + "&include=" + include);
+var fireUrl = function(params, include, teamIndex) {
+    console.log('firing url : ' + baseUrl + params + "?api_token=" + API_TOKEN + "&include=" + include + " ---- " + teamIndex);
     return baseUrl + params + "?api_token=" + API_TOKEN + "&include=" + include;
 };
 
@@ -49,9 +49,12 @@ exports.populatePlayersForAllTeams = function(req, res) {
             teams.forEach(function(team, teamIndex) {
 
                 include = 'squad.player'
-                params = 'team/' + team.teamId;
+                params = 'teams/' + team.teamId;
 
-                request.get(fireUrl(params, include), function(err, response, data) {
+                // if(teamIndex >= 1000 && teamIndex < 1100){
+
+                request.get(fireUrl(params, include, teamIndex), function(err, response, data) {
+                    // console.log('team no ' + teamIndex + " with id " + team.teamId);
 
                     if (err) {
                     	console.log(err);
@@ -102,10 +105,15 @@ exports.populatePlayersForAllTeams = function(req, res) {
 
                         data = data.data.squad.data;
 
+                        // console.log(Object.keys(data))
+
                         data.forEach(function(player, playerIndex) {
+
 
                             var playerx = player;
                             player = player.player.data;
+
+                            console.log('team index -->' + teamIndex)
 
 
                             Player.findOne({ playerId: player.player_id }).exec(function(playerErr, playerObj) {
@@ -219,6 +227,10 @@ exports.populatePlayersForAllTeams = function(req, res) {
                         });
                     }
                 });
+            
+
+
+                // }//'if' ends with this brace
             });
         }
 

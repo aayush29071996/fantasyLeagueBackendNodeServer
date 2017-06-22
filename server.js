@@ -2,7 +2,7 @@
 * Created by harirudhra on Sun 1 Jan 2017
 */
 
-require('newrelic');
+// require('newrelic');
 
 var express = require('express');
 var app = express();
