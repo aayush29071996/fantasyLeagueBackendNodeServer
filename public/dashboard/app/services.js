@@ -6,7 +6,7 @@ var dashServices = angular.module('dashServices', ['ngResource','dashControllers
 
 dashServices.factory('Auth', function($http){
     var user={};
-    var baseURI = "https://inyards.herokuapp.com";
+    var baseURI = "https://inyards.com";
 
     user.authenticate = function(data){
         return $http.post(baseURI + '/admin', data);
@@ -17,7 +17,7 @@ dashServices.factory('Auth', function($http){
 
 dashServices.factory('Users', function($http){
   var user={};
-  var baseURI = "https://inyards.herokuapp.com";
+  var baseURI = "https://inyards.com";
 
   // Get All Teams
   user.getAllUsers=function() {
@@ -69,7 +69,7 @@ dashServices.factory('Users', function($http){
 
 dashServices.factory('Football', function($http){
     var user={};
-    var baseURI = "https://inyards.herokuapp.com";
+    var baseURI = "https://inyards.com";
 
     // Get All Teams
     user.getAllTeams=function() {

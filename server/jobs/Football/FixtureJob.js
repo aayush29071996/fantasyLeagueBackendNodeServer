@@ -53,7 +53,7 @@ exports.updateFixturesJob = function() {
             console.log('Update Fixture Job Called')
 
             //must be livescore/now 
-            params = 'livescore'
+            params = 'livescores'
             include = ''
 
             request.get(fireUrl(params, include), function(err, response, data) {
