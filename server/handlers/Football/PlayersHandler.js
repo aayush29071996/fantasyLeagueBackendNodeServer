@@ -162,13 +162,13 @@ exports.populatePlayersForAllTeams = function(req, res) {
                                 }
 
                                 if (playerObj == null) {
-                                    console.log('adding new player')
+                                    console.log('adding new player with position ID ' + pla  )
                                     var newPlayer = new Player();
                                     newPlayer.playerId = player.player_id;
                                     newPlayer.name = player.common_name;
                                     newPlayer.teams.push(team);
                                     // if (player.hasOwnProperty('position')) {
-                                        newPlayer.positionId = playerx.position_id;
+                                    newPlayer.positionId = player.position_id;
                                         // newPlayer.position = player.position.name;
                                     // }
                                     newPlayer.save(function(playerSaveErr, savedPlayer) {
