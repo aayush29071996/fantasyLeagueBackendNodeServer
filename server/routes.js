@@ -6,6 +6,10 @@ var UserController = require('./controllers/UserController');
 var ResetController = require('./controllers/ResetController');
 var InviteController = require('./controllers/InviteController');
 var ContactController = require('./controllers/ContactController');
+
+// var UserProfileController = require('./controllers/UserProfileController');
+
+// var ContactController = require('./controllers/ContactController');
 // var UsersHandler = require('./handlers/User/UsersHandler')
 
 var FixturesHandler = require('./handlers/Football/FixturesHandler');
@@ -44,31 +48,32 @@ module.exports = function(app) {
 
 	app.get('/pitch/all', function(req,res){
 		res.sendFile('pitch/views/all.html', {
-			root: __dirname	
-		});	
+			root: __dirname
+		});
 	});
 	app.get('/pitch/trending', function(req,res){
 		res.sendFile('pitch/views/trending.html', {
-			root: __dirname	
-		});	
+			root: __dirname
+		});
 	});
 	app.get('/pitch/recent', function(req,res){
 		res.sendFile('pitch/views/recent.html', {
-			root: __dirname	
-		});	
+			root: __dirname
+		});
 	});
-	
+
 	app.get('/mpitch', function(req,res){
 		res.sendFile('mpitch/index.html', {
 			root: __dirname
 		});
 	});
-	
+
 	app.get('/logo',function(req,res){
 		res.sendFile('logo.png', {
 			root: __dirname
 		});
 	});
+
 
 	//invite route
 	app.post('/invite', InviteController.save);
@@ -86,7 +91,12 @@ module.exports = function(app) {
 	app.post('/register', UserController.save);
 
 	app.post('/getAllUsers', UserController.getAllUsers);
-	app.post('/getUser', UserController.getUser);
+	// app.post('/getUser', UserController.getUser);
+
+	/*Kishore*/
+	app.get('/users', UserController.getAllUsers);
+	app.get('/user/:userId', UserController.getUser);
+
 
 	// app.post('/reset', UserController.resetPasswordRequest);
 	// app.get('/reset/:token', UserController.resetPasswordResponse);
@@ -96,14 +106,14 @@ module.exports = function(app) {
 	app.get('/reset/:token', ResetController.resetPasswordResponse);
 	app.post('/reset/:token', UserController.resetPassword);
 	app.post('/changePassword', UserController.changePassword);
-	
+
 	app.post('/feedback', ContactController.sendFeedback);
-	
-	
+
+
 	app.get('/roster/:matchId', RosterController.getRoster);
 	//app.post('/complaint', ContactController.sendComplaint);
-	
-	
+
+
 	app.get('/playerHistory/:username', PointsSystemController.getPlayerHistory);
 
 

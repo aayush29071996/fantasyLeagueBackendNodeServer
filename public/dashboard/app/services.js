@@ -1,4 +1,3 @@
-
 'use strict';
 
 
@@ -21,7 +20,7 @@ dashServices.factory('Users', function($http){
 
   // Get All Teams
   user.getAllUsers=function() {
-      return $http.get(baseURI+'/user');
+      return $http.get(baseURI+'/users');
   };
 
 

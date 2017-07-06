@@ -182,7 +182,7 @@ exports.resetPasswordRequest = function(req, res){
 				error: ''
 			});
 		});
-		
+
 	});
 }
 
@@ -213,7 +213,7 @@ exports.resetPasswordResponse = function(req, res){
 			data: user.email,
 			error: ''
 		});
-		
+
 	});
 }
 
@@ -261,7 +261,7 @@ exports.resetPassword = function(req, res){
 				error: ''
 			});
 		});
-		
+
 	});
 }
 
@@ -305,38 +305,39 @@ exports.changePassword = function(req, res){
 					error: ''
 				});
 			});
-		
+
 	});
 }
 
 
 
 exports.getAllUsers = function(req, res){
-	User.find({},function(err, users){
+	User.find({}).select('username email userPoints createdOn').populate('users').exec(function(err, users){
 		if(err){
-			res.status(httpStatus.ISE).json({
-				status: status.FAILURE,
-				code: httpStatus.ISE,
+			res.status(Codes.httpStatus.ISE).json({
+				status: Codes.status.FAILURE,
+				code: Codes.httpStatus.ISE,
 				data: '',
-				error: errorMsg.UNEXP_ERROR
+				error: Codes.errorMsg.UNEXP_ERROR
 			});
 			return;
 		}
 		if(users.length > 0){
-			res.status(httpStatus.OK).json({
-				status:status.SUCCESS,
-				code: httpStatus.OK,
+			res.status(Codes.httpStatus.OK).json({
+				status:Codes.status.SUCCESS,
+				code: Codes.httpStatus.OK,
 				data: users,
 				error: ''
 			});
 			return;
 		}
-		res.status(httpStatus.OK).json({
-			status:status.FAILURE,
-			code: httpStatus.BR,
+		res.status(Codes.httpStatus.OK).json({
+			status:Codes.status.FAILURE,
+			code: Codes.httpStatus.BR,
 			data: '',
-			error: errorMsg.NO_USERS_FOUND
+			error: Codes.errorMsg.NO_USERS_FOUND
 		});
+		return;
 	});
 }
 
@@ -404,7 +405,7 @@ function sendWelcomeMail(toAddr){
 	    sender: 'Inyards Pitch <noreply@inyards.com>',
 	    to: toAddr,
 	    subject: 'You are now a Pitcher!',
-	    html: htmlstream 
+	    html: htmlstream
 	};
 	transporter.sendMail(mailOptions, function(error, info){
 	    if(error){
@@ -428,7 +429,7 @@ function sendResetPasswordRequestMail(toAddr, token){
 	    to: toAddr,
 	    subject: 'Inyards - Reset Password',
 	    text:'https://inyards.com/reset/' + token
-	    // html: htmlstream 
+	    // html: htmlstream
 	};
 	transporter.sendMail(mailOptions, function(error, info){
 	    if(error){
@@ -452,7 +453,7 @@ function sendResetPasswordMail(toAddr){
 	    to: toAddr,
 	    subject: 'Inyards - Password Reset Successful',
 	    text:'Password has been reset'
-	    // html: htmlstream 
+	    // html: htmlstream
 	};
 	transporter.sendMail(mailOptions, function(error, info){
 	    if(error){
