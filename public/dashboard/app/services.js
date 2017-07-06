@@ -16,8 +16,8 @@ dashServices.factory('Auth', function($http){
 
 dashServices.factory('Users', function($http){
   var user={};
-  // var baseURI = "https://inyards.com";
-  var baseURI = "https://inyards.herokuapp.com";
+  var baseURI = "https://inyards.com";
+  // var baseURI = "https://inyards.herokuapp.com";
   // Get All Teams
   user.getAllUsers=function() {
       return $http.get(baseURI+'/users');
