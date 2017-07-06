@@ -51,7 +51,7 @@ exports.populatePlayersForAllTeams = function(req, res) {
                 include = 'squad.player'
                 params = 'teams/' + team.teamId;
 
-                // if(teamIndex >= 1000 && teamIndex < 1100){
+                // if(teamIndex >= 800 && teamIndex < 1000){
 
                 request.get(fireUrl(params, include, teamIndex), function(err, response, data) {
                     // console.log('team no ' + teamIndex + " with id " + team.teamId);
@@ -162,7 +162,7 @@ exports.populatePlayersForAllTeams = function(req, res) {
                                 }
 
                                 if (playerObj == null) {
-                                    console.log('adding new player with position ID ' + pla  )
+                                    console.log('adding new player with position ID ' + player.position_id  )
                                     var newPlayer = new Player();
                                     newPlayer.playerId = player.player_id;
                                     newPlayer.name = player.common_name;

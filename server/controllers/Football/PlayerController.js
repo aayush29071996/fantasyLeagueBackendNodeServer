@@ -11,7 +11,7 @@ var Validation = require('../Validation');
 //get list of all players as an array obj
 exports.getAllPlayers = function(req, res) {
 	
-	Player.find({}).select('playerId name active position').exec(function(playersErr, players){
+	Player.find({}).populate('teams').exec(function(playersErr, players){
 		if(playersErr){
 			res.status(Codes.httpStatus.ISE).json({
 	            status: Codes.status.FAILURE,
@@ -219,6 +219,37 @@ exports.updatePlayer = function(req, res){
             status: Codes.status.SUCCESS,
             code: Codes.httpStatus.OK,
             data: player,
+            error: ''
+        });
+        return;
+	});
+}
+
+//update player details
+exports.updatePlayerPosition = function(req, res){
+	Player.findOneAndUpdate({playerId:req.params.playerId}, {$set:{positionId:req.params.positionId}},{"new":true}).exec(function(playerErr, player){
+		if(playerErr){
+			res.status(Codes.httpStatus.ISE).json({
+	            status: Codes.status.FAILURE,
+	            code: Codes.httpStatus.ISE,
+	            data: '',
+	            error: Codes.errorMsg.UNEXP_ERROR
+	        });
+	        return;
+		}
+		if(player == null){
+			res.status(Codes.httpStatus.BR).json({
+                status: Codes.status.FAILURE,
+                code: Codes.httpStatus.BR,
+                data: '',
+                error: Codes.errorMsg.P_NO
+            });
+            return;
+		}
+		res.status(Codes.httpStatus.OK).json({
+            status: Codes.status.SUCCESS,
+            code: Codes.httpStatus.OK,
+            data: 'player with playerId ' + player.playerId + ' is updated with new positionId ' + player.positionId,
             error: ''
         });
         return;

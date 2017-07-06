@@ -160,6 +160,7 @@ module.exports = function(app) {
 	app.post('/player/toggleStatus', PlayerController.togglePlayerStatus);
 	app.post('/player/', PlayerController.createPlayer);
 	app.put('/player/', PlayerController.updatePlayer);
+	app.put('/player/:playerId/position/:positionId', PlayerController.updatePlayerPosition);
 	app.delete('/player/:playerId', PlayerController.deletePlayer);
 
 	//MatchCard routes
