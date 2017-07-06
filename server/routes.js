@@ -95,7 +95,7 @@ module.exports = function(app) {
 
 	/*Kishore*/
 	app.get('/users', UserController.getAllUsers);
-	app.get('/user/:userId', UserController.getUser);
+	// app.get('/user/:userId', UserController.getUser);
 
 
 	// app.post('/reset', UserController.resetPasswordRequest);
