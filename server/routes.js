@@ -10,8 +10,6 @@ var ContactController = require('./controllers/ContactController');
 // var UserProfileController = require('./controllers/UserProfileController');
 
 // var ContactController = require('./controllers/ContactController');
-// var UsersHandler = require('./handlers/User/UsersHandler')
-
 var FixturesHandler = require('./handlers/Football/FixturesHandler');
 var TeamsHandler = require('./handlers/Football/TeamsHandler');
 var PlayersHandler = require('./handlers/Football/PlayersHandler');
