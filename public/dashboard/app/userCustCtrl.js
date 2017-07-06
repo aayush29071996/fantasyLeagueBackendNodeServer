@@ -1,5 +1,5 @@
 angular.module('userCustCtrl',['dashServices'])
-.controller('UserCust', function($scope,$window){
+.controller('UserCust', function($scope,$window,Users){
   new Morris.Line({
     element: 'myfirstchart',
     data: [
@@ -42,5 +42,13 @@ angular.module('userCustCtrl',['dashServices'])
     ykeys: ['value'],
     parseTime: false,
     labels: ['Users']
+  });
+  Users.getAllUsers().then(function(response){
+    $scope.users=response.data.data;
+    console.log($scope.users)
+    $scope.userDob = moment($scope.users.createdOn).format('YYYY-MM-DD');
+
+    // $scope.useDob=moment(response.data.createdOn);
+    console.log($scope.userDob);
   });
 });

@@ -66,12 +66,10 @@
         </select> entries</label>
 
         <label style="margin-left:7vh;">Sort By&nbsp;<select ng-model="selectedSort" name="datatable-editable_length" class="form-control input-sm">
-        <option value="sNo">S.No (Ascending)</option>
-        <option value="-sNo">S.No Id (Descending)</option>
         <option value="userId">User Id(Ascending)</option>
         <option value="-userId">User Id (Descending)</option>
-        <option value="userName">User Name (Ascending)</option>
-        <option value="-userName">User Name (Descending)</option>
+        <option value="username">User Name (Ascending)</option>
+        <option value="-username">User Name (Descending)</option>
         <!-- <option value="email">E-Mail</option>
         <option value="pNo">Phone Number</option> -->
         <option value="country">Country (Ascending)</option>
@@ -83,10 +81,12 @@
         <table cg-busy="{promise:allTeamsPromise,message:'Please Wait...'}" class="table table-striped dataTable no-footer" id="datatable-editable" role="grid">
             <thead>
                 <tr role="row">
-                <th tabindex="0" rowspan="1" colspan="1" style="width: 110px;">S.No </th>
-                <th tabindex="0" rowspan="1" colspan="1" style="width: 150px;">User Id </th>
+                <!-- <th tabindex="0" rowspan="1" colspan="1" style="width: 110px;">S.No </th> -->
+                <!-- <th tabindex="0" rowspan="1" colspan="1" style="width: 150px;">User Id </th> -->
                 <th tabindex="0" rowspan="1" colspan="1" style="width: 253px;">User Name</th>
                 <th tabindex="0" rowspan="1" colspan="1" style="width: 230px;">E-Mail</th>
+                <th tabindex="0" rowspan="1" colspan="1" style="width: 230px;">Created On</th>
+                <th tabindex="0" rowspan="1" colspan="1" style="width: 230px;">User Points</th>
                 <th tabindex="0" rowspan="1" colspan="1" style="width: 180px;">Phone Number</th>
                 <th tabindex="0" rowspan="1" colspan="1" style="width: 130px;">Country</th>
                 <th rowspan="1" colspan="1" style="width: 180px;">Address</th>
@@ -94,18 +94,20 @@
               </tr>
             </thead>
             <tbody>
-            <tr class="gradeA odd" role="row" ng-repeat="teams in items | orderBy: selectedSort | filter : tableSearchQuery">
-                    <td>{{users.userId}}</td>
-                    <td>{{users.userName}}</td>
-                    <td>{{users.email}}</td>
+            <tr class="gradeA odd" role="row" ng-repeat="user in users | orderBy: selectedSort | filter : tableSearchQuery">
+                    <!-- <td>{{users.userId}}</td> -->
+                    <td>{{user.username}}</td>
+                    <td>{{user.email}}</td>
+                    <td>{{userDob}}</td>
+                    <td>{{user.userPoints}}</td>
                     <td>{{users.pno}}</td>
                     <td>{{users.country}}</td>
                     <td class="actions">
                         <!--<a href="#" class="hidden on-editing save-row"><i class="fa fa-save"></i></a>-->
                         <!--<a href="#" class="hidden on-editing cancel-row"><i class="fa fa-times"></i></a>-->
-                        <a href="" class="on-default edit-row" ng-click="ViewUser(teams.userId)"><i class="fa fa-eye"></i></a>
+                        <!-- <a href="" class="on-default edit-row" ng-click="ViewUser(user.userId)"><i class="fa fa-eye"></i></a>
                         <a class="on-default edit-row"><i class="fa fa-pencil"></i></a>
-                        <a class="on-default remove-row"><i class="fa fa-trash-o"></i></a>
+                        <a class="on-default remove-row"><i class="fa fa-trash-o"></i></a> -->
                     </td>
                 </tr>
                 </tbody>
