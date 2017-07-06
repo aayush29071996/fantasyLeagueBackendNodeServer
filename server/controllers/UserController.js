@@ -314,28 +314,28 @@ exports.changePassword = function(req, res){
 exports.getAllUsers = function(req, res){
 	User.find({}).select('username email userPoints createdOn').populate('users').exec(function(err, users){
 		if(err){
-			res.status(Codes.httpStatus.ISE).json({
-				status: Codes.status.FAILURE,
-				code: Codes.httpStatus.ISE,
+			res.status(httpStatus.ISE).json({
+				status: status.FAILURE,
+				code: httpStatus.ISE,
 				data: '',
-				error: Codes.errorMsg.UNEXP_ERROR
+				error: errorMsg.UNEXP_ERROR
 			});
 			return;
 		}
 		if(users.length > 0){
-			res.status(Codes.httpStatus.OK).json({
-				status:Codes.status.SUCCESS,
-				code: Codes.httpStatus.OK,
+			res.status(httpStatus.OK).json({
+				status:status.SUCCESS,
+				code: httpStatus.OK,
 				data: users,
 				error: ''
 			});
 			return;
 		}
-		res.status(Codes.httpStatus.OK).json({
-			status:Codes.status.FAILURE,
-			code: Codes.httpStatus.BR,
+		res.status(httpStatus.OK).json({
+			status:status.FAILURE,
+			code: httpStatus.BR,
 			data: '',
-			error: Codes.errorMsg.NO_USERS_FOUND
+			error: errorMsg.NO_USERS_FOUND
 		});
 		return;
 	});
