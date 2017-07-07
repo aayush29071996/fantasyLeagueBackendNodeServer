@@ -91,7 +91,6 @@ module.exports = function(app) {
 	app.post('/getAllUsers', UserController.getAllUsers);
 	// app.post('/getUser', UserController.getUser);
 
-	/*Kishore*/
 	app.get('/users', UserController.getAllUsers);
 	// app.get('/user/:userId', UserController.getUser);
 
