@@ -6,8 +6,8 @@
  var Match = require('../../models/Football/Match');
  var MatchCard = require('../../models/Football/MatchCard');
  var PointSystem = require('../../models/Football/Master/PointSystem');
- var Player = require('../../models/Football/Master/Player');	
- var Team = require('../../models/Football/Master/Team');	
+ var Player = require('../../models/Football/Master/Player');
+ var Team = require('../../models/Football/Master/Team');
  var moment = require('moment');
  var _ = require('underscore');
  var sortBy = require('array-sort-by');
@@ -21,9 +21,9 @@ var HistoryCount = require('../../modules/getHistoryCount');
 exports.createPointSystem = function(req, res) {
 
 	var data = req.body;
-	var newPointSystem = new PointSystem(); 
+	var newPointSystem = new PointSystem();
 	newPointSystem.name = data.name;
-	
+
 	var defense = {};
 	defense.goal = data.defense.goal;
 	defense.goalByAssist = data.defense.goalByAssist;
@@ -81,7 +81,7 @@ exports.createPointSystem = function(req, res) {
 		        error: Validation.validatingErrors(newPointSystemSaveErr)
 		    });
 		    return;
-		} 
+		}
 		if(savedNewPointSystem){
 			res.status(Codes.httpStatus.OK).json({
 		        status: Codes.status.SUCCESS,
@@ -124,7 +124,7 @@ exports.updatePointSystem = function(req, res){
 
 
 		pointSystem.name = data.name;
-	
+
 		pointSystem.defense.goal = data.defense.goal;
 		pointSystem.defense.goalByAssist = data.defense.goalByAssist;
 		pointSystem.defense.goalByPenalty = data.defense.goalByPenalty;
@@ -134,7 +134,7 @@ exports.updatePointSystem = function(req, res){
 		pointSystem.defense.cardYellowRed = data.defense.cardYellowRed;
 		pointSystem.defense.cardRed = data.defense.cardRed;
 		pointSystem.defense.cleanSheet = data.defense.cleanSheet;
-		
+
 		pointSystem.forward.goal = data.forward.goal;
 		pointSystem.forward.goalByAssist = data.forward.goalByAssist;
 		pointSystem.forward.goalByPenalty = data.forward.goalByPenalty;
@@ -154,7 +154,7 @@ exports.updatePointSystem = function(req, res){
 		pointSystem.midfield.cardYellowRed = data.midfield.cardYellowRed;
 		pointSystem.midfield.cardRed = data.midfield.cardRed;
 		pointSystem.midfield.cleanSheet = data.midfield.cleanSheet;
-		
+
 		pointSystem.goalkeeper.goal = data.goalkeeper.goal;
 		pointSystem.goalkeeper.goalByAssist = data.goalkeeper.goalByAssist;
 		pointSystem.goalkeeper.goalByPenalty = data.goalkeeper.goalByPenalty;
@@ -174,7 +174,7 @@ exports.updatePointSystem = function(req, res){
 			        error: Validation.validatingErrors(pointSystemSaveErr)
 			    });
 			    return;
-			} 
+			}
 			if(savedPointSystem){
 				res.status(Codes.httpStatus.OK).json({
 			        status: Codes.status.SUCCESS,
@@ -233,7 +233,7 @@ exports.activatePointSystem = function(req, res) {
 			        error: Validation.validatingErrors(pointSystemSaveErr)
 			    });
 			    return;
-			} 
+			}
 			if(index == pointSystems.length - 1){
 				res.status(Codes.httpStatus.OK).json({
 			        status: Codes.status.SUCCESS,
@@ -288,7 +288,7 @@ exports.createMatchCard = function(req, res) {
 		            error: Codes.errorMsg.F_INV_MID
 		        });
 		        return;
-			}		
+			}
 			var players = []
 			req.body.players.forEach(function(playerId, index){
 				Player.findOne({playerId:playerId}, function(playerErr, player){
@@ -300,7 +300,7 @@ exports.createMatchCard = function(req, res) {
 				            error: Codes.errorMsg.UNEXP_ERROR
 				        });
 		        		return;
-						}	
+						}
 					var newPlayer = new Player();
 					newPlayer.playerId = player.playerId;
 					newPlayer.name = player.name;
@@ -324,7 +324,7 @@ exports.createMatchCard = function(req, res) {
 		                        error: Validation.validatingErrors(matchCardSaveErr)
 		                    });
 		                    return;
-		                } 
+		                }
 		                if(savedMatchCard){
 		                	res.status(Codes.httpStatus.OK).json({
 					            status: Codes.status.SUCCESS,
@@ -341,7 +341,50 @@ exports.createMatchCard = function(req, res) {
 			});
 		});
 	});
+
+
+
 }
+
+
+
+
+exports.displayPlayers = function(req, res) {
+
+		MatchCard.findOne({user:req.body.userId, match:req.body.matchId}).populate('match').exec(function(matchCardErr, matchCard){
+			if(matchCardErr){
+				res.status(Codes.httpStatus.ISE).json({
+		            status: Codes.status.FAILURE,
+		            code: Codes.httpStatus.ISE,
+		            data: '',
+		            error: Codes.errorMsg.UNEXP_ERROR
+		        });
+	        	return;
+			}
+
+
+			if(matchCard == null){
+				res.status(Codes.httpStatus.OK).json({
+		            status: Codes.status.SUCCESS,
+		            code: Codes.httpStatus.OK,
+		            data: '',
+		            error: Codes.errorMsg.F_INV_MID
+		        });
+		        return;
+			}
+
+      res.status(Codes.httpStatus.OK).json({
+	            status: Codes.status.SUCCESS,
+	            code: Codes.httpStatus.OK,
+	            data: matchCard,
+	            error: ''
+			});
+
+
+
+	});
+}
+
 
 exports.getMatchLeaderboard = function(req, res){
 
@@ -370,7 +413,7 @@ exports.getMatchLeaderboard = function(req, res){
 		console.log(match);
 		matchObjectId=match[0]._id;
 		console.log(matchObjectId);
-		
+
 	MatchCard.find({match:matchObjectId}).sort({"matchPoints":1}).populate('user').exec(function(matchCardsErr, matchCards){
 
 			if(matchCardsErr){
@@ -382,7 +425,7 @@ exports.getMatchLeaderboard = function(req, res){
 		        });
 		        return;
 			}
-	
+
 			if(matchCards == null){
 				res.status(Codes.httpStatus.BR).json({
 		            status: Codes.status.FAILURE,
@@ -392,7 +435,7 @@ exports.getMatchLeaderboard = function(req, res){
 		        });
 		        return;
 			}
-	
+
 			res.status(Codes.httpStatus.OK).json({
 	            status: Codes.status.SUCCESS,
 	            code: Codes.httpStatus.OK,
@@ -400,15 +443,15 @@ exports.getMatchLeaderboard = function(req, res){
 	            error: ''
 			});
 		});
-		
+
 	});
-	
+
 }
 
 exports.getPlayerHistory = function(req, res){
 	var userObjectId;
 	var userPoint;
-	
+
 	User.find({username:req.params.username}).select("-__v -name -email -password -avatar -location -dob -token -status -createdOn").exec(function(err,user){
 		if(err){
 			res.status(Codes.httpStatus.ISE).json({
@@ -418,7 +461,7 @@ exports.getPlayerHistory = function(req, res){
 	            error: Codes.errorMsg.UNEXP_ERROR
 	        });
 	        return;
-			}	
+			}
 			if(user.length>0){
 				userObjectId=user[0]._id;
 				userPoint=user[0].userPoints;
@@ -430,9 +473,9 @@ exports.getPlayerHistory = function(req, res){
 	            data: '',
 	            error: Codes.errorMsg.UNEXP_ERROR
 	        });
-	        return;	
+	        return;
 			}
-			
+
 		MatchCard.find({user:userObjectId}).select("-__v -_id -players -createdOn").populate('match','startingDateTime matchId team1Id team2Id').exec(function(error,cards){
 			if(error){
 			res.status(Codes.httpStatus.ISE).json({
@@ -470,7 +513,7 @@ exports.getPlayerHistory = function(req, res){
 			            data: '',
 			            error: Codes.errorMsg.UNEXP_ERROR
 			        });
-			        return;	
+			        return;
 					}
 					res.status(Codes.httpStatus.OK).json({
 		            status: Codes.status.SUCCESS,
@@ -492,13 +535,13 @@ exports.getPlayerHistory = function(req, res){
 		            error: ''
 				});
 				return;
-					
+
 				});
-				
+
 			});
-		
-		
+
+
 		});
-			
+
 	});
 };

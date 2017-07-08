@@ -94,6 +94,15 @@ module.exports = function(app) {
 	app.get('/users', UserController.getAllUsers);
 	// app.get('/user/:userId', UserController.getUser);
 
+	app.get('/auth/google',passport.athenticate('google',{scope:['profile','email']}));
+
+	app.get('/auth/google/callback',
+		passport.athenticate('google',{successRedirect: '/profile',
+																	 failureRedirect:'/'}));
+	app.get('/logout',function(req,res){
+		res.logout();
+		res.redirect('/');
+	})
 
 	// app.post('/reset', UserController.resetPasswordRequest);
 	// app.get('/reset/:token', UserController.resetPasswordResponse);
@@ -164,6 +173,7 @@ module.exports = function(app) {
 
 	//MatchCard routes
 	app.post('/createMatchCard', PointsSystemController.createMatchCard);
+	app.get('/displayPlayers', PointsSystemController.displayPlayers);
 	app.get('/leaderboard/:matchId', PointsSystemController.getMatchLeaderboard);
 
 	app.post('/category', PitchController.createCategory);
