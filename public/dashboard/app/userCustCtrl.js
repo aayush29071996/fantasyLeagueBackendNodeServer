@@ -43,7 +43,6 @@ angular.module('userCustCtrl',['dashServices'])
     parseTime: false,
     labels: ['Users']
   });
-<<<<<<< HEAD
 
   Users.getAllUsers().then(function(response){
    $scope.users=response.data.data;
@@ -55,7 +54,6 @@ angular.module('userCustCtrl',['dashServices'])
  });
 
 
-=======
   Users.getAllUsers().then(function(response){
     $scope.users=response.data.data;
     console.log($scope.users)
@@ -64,5 +62,4 @@ angular.module('userCustCtrl',['dashServices'])
     // $scope.useDob=moment(response.data.createdOn);
     console.log($scope.userDob);
   });
->>>>>>> 5efeb2f62233e61d95ae739b72a8da0df0f0b151
 });
