@@ -347,7 +347,7 @@ exports.createMatchCard = function(req, res) {
 }
 
 
-<<<<<<< HEAD
+
 exports.editMatchCard = function(req, res) {
 
 
@@ -421,8 +421,8 @@ exports.editMatchCard = function(req, res) {
 
 			});
 		});
-=======
-
+});
+}
 
 exports.displayPlayers = function(req, res) {
 
@@ -457,7 +457,7 @@ exports.displayPlayers = function(req, res) {
 
 
 
->>>>>>> 5efeb2f62233e61d95ae739b72a8da0df0f0b151
+
 	});
 }
 

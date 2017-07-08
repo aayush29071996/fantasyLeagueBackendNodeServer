@@ -88,26 +88,18 @@ module.exports = function(app) {
 	app.post('/username', UserController.validate);
 	app.post('/register', UserController.save);
 
-<<<<<<< HEAD
 	app.get('/users', UserController.getAllUsers);
 	app.post('/getUser', UserController.getUser);
-=======
-	app.post('/getAllUsers', UserController.getAllUsers);
-	// app.post('/getUser', UserController.getUser);
 
-	app.get('/users', UserController.getAllUsers);
-	// app.get('/user/:userId', UserController.getUser);
+	// app.get('/auth/google',passport.athenticate('google',{scope:['profile','email']}));
 
-	app.get('/auth/google',passport.athenticate('google',{scope:['profile','email']}));
-
-	app.get('/auth/google/callback',
-		passport.athenticate('google',{successRedirect: '/profile',
-																	 failureRedirect:'/'}));
+	// app.get('/auth/google/callback',
+		// passport.athenticate('google',{successRedirect: '/profile',failureRedirect:'/'}));
 	app.get('/logout',function(req,res){
 		res.logout();
 		res.redirect('/');
 	})
->>>>>>> 5efeb2f62233e61d95ae739b72a8da0df0f0b151
+
 
 	// app.post('/reset', UserController.resetPasswordRequest);
 	// app.get('/reset/:token', UserController.resetPasswordResponse);

@@ -14,10 +14,10 @@ var md5 = require('md5');
 var nodemailer = require('nodemailer');
 var fs = require('fs');
 var key = 'jallikattu';
-var LocalStrategy    = require('passport-local').Strategy;
-var FacebookStrategy = require('passport-facebook').Strategy;
+// var LocalStrategy    = require('passport-local').Strategy;
+// var FacebookStrategy = require('passport-facebook').Strategy;
 // var TwitterStrategy  = require('passport-twitter').Strategy;
-var GoogleStrategy   = require('passport-google-oauth').OAuth2Strategy;
+// var GoogleStrategy   = require('passport-google-oauth').OAuth2Strategy;
 // var User = require('../models/UserProfile');
 var Userlocal = require('../models/User');
 
@@ -50,7 +50,7 @@ var httpStatus = {
 // load all the things we need
 
 
-var baseUrl = "http://localhost:9000"
+// var baseUrl = "http://localhost:9000"
 // var baseUrl = "https://inyards.com"
 // var baseUrl = "https://inyards.herokuapp.com"
 
@@ -190,144 +190,144 @@ var baseUrl = "http://localhost:9000"
 
 
 	//google
-			passport.use(new GoogleStrategy({
+			// passport.use(new GoogleStrategy({
 
-				clientID        : configAuth.googleAuth.clientID,
-				clientSecret    : configAuth.googleAuth.clientSecret,
-				callbackURL     : configAuth.googleAuth.callbackURL,
-				passReqToCallback : true // allows us to pass in the req from our route (lets us check if a user is logged in or not)
+			// 	clientID        : configAuth.googleAuth.clientID,
+			// 	clientSecret    : configAuth.googleAuth.clientSecret,
+			// 	callbackURL     : configAuth.googleAuth.callbackURL,
+			// 	passReqToCallback : true // allows us to pass in the req from our route (lets us check if a user is logged in or not)
 
-			},
-			function(req, token, refreshToken, profile, done) {
+			// },
+			// function(req, token, refreshToken, profile, done) {
 
 
-					process.nextTick(function() {
+			// 		process.nextTick(function() {
 
-							console.log(profile.emails);
-							// check if the user is already logged in
-							if (!req.user) {
+			// 				console.log(profile.emails);
+			// 				// check if the user is already logged in
+			// 				if (!req.user) {
 
-									User.findOne({ 'google.id' : profile.id }, function(err, user) {
-											if(err){
-												res.status(httpStatus.ISE).json({
-													status: status.FAILURE,
-													code: httpStatus.ISE,
-													data: '',
-													error: errorMsg.UNEXP_ERROR
-												})
-												return done(err);
-											}
+			// 						User.findOne({ 'google.id' : profile.id }, function(err, user) {
+			// 								if(err){
+			// 									res.status(httpStatus.ISE).json({
+			// 										status: status.FAILURE,
+			// 										code: httpStatus.ISE,
+			// 										data: '',
+			// 										error: errorMsg.UNEXP_ERROR
+			// 									})
+			// 									return done(err);
+			// 								}
 
-											if (user) {
-													return done(null, user.user);//user found, return the user
-											}
-											else {
-													//if ther is no user return them
-													console.log("writting!");
-													var eval = baseUrl + "/emailAvailable/" + profile.emails[0].value;
-													request({ url:eval, json:true },function(err,response,data){
+			// 								if (user) {
+			// 										return done(null, user.user);//user found, return the user
+			// 								}
+			// 								else {
+			// 										//if ther is no user return them
+			// 										console.log("writting!");
+			// 										var eval = baseUrl + "/emailAvailable/" + profile.emails[0].value;
+			// 										request({ url:eval, json:true },function(err,response,data){
 
-														if(data.code==200){
+			// 											if(data.code==200){
 
-															//email available
-															var cdate = new Date();
-															var newUserProfile            = new User();
-															newUserProfile.google.id    = profile.id;
-															newUserProfile.google.token = token;
-															newUserProfile.google.name  = profile.displayName;
-															newUserProfile.google.email = profile.emails[0].value;
-															newUserProfile.google_id = profile.id;
+			// 												//email available
+			// 												var cdate = new Date();
+			// 												var newUserProfile            = new User();
+			// 												newUserProfile.google.id    = profile.id;
+			// 												newUserProfile.google.token = token;
+			// 												newUserProfile.google.name  = profile.displayName;
+			// 												newUserProfile.google.email = profile.emails[0].value;
+			// 												newUserProfile.google_id = profile.id;
 
-															var newUser			= new Userlocal();
-															newUser.name    	= profile.diplayName;
-															newUser.username	= profile.displayName;
-															newUser.email		= profile.emails[0].value;
-															newUser.createdOn	= cdate;
-															newUser.google_link = true
+			// 												var newUser			= new Userlocal();
+			// 												newUser.name    	= profile.diplayName;
+			// 												newUser.username	= profile.displayName;
+			// 												newUser.email		= profile.emails[0].value;
+			// 												newUser.createdOn	= cdate;
+			// 												newUser.google_link = true
 
-															newUser.save(function(err,data){
-																if(err){
-																	return done(err);
-																}
-																else{
-																	newUserProfile.user = data._id;
-																	newUserProfile.save(function(err,data){
-																		if(err){
-																			return done(err);
-																		}
-																	});
-																}
-																return  done(null,data._id);
-																//return done(null, newUser);
-															});
+			// 												newUser.save(function(err,data){
+			// 													if(err){
+			// 														return done(err);
+			// 													}
+			// 													else{
+			// 														newUserProfile.user = data._id;
+			// 														newUserProfile.save(function(err,data){
+			// 															if(err){
+			// 																return done(err);
+			// 															}
+			// 														});
+			// 													}
+			// 													return  done(null,data._id);
+			// 													//return done(null, newUser);
+			// 												});
 
-														}
-														else{
-															//login
-															console.log("Already Exists!");
-															Userlocal.find({email:data.data},function(err,doc){
-																if(doc[0].google_link) return done(null,doc[0]._id);
-																else {
-																	return done(err);/******/
-																}
-															});
+			// 											}
+			// 											else{
+			// 												//login
+			// 												console.log("Already Exists!");
+			// 												Userlocal.find({email:data.data},function(err,doc){
+			// 													if(doc[0].google_link) return done(null,doc[0]._id);
+			// 													else {
+			// 														return done(err);/******/
+			// 													}
+			// 												});
 
-														}
-													});
-											}
-									});
+			// 											}
+			// 										});
+			// 								}
+			// 						});
 
-							}
-							else
-							{
-									// user already exists and is logged in, we have to link accounts
-									//check if already linked
-									var objId = req.user.id;
-									var eval = baseUrl + "/googleAvailable/" + profile.id;
-									request({ url:eval, json:true }, function(err, response, head) {
-										console.log(head.code);
-										if(head.code == 200)//no other facebook link
-										{
-											var newGoogle = {
+			// 				}
+			// 				else
+			// 				{
+			// 						// user already exists and is logged in, we have to link accounts
+			// 						//check if already linked
+			// 						var objId = req.user.id;
+			// 						var eval = baseUrl + "/googleAvailable/" + profile.id;
+			// 						request({ url:eval, json:true }, function(err, response, head) {
+			// 							console.log(head.code);
+			// 							if(head.code == 200)//no other facebook link
+			// 							{
+			// 								var newGoogle = {
 
-													"id" 	: profile.id,
-													"token" : token,
-													"name"	: profile.displayName,
-													"email" : profile.emails[0].value
-											}
-											User.update({user:objId},{google:newGoogle,google_id:profile.id},function(err,raw){
+			// 										"id" 	: profile.id,
+			// 										"token" : token,
+			// 										"name"	: profile.displayName,
+			// 										"email" : profile.emails[0].value
+			// 								}
+			// 								User.update({user:objId},{google:newGoogle,google_id:profile.id},function(err,raw){
 
-													if(err){
-														res.status(httpStatus.ISE).json({
-															status: status.FAILURE,
-															code: httpStatus.ISE,
-															data: '',
-															error: errorMsg.EMAIL_IN_USE
-														});
-													}
-													Userlocal.update({_id:objId},{google_link:true},function(err,raw){
+			// 										if(err){
+			// 											res.status(httpStatus.ISE).json({
+			// 												status: status.FAILURE,
+			// 												code: httpStatus.ISE,
+			// 												data: '',
+			// 												error: errorMsg.EMAIL_IN_USE
+			// 											});
+			// 										}
+			// 										Userlocal.update({_id:objId},{google_link:true},function(err,raw){
 
-															if(err){
-																return done(err);
-															}
-															else{
-																return done(null,req.user);
-															}
-													});
-											});
-										}
-										else{
-											//already in use
-											return done(err);
-										}
-									});
+			// 												if(err){
+			// 													return done(err);
+			// 												}
+			// 												else{
+			// 													return done(null,req.user);
+			// 												}
+			// 										});
+			// 								});
+			// 							}
+			// 							else{
+			// 								//already in use
+			// 								return done(err);
+			// 							}
+			// 						});
 
-									//
-							}
+			// 						//
+			// 				}
 
-					});
+			// 		});
 
-			}));
+			// }));
 
 
 
