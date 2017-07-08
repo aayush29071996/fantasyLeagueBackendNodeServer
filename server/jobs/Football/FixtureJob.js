@@ -59,7 +59,7 @@ exports.updateFixturesJob = function() {
             request.get(fireUrl(params, include), function(err, response, data) {
 
                 if (err) {
-                    console.log(responseToConsole(Codes.status.FAILURE, Codes.httpStatus.ISE, '', Codes.errorMsg.UNEXP_ERROR));
+                    console.log(responseToConsole(Codes.status.FAILURE, Codes.httpStatus.ISE, err, Codes.errorMsg.UNEXP_ERROR));
                     return;
                 }
 
@@ -92,15 +92,15 @@ exports.updateFixturesJob = function() {
                         //var data = ["691324","691323","699154","699153","699151","699155","699152","730211","730218","683313","730217","683309","730215","730220","730219","730212","683310","730216"];
 
                         data.forEach(function(fixture, index) {
-
-                            console.log('update started for match id ' + fixture.id);
+                            // console.log(Object.keys(fixture.time))
+                            console.log('update started for match id ' + fixture.id + ' which starts at ' + fixture.time.starting_at.date_time + ' UTC');
                                 
                             params = 'fixtures/' + fixture.id;
                             include = 'lineup,events'
 
                             request.get(fireUrl(params, include), function(err, response, data) {
                                 if (err) {
-                                    console.log(responseToConsole(Codes.status.FAILURE, Codes.httpStatus.ISE, '', Codes.errorMsg.UNEXP_ERROR));
+                                    console.log(responseToConsole(Codes.status.FAILURE, Codes.httpStatus.ISE, err, Codes.errorMsg.UNEXP_ERROR));
                                     return;
                                 }
 
@@ -123,11 +123,13 @@ exports.updateFixturesJob = function() {
                                             return;
                                         }
                                     }
-                                    var updatedMatch = data;
+                                    var updatedMatch = data.data;
+
+                                    console.log(updatedMatch.id);
 
                                     Match.findOne({ matchId: updatedMatch.id }).populate('events').exec(function(matchErr, match) {
                                         if (matchErr) {
-                                            console.log(responseToConsole(Codes.status.FAILURE, Codes.httpStatus.ISE, '', Codes.errorMsg.UNEXP_ERROR));
+                                            console.log(responseToConsole(Codes.status.FAILURE, Codes.httpStatus.ISE, matchErr, Codes.errorMsg.UNEXP_ERROR));
                                             return;
                                         }
 
@@ -402,17 +404,18 @@ exports.calculatePointsJob = function() {
     console.log('calculatePointsJob inside')
     var calculatePointsJob = new CronJob({
 
-        cronTime: '*/60 * * * * *',
+        cronTime: '*/120 * * * * *',
         onTick: function() {
 
-                var twoHoursBefore= moment.utc().subtract('2','h').format("YYYY-MM-DD HH:mm:ss");
-                var thirtyMinsAfter = moment.utc().add('30','m').format("YYYY-MM-DD HH:mm:ss");
+                var twoHoursBefore = moment(moment().subtract('2','h').format("YYYY-MM-DD HH:mm:ss")).toISOString();
+                var thirtyMinsAfter = moment(moment().add('30','m').format("YYYY-MM-DD HH:mm:ss")).toISOString();
                 console.log('From ' + twoHoursBefore + ' To ' + thirtyMinsAfter);
                  console.log('calculatePointsJob called')
                 Match.find({startingDateTime:{$gte:twoHoursBefore, $lt:thirtyMinsAfter}}).populate('events').exec( function(matchesErr, matches){
                     console.log('matches to be calculated ' + matches.length)
                     if(matchesErr){
-                           console.log(responseToConsole(Codes.status.FAILURE, Codes.httpStatus.ISE, '', Codes.errorMsg.UNEXP_ERROR));
+
+                           console.log(responseToConsole(Codes.status.FAILURE, Codes.httpStatus.ISE, matchesErr, Codes.errorMsg.UNEXP_ERROR));
                     }
 
                     matches.forEach(function(match, index){
@@ -430,22 +433,22 @@ exports.calculatePointsJob = function() {
 
                             var pos = playerLP.position;
                             //defense
-                            if(pos === "CD" || pos ===  "CD-L" || pos === "CD-R" || pos === "LB" || pos === "RB"){
+                            if(pos === "CD" || pos ===  "CD-L" || pos === "CD-R" || pos === "LB" || pos === "RB" || pos === "D"){
                                 console.log(pos + ' - defense');
                                 return computePointsDefense(event);
                             } else
                             //midfielder    
-                            if(pos === "Midfielder" || pos === "CM-L" || pos === "CM-R" || pos === "CM" ||  pos === "LM" || pos === "RM" || pos === "AM"){
+                            if(pos === "Midfielder" || pos === "CM-L" || pos === "CM-R" || pos === "CM" ||  pos === "LM" || pos === "RM" || pos === "AM" || pos === "M"){
                                 return computePointsMidfield(event);
                                 console.log(pos + ' - midfielder');
                             } else
                             //forward
-                            if(pos === "Forward" || pos === "LF" || pos === "RF" || pos === "CF" || pos === "CF-L" || pos ==="CF-R"){
+                            if(pos === "Forward" || pos === "LF" || pos === "RF" || pos === "CF" || pos === "CF-L" || pos ==="CF-R" || pos === "F"){
                                 console.log(pos + ' - forward');
                                 return computePointsForward(event);
                             } else
                             //goalkeeper    
-                            if(pos === "Goalkeeper"){
+                            if(pos === "Goalkeeper" || pos === "G"){
                                 console.log(pos + ' - goalkeeper');
                                 return computePointsGoalkeeper(event);
                             } else

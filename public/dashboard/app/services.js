@@ -3,10 +3,11 @@
 
 
 var dashServices = angular.module('dashServices', ['ngResource','dashControllers']);
+var baseURI = "http://localhost:9000";
+// var baseURI = "https://inyards.com";
 
 dashServices.factory('Auth', function($http){
     var user={};
-    var baseURI = "https://inyards.com";
 
     user.authenticate = function(data){
         return $http.post(baseURI + '/admin', data);
@@ -17,11 +18,10 @@ dashServices.factory('Auth', function($http){
 
 dashServices.factory('Users', function($http){
   var user={};
-  var baseURI = "https://inyards.com";
 
   // Get All Teams
   user.getAllUsers=function() {
-      return $http.get(baseURI+'/user');
+      return $http.get(baseURI+'/users');
   };
 
 
@@ -69,7 +69,6 @@ dashServices.factory('Users', function($http){
 
 dashServices.factory('Football', function($http){
     var user={};
-    var baseURI = "https://inyards.com";
 
     // Get All Teams
     user.getAllTeams=function() {
@@ -96,7 +95,9 @@ dashServices.factory('Football', function($http){
         return $http.get(baseURI+'/team/'+teamId);
     };
 
-
+    user.toggleMatchStatus=function(matchId, active) {
+        return $http.put(baseURI+'/fixture',{"matchId":matchId, "active":active})
+    }
 
     user.getPlayerDetails=function(playerId) {
         return $http.get(baseURI+'/player/'+playerId);
@@ -123,16 +124,18 @@ dashServices.factory('Football', function($http){
     };
 
     user.getLiveMatches=function(){
-        return $http.get(baseURI+'/liveFixtures');
+        return $http.get(baseURI+'/liveFixturesAdmin');
     };
 
     user.getUpcomingMatches=function(){
-        return $http.get(baseURI+'/upcomingFixtures');
+        return $http.get(baseURI+'/upcomingFixturesAdmin');
     };
 
     user.getPastMatches=function(){
-        return $http.get(baseURI+'/historyFixtures');
+        return $http.get(baseURI+'/historyFixturesAdmin');
     };
+
+
 
     return user;
     });

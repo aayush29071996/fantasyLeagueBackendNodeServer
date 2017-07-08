@@ -83,7 +83,16 @@ exports.getFixturesHistory = function(req, res) {
 							teams.team2 = team2;
 							fixture.push(teams);
 							fixture.push(season);
-							fixturesSet.push(fixture);
+
+							//TEAM ACTIVE FILTER
+							// if(team1.active || team2.active){
+								//fixturesSet.push(fixture);
+							// }
+
+							//MATCH ACTIVE FILTER
+							if(match.active){
+								fixturesSet.push(fixture);
+							}
 
 							if(fixturesSet.length == matches.length){
 								res.status(Codes.httpStatus.OK).json({
@@ -178,7 +187,16 @@ exports.getFixturesLive = function(req, res) {
 							teams.team2 = team2;
 							fixture.push(teams);
 							fixture.push(season);
-							fixturesSet.push(fixture);
+							
+							//TEAM ACTIVE FILTER
+							// if(team1.active || team2.active){
+								//fixturesSet.push(fixture);
+							// }
+
+							//MATCH ACTIVE FILTER
+							if(match.active){
+								fixturesSet.push(fixture);
+							}
 
 							if(fixturesSet.length == matches.length){
 								res.status(Codes.httpStatus.OK).json({
@@ -228,8 +246,9 @@ exports.getFixturesUpcoming = function(req, res) {
             });
             return;
 		} 
-
+		console.log(matches.length + ' upcoming all matches');
 		var fixturesSet = [];
+		var matchCount = 0;
 		if(matches.length > 0){
 			matches.forEach(function(match, index){
 				Team.find({teamId:match.team1Id}, {players: 0}, function(team1Err, team1){
@@ -271,9 +290,23 @@ exports.getFixturesUpcoming = function(req, res) {
 							teams.team2 = team2;
 							fixture.push(teams);
 							fixture.push(season);
-							fixturesSet.push(fixture);
 
-							if(fixturesSet.length == matches.length){
+							console.log(team1.teamId + ' - ' + team1.active);
+
+							//TEAM ACTIVE FILTER
+							// if(team1.active || team2.active){
+								//fixturesSet.push(fixture);
+							// }
+
+							//MATCH ACTIVE FILTER
+							if(match.active){
+								fixturesSet.push(fixture);
+							}
+
+							matchCount = matchCount + 1;
+
+							if(matchCount == matches.length){
+								console.log(fixturesSet.length + ' upcoming active matches');
 								res.status(Codes.httpStatus.OK).json({
 									status: Codes.status.SUCCESS,
 									code: Codes.httpStatus.OK,
@@ -908,6 +941,38 @@ exports.createFixture = function(req, res){
 				});
 			return;
 		}
+	});
+}
+
+
+//update fixture details
+exports.toggleFixtureStatus = function(req, res){
+	Match.findOneAndUpdate({matchId:req.body.matchId}, {$set:{active:req.body.active}},{"new":true}).exec(function(fixtureErr, fixture){
+		if(fixtureErr){
+			res.status(Codes.httpStatus.ISE).json({
+	            status: Codes.status.FAILURE,
+	            code: Codes.httpStatus.ISE,
+	            data: '',
+	            error: Codes.errorMsg.UNEXP_ERROR
+	        });
+	        return;
+		}
+		if(fixture == null){
+			res.status(Codes.httpStatus.BR).json({
+                status: Codes.status.FAILURE,
+                code: Codes.httpStatus.BR,
+                data: '',
+                error: Codes.errorMsg.F_NO_MA
+            });
+            return;
+		}
+		res.status(Codes.httpStatus.OK).json({
+            status: Codes.status.SUCCESS,
+            code: Codes.httpStatus.OK,
+            data: fixture.active,
+            error: ''
+        });
+        return;
 	});
 }
 

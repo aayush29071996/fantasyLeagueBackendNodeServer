@@ -9,9 +9,9 @@ var uniqueValidator = require('mongoose-unique-validator');
 
 var UserSchema = new mongoose.Schema({
 	name:{type:String},
-	username:{type:String, required: true, unique: true },
+	username:{type:String, unique: true },
 	email:{type: String, required: true, unique:true},
-	password:{type:String, required:true},
+	password:{type:String},
 	resetPasswordToken:{type:String},
 	resetPasswordExpires:{type:Date},
 	avatar:{type:String},
@@ -28,11 +28,16 @@ var UserSchema = new mongoose.Schema({
 	  timezone: {type:String},
 	  zip: {type:String}
 	},
-	dob:{type:Date, required:true},
+	dob:{type:Date},
 	token:{type:String, required:true},
 	status:{type:String, enum:['ACTIVE', 'INACTIVE' ,'BLOCKED'], default:'ACTIVE'},
 	createdOn:{type:Date, required: true},
-	userPoints:{type:Number, default:0}
+	userPoints:{type:Number, default:0},
+	google:{
+		accessToken:{type:String},
+		idToken:{type:String},
+		imgUrl:{type:String}
+	}
 });
 
 var User = mongoose.model('User', UserSchema);

@@ -3,7 +3,7 @@
 
 var dashControllers = angular.module('dashControllers', ['dashServices']);
 
-dashControllers.controller('Login', function ($scope, Auth, $state, $timeout) {
+dashControllers.controller('Login', function ($scope, Auth, $state, $timeout,Football) {
     $scope.user={};
     $scope.btnText="Login";
     $scope.loginError=false;
@@ -51,6 +51,56 @@ dashControllers.controller('FootFixtures', function($scope, Football, Auth, $sta
     $scope.returnIST = function(date){
         return moment(date).utcOffset('+0530').format('YYYY-MM-DD HH:mm');
     };
+
+    $scope.updatedFixture={};
+    $scope.updatedFixture.active=false;
+    $scope.EditFixture=function(matchId){
+      document.getElementById(matchId).children[4].style.display="none";  
+      document.getElementById(matchId).children[5].style.display="table-cell";
+    
+      if(document.getElementById(matchId).children[4].innerHTML=="false"){
+      $scope.updatedFixture.active=false;
+            document.getElementById("statusBtn").className="btn btn-danger btn-trans waves-effect waves-danger w-md m-b-5";
+      }
+      else if(document.getElementById(matchId).children[4].innerHTML=="true"){
+      $scope.updatedFixture.active=true;
+            document.getElementById("statusBtn").className="btn btn-success btn-trans waves-effect waves-success w-md m-b-5";
+      
+      }
+      console.log($scope.updatedFixture);
+      document.getElementById(matchId).children[6].children[0].style.display="table-cell";
+      document.getElementById(matchId).children[6].children[1].style.display="table-cell";
+      document.getElementById(matchId).children[6].children[2].style.display="none";
+    };
+
+    $scope.cancelEdit=function(matchId){
+      document.getElementById(matchId).children[4].style.display="table-cell";
+      document.getElementById(matchId).children[5].style.display="none";
+      
+      document.getElementById(matchId).children[6].children[0].style.display="none";
+      document.getElementById(matchId).children[6].children[1].style.display="none";
+      document.getElementById(matchId).children[6].children[2].style.display="inline";
+        
+    };
+    $scope.clickedToggle=function(){
+        console.log($scope.updatedFixture.active);
+        if($scope.updatedFixture.active==true){
+            $scope.updatedFixture.active=false;
+            document.getElementById("statusBtn").className="btn btn-danger btn-trans waves-effect waves-danger w-md m-b-5";
+        }
+        else if($scope.updatedFixture.active==false){
+            $scope.updatedFixture.active=true;
+            document.getElementById("statusBtn").className="btn btn-success btn-trans waves-effect waves-success w-md m-b-5";
+        }
+    };
+
+    $scope.postEdited=function(matchId){
+         $scope.updateMatchPromise=Football.toggleMatchStatus(matchId,$scope.updatedFixture.active).then(function(res){
+            $scope.cancelEdit(matchId);
+            window.location.reload();
+         });
+    };
+
 })
 
 

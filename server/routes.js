@@ -85,7 +85,7 @@ module.exports = function(app) {
 	app.post('/username', UserController.validate);
 	app.post('/register', UserController.save);
 
-	app.post('/getAllUsers', UserController.getAllUsers);
+	app.get('/users', UserController.getAllUsers);
 	app.post('/getUser', UserController.getUser);
 
 	// app.post('/reset', UserController.resetPasswordRequest);
@@ -132,6 +132,7 @@ module.exports = function(app) {
 	app.get('/fixtures', FixtureController.getAllFixtures);
 	app.get('/fixtures/:seasonId', FixtureController.getFixturesBySeason);
 	app.get('/fixture/:matchId',FixtureController.getFixture);
+	app.put('/fixture',FixtureController.toggleFixtureStatus);
 	//TODO: app.put('/fixture/:id', FixtureController.updateFixture);
 	//TODO: app.delete('/fixture/:id', FixtureController.deleteFixture);
 
