@@ -10,7 +10,7 @@ var Validation = require('../Validation');
 
 //get list of all players as an array obj
 exports.getAllPlayers = function(req, res) {
-	
+
 	Player.find({}).populate('teams').exec(function(playersErr, players){
 		if(playersErr){
 			res.status(Codes.httpStatus.ISE).json({
@@ -106,7 +106,7 @@ exports.togglePlayerStatus = function(req, res){
         });
         return;
 	});
-	
+
 }
 
 //check availability for new player id
@@ -128,7 +128,7 @@ exports.getPlayerIdAvailability = function(req, res){
 	            data: req.body.playerId,
 	            error: ''
 	    	});
-			return; 
+			return;
 		}
 		res.status(Codes.httpStatus.BR).json({
             status: Codes.status.FAILURE,
@@ -154,13 +154,13 @@ exports.createPlayer = function(req, res){
 	        return;
 		}
 		if(player == null){
-			
+
 			var newPlayer = new Player();
             newPlayer.playerId = req.body.playerId;
-            newPlayer.name = req.body.name;                  
+            newPlayer.name = req.body.name;
             newPlayer.positionId = req.body.positionId;
             newPlayer.position = req.body.position;
-			newPlayer.save(function(playerSaveErr, savedPlayer){
+						newPlayer.save(function(playerSaveErr, savedPlayer){
             	if (playerSaveErr) {
                     res.status(Codes.httpStatus.BR).json({
                         status: Codes.status.FAILURE,
@@ -169,7 +169,7 @@ exports.createPlayer = function(req, res){
                         error: Validation.validatingErrors(playerSaveErr)
                     });
                     return;
-                } 
+                }
                 if(savedPlayer){
                 	res.status(Codes.httpStatus.OK).json({
 		            status: Codes.status.SUCCESS,

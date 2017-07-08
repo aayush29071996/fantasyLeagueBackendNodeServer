@@ -32,12 +32,16 @@ var UserSchema = new mongoose.Schema({
 	token:{type:String, required:true},
 	status:{type:String, enum:['ACTIVE', 'INACTIVE' ,'BLOCKED'], default:'ACTIVE'},
 	createdOn:{type:Date, required: true},
+<<<<<<< HEAD
 	userPoints:{type:Number, default:0},
 	google:{
 		accessToken:{type:String},
 		idToken:{type:String},
 		imgUrl:{type:String}
 	}
+=======
+	userPoints:{type:Number, default:1}
+>>>>>>> 5efeb2f62233e61d95ae739b72a8da0df0f0b151
 });
 
 var User = mongoose.model('User', UserSchema);

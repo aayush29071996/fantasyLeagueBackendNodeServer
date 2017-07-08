@@ -6,6 +6,7 @@ var User = require('../models/User');
 var HttpStatus = require('http-status');
 var Validation = require('./Validation');
 var moment = require('moment');
+var configAuth = require('../auth');
 var trim = require('trimmer');
 var uuid = require('uuid');
 var crypto = require('crypto');
@@ -13,6 +14,12 @@ var md5 = require('md5');
 var nodemailer = require('nodemailer');
 var fs = require('fs');
 var key = 'jallikattu';
+var LocalStrategy    = require('passport-local').Strategy;
+var FacebookStrategy = require('passport-facebook').Strategy;
+// var TwitterStrategy  = require('passport-twitter').Strategy;
+var GoogleStrategy   = require('passport-google-oauth').OAuth2Strategy;
+// var User = require('../models/UserProfile');
+var Userlocal = require('../models/User');
 
 var errorMsg = {
 	UNEXP_ERROR : 'unexpected error in accessing data',
@@ -22,7 +29,11 @@ var errorMsg = {
 	MOBILE_IN_USE : 'mobile number in use',
 	INVALID_TOKEN : 'invalid reset password token',
 	OLD_PASS_DOESNT_MATCH: 'Old Password does not match',
-	NO_USERS_FOUND : 'no users found'
+	NO_USERS_FOUND : 'no users found',
+	INVALID_PASS_U: 'username and password does not match',
+	INVALID_PASS_E: 'email and password does not match',
+	FACEBOOK_IN_USE:'facebook account already in use',
+	GOOGLE_IN_USE:'facebook account already in use',
 }
 
 var status = {
@@ -35,6 +46,296 @@ var httpStatus = {
 	ISE : HttpStatus.INTERNAL_SERVER_ERROR,
 	BR : HttpStatus.BAD_REQUEST
 }
+
+// load all the things we need
+
+
+var baseUrl = "http://localhost:9000"
+// var baseUrl = "https://inyards.com"
+// var baseUrl = "https://inyards.herokuapp.com"
+
+
+//facebook
+/*passport.use(new FacebookStrategy({
+
+        clientID        : configAuth.facebookAuth.clientID,
+        clientSecret    : configAuth.facebookAuth.clientSecret,
+        callbackURL     : configAuth.facebookAuth.callbackURL,
+		profileFields	: ['name', 'email', 'link', 'locale', 'timezone'],
+        passReqToCallback : true
+    },
+    function(req, token, refreshToken, profile, done) {
+
+		profile = profile._json;
+		console.log(profile);
+        process.nextTick(function() {
+          if (!req.user) {
+			  	console.log("No user!!");
+                User.findOne({ 'facebook.id' : profile.id }, function(err, user) {
+                  if(err){
+              			 res.status(httpStatus.ISE).json({
+              				status: status.FAILURE,
+              				code: httpStatus.ISE,
+              				data: '',
+              				error: errorMsg.UNEXP_ERROR
+              			})
+						console.log(err);
+              			return done(err);
+              		}
+                  if (user) {
+                        return done(null, user.user); // user found, return that user
+                  	}
+                	else {
+                        // if there is no user, create them
+						var eval = baseUrl + "/emailAvailable/" + profile.email;
+						request({ url:eval, json:true }, function(err, response, head) {
+
+							if(head.code==200){
+								//email avalailable
+								var cdate = new Date();
+								console.log("writting!");
+								var newUserProfile            = new User();
+								newUserProfile.facebook.id    = profile.id;
+								newUserProfile.facebook.token = token;
+								newUserProfile.facebook.name  = profile.first_name + ' ' + profile.last_name;
+								newUserProfile.facebook.email = profile.email;
+								newUserProfile.facebook_id = profile.id;
+
+								var newUser			= new Userlocal();
+								newUser.name    	= profile.first_name + ' ' + profile.last_name;
+								newUser.email		= profile.email;
+								newUser.createdOn   = cdate;
+								newUser.facebook_link = true;
+
+								newUser.save(function(err,data){
+									if(err){
+										return done(err);
+									}
+									else{
+										newUserProfile.user = data._id;
+										newUserProfile.save(function(err,data){
+											if(err){
+												return done(err);
+											}
+										});
+									}
+									//session
+									return done(null, data._id);
+									//return done(null, newUser);
+								});
+							}
+							else{
+								//login
+								console.log("Already Exists!");
+								Userlocal.find({email:head.data},function(err,doc){
+									if(doc[0].facebook_link) return done(null,doc[0]._id);
+									else {
+										return done(err);
+									}
+								});
+							}
+						});
+					}
+                });
+        }
+        else {
+                // user already exists and is logged in, we have to link accounts
+				//check if already linked
+				objId = req.user.id;
+				console.log("Hello world!");
+				console.log("objId : " + objId);
+				var eval = baseUrl + "/facebookAvailable/" + profile.id;
+				request({ url:eval, json:true }, function(err, response, head) {
+					console.log(head.code);
+					if(head.code == 200)//no other facebook link
+					{
+						var newFacebook = {
+
+							"id" 	: profile.id,
+							"token" : token,
+							"name"	: profile.first_name + ' ' + profile.last_name,
+							"email" : profile.email
+						}
+						User.update({user:objId},{facebook:newFacebook,facebook_id:profile.id},function(err,raw){
+
+							if(err){
+								res.status(httpStatus.BR).json({
+									status: status.FAILURE,
+									code: httpStatus.BR,
+									data: '',
+									error: errorMsg.UNEXP_ERROR
+								});
+							}
+							Userlocal.update({_id:objId},{facebook_link:true},function(err,raw){
+
+								if(err){
+									return done(err);
+								}
+								else{
+									return done(null,objId);
+								}
+							});
+						});
+						return done(null,objId);
+					}
+					else{
+						//already in use
+						return done(err);
+					}
+				});
+				//
+            }
+        });
+	}));*/
+
+
+	//google
+			passport.use(new GoogleStrategy({
+
+				clientID        : configAuth.googleAuth.clientID,
+				clientSecret    : configAuth.googleAuth.clientSecret,
+				callbackURL     : configAuth.googleAuth.callbackURL,
+				passReqToCallback : true // allows us to pass in the req from our route (lets us check if a user is logged in or not)
+
+			},
+			function(req, token, refreshToken, profile, done) {
+
+
+					process.nextTick(function() {
+
+							console.log(profile.emails);
+							// check if the user is already logged in
+							if (!req.user) {
+
+									User.findOne({ 'google.id' : profile.id }, function(err, user) {
+											if(err){
+												res.status(httpStatus.ISE).json({
+													status: status.FAILURE,
+													code: httpStatus.ISE,
+													data: '',
+													error: errorMsg.UNEXP_ERROR
+												})
+												return done(err);
+											}
+
+											if (user) {
+													return done(null, user.user);//user found, return the user
+											}
+											else {
+													//if ther is no user return them
+													console.log("writting!");
+													var eval = baseUrl + "/emailAvailable/" + profile.emails[0].value;
+													request({ url:eval, json:true },function(err,response,data){
+
+														if(data.code==200){
+
+															//email available
+															var cdate = new Date();
+															var newUserProfile            = new User();
+															newUserProfile.google.id    = profile.id;
+															newUserProfile.google.token = token;
+															newUserProfile.google.name  = profile.displayName;
+															newUserProfile.google.email = profile.emails[0].value;
+															newUserProfile.google_id = profile.id;
+
+															var newUser			= new Userlocal();
+															newUser.name    	= profile.diplayName;
+															newUser.username	= profile.displayName;
+															newUser.email		= profile.emails[0].value;
+															newUser.createdOn	= cdate;
+															newUser.google_link = true
+
+															newUser.save(function(err,data){
+																if(err){
+																	return done(err);
+																}
+																else{
+																	newUserProfile.user = data._id;
+																	newUserProfile.save(function(err,data){
+																		if(err){
+																			return done(err);
+																		}
+																	});
+																}
+																return  done(null,data._id);
+																//return done(null, newUser);
+															});
+
+														}
+														else{
+															//login
+															console.log("Already Exists!");
+															Userlocal.find({email:data.data},function(err,doc){
+																if(doc[0].google_link) return done(null,doc[0]._id);
+																else {
+																	return done(err);/******/
+																}
+															});
+
+														}
+													});
+											}
+									});
+
+							}
+							else
+							{
+									// user already exists and is logged in, we have to link accounts
+									//check if already linked
+									var objId = req.user.id;
+									var eval = baseUrl + "/googleAvailable/" + profile.id;
+									request({ url:eval, json:true }, function(err, response, head) {
+										console.log(head.code);
+										if(head.code == 200)//no other facebook link
+										{
+											var newGoogle = {
+
+													"id" 	: profile.id,
+													"token" : token,
+													"name"	: profile.displayName,
+													"email" : profile.emails[0].value
+											}
+											User.update({user:objId},{google:newGoogle,google_id:profile.id},function(err,raw){
+
+													if(err){
+														res.status(httpStatus.ISE).json({
+															status: status.FAILURE,
+															code: httpStatus.ISE,
+															data: '',
+															error: errorMsg.EMAIL_IN_USE
+														});
+													}
+													Userlocal.update({_id:objId},{google_link:true},function(err,raw){
+
+															if(err){
+																return done(err);
+															}
+															else{
+																return done(null,req.user);
+															}
+													});
+											});
+										}
+										else{
+											//already in use
+											return done(err);
+										}
+									});
+
+									//
+							}
+
+					});
+
+			}));
+
+
+
+
+
+
+
+
 
 var transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -182,7 +483,7 @@ exports.resetPasswordRequest = function(req, res){
 				error: ''
 			});
 		});
-		
+
 	});
 }
 
@@ -213,7 +514,7 @@ exports.resetPasswordResponse = function(req, res){
 			data: user.email,
 			error: ''
 		});
-		
+
 	});
 }
 
@@ -261,7 +562,7 @@ exports.resetPassword = function(req, res){
 				error: ''
 			});
 		});
-		
+
 	});
 }
 
@@ -305,14 +606,14 @@ exports.changePassword = function(req, res){
 					error: ''
 				});
 			});
-		
+
 	});
 }
 
 
 
 exports.getAllUsers = function(req, res){
-	User.find({},function(err, users){
+	User.find({}).select('username email userPoints createdOn').populate('users').exec(function(err, users){
 		if(err){
 			res.status(httpStatus.ISE).json({
 				status: status.FAILURE,
@@ -337,6 +638,7 @@ exports.getAllUsers = function(req, res){
 			data: '',
 			error: errorMsg.NO_USERS_FOUND
 		});
+		return;
 	});
 }
 
@@ -404,7 +706,7 @@ function sendWelcomeMail(toAddr){
 	    sender: 'Inyards Pitch <noreply@inyards.com>',
 	    to: toAddr,
 	    subject: 'You are now a Pitcher!',
-	    html: htmlstream 
+	    html: htmlstream
 	};
 	transporter.sendMail(mailOptions, function(error, info){
 	    if(error){
@@ -428,7 +730,7 @@ function sendResetPasswordRequestMail(toAddr, token){
 	    to: toAddr,
 	    subject: 'Inyards - Reset Password',
 	    text:'https://inyards.com/reset/' + token
-	    // html: htmlstream 
+	    // html: htmlstream
 	};
 	transporter.sendMail(mailOptions, function(error, info){
 	    if(error){
@@ -452,7 +754,7 @@ function sendResetPasswordMail(toAddr){
 	    to: toAddr,
 	    subject: 'Inyards - Password Reset Successful',
 	    text:'Password has been reset'
-	    // html: htmlstream 
+	    // html: htmlstream
 	};
 	transporter.sendMail(mailOptions, function(error, info){
 	    if(error){

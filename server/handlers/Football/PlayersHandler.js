@@ -227,10 +227,7 @@ exports.populatePlayersForAllTeams = function(req, res) {
                         });
                     }
                 });
-            
-
-
-                // }//'if' ends with this brace
+            // }//'if' ends with this brace
             });
         }
 

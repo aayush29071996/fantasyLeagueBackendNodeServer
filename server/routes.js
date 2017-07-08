@@ -6,8 +6,10 @@ var UserController = require('./controllers/UserController');
 var ResetController = require('./controllers/ResetController');
 var InviteController = require('./controllers/InviteController');
 var ContactController = require('./controllers/ContactController');
-// var UsersHandler = require('./handlers/User/UsersHandler')
 
+// var UserProfileController = require('./controllers/UserProfileController');
+
+// var ContactController = require('./controllers/ContactController');
 var FixturesHandler = require('./handlers/Football/FixturesHandler');
 var TeamsHandler = require('./handlers/Football/TeamsHandler');
 var PlayersHandler = require('./handlers/Football/PlayersHandler');
@@ -44,31 +46,32 @@ module.exports = function(app) {
 
 	app.get('/pitch/all', function(req,res){
 		res.sendFile('pitch/views/all.html', {
-			root: __dirname	
-		});	
+			root: __dirname
+		});
 	});
 	app.get('/pitch/trending', function(req,res){
 		res.sendFile('pitch/views/trending.html', {
-			root: __dirname	
-		});	
+			root: __dirname
+		});
 	});
 	app.get('/pitch/recent', function(req,res){
 		res.sendFile('pitch/views/recent.html', {
-			root: __dirname	
-		});	
+			root: __dirname
+		});
 	});
-	
+
 	app.get('/mpitch', function(req,res){
 		res.sendFile('mpitch/index.html', {
 			root: __dirname
 		});
 	});
-	
+
 	app.get('/logo',function(req,res){
 		res.sendFile('logo.png', {
 			root: __dirname
 		});
 	});
+
 
 	//invite route
 	app.post('/invite', InviteController.save);
@@ -85,8 +88,26 @@ module.exports = function(app) {
 	app.post('/username', UserController.validate);
 	app.post('/register', UserController.save);
 
+<<<<<<< HEAD
 	app.get('/users', UserController.getAllUsers);
 	app.post('/getUser', UserController.getUser);
+=======
+	app.post('/getAllUsers', UserController.getAllUsers);
+	// app.post('/getUser', UserController.getUser);
+
+	app.get('/users', UserController.getAllUsers);
+	// app.get('/user/:userId', UserController.getUser);
+
+	app.get('/auth/google',passport.athenticate('google',{scope:['profile','email']}));
+
+	app.get('/auth/google/callback',
+		passport.athenticate('google',{successRedirect: '/profile',
+																	 failureRedirect:'/'}));
+	app.get('/logout',function(req,res){
+		res.logout();
+		res.redirect('/');
+	})
+>>>>>>> 5efeb2f62233e61d95ae739b72a8da0df0f0b151
 
 	// app.post('/reset', UserController.resetPasswordRequest);
 	// app.get('/reset/:token', UserController.resetPasswordResponse);
@@ -96,14 +117,14 @@ module.exports = function(app) {
 	app.get('/reset/:token', ResetController.resetPasswordResponse);
 	app.post('/reset/:token', UserController.resetPassword);
 	app.post('/changePassword', UserController.changePassword);
-	
+
 	app.post('/feedback', ContactController.sendFeedback);
-	
-	
+
+
 	app.get('/roster/:matchId', RosterController.getRoster);
 	//app.post('/complaint', ContactController.sendComplaint);
-	
-	
+
+
 	app.get('/playerHistory/:username', PointsSystemController.getPlayerHistory);
 
 
@@ -158,6 +179,7 @@ module.exports = function(app) {
 
 	//MatchCard routes
 	app.post('/createMatchCard', PointsSystemController.createMatchCard);
+	app.get('/displayPlayers', PointsSystemController.displayPlayers);
 	app.get('/leaderboard/:matchId', PointsSystemController.getMatchLeaderboard);
 
 	app.post('/category', PitchController.createCategory);

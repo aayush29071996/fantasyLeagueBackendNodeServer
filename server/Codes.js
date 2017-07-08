@@ -43,4 +43,3 @@ exports.httpStatus = {
 	NF : HttpStatus.NOT_FOUND,
 	UNAUTH : HttpStatus.UNAUTHORIZED
 }
-
