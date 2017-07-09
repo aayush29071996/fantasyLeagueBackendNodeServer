@@ -138,13 +138,13 @@ function getRosterColorCode(pos){
 			cc="#e67e22";
 			break;
 		case '2':
-			cc="#3498db";
+			cc="#f1c40f";
 			break;
 		case '3':
 			cc="#2ecc71";
 			break;
 		case '4':
-			cc="#f1c40f";
+			cc="#3498db";
 			break;
 		default:
 			cc="#9b59b6";
