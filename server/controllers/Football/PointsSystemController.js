@@ -385,7 +385,7 @@ exports.editMatchCard = function(req, res) {
 			            error: Codes.errorMsg.UNEXP_ERROR
 			        });
 	        		return;
-					}	
+					}
 				var newPlayer = new Player();
 				newPlayer.playerId = player.playerId;
 				newPlayer.name = player.name;
@@ -406,7 +406,7 @@ exports.editMatchCard = function(req, res) {
 	                        error: Validation.validatingErrors(matchCardSaveErr)
 	                    });
 	                    return;
-	                } 
+	                }
 	                if(savedMatchCard){
 	                	res.status(Codes.httpStatus.OK).json({
 				            status: Codes.status.SUCCESS,
@@ -424,9 +424,9 @@ exports.editMatchCard = function(req, res) {
 });
 }
 
-exports.displayPlayers = function(req, res) {
+exports.getRosterPlayers = function(req, res) {
 
-		MatchCard.findOne({user:req.body.userId, match:req.body.matchId}).populate('match').exec(function(matchCardErr, matchCard){
+		MatchCard.findOne({username:req.body.username, match:req.body.matchId}).populate('match').exec(function(matchCardErr, matchCard){
 			if(matchCardErr){
 				res.status(Codes.httpStatus.ISE).json({
 		            status: Codes.status.FAILURE,

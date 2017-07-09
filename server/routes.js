@@ -171,7 +171,7 @@ module.exports = function(app) {
 
 	//MatchCard routes
 	app.post('/createMatchCard', PointsSystemController.createMatchCard);
-	app.get('/displayPlayers', PointsSystemController.displayPlayers);
+	app.get('/getRosterPlayers/:username/:matchId', PointsSystemController.getRosterPlayers);
 	app.get('/leaderboard/:matchId', PointsSystemController.getMatchLeaderboard);
 
 	app.post('/category', PitchController.createCategory);

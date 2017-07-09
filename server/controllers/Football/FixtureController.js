@@ -17,7 +17,7 @@ exports.getFixturesHistory = function(req, res) {
 
 	var twoHoursBefore= moment.utc().subtract('2','h').format("YYYY-MM-DD HH:mm:ss");
 	var sevenDaysBefore = moment.utc().subtract('7','d').format("YYYY-MM-DD HH:mm:ss");
-	
+
 	console.log(twoHoursBefore)
 	console.log(sevenDaysBefore);
 
@@ -74,7 +74,7 @@ exports.getFixturesHistory = function(req, res) {
 					            error: Codes.errorMsg.UNEXP_ERROR
 					        });
 					       	 return;
-							}	
+							}
 
 							var fixture = [];
 							fixture.push(match)
@@ -110,7 +110,7 @@ exports.getFixturesHistory = function(req, res) {
 					});
 
 			});
-			
+
 		}
 	});
 }
@@ -143,7 +143,7 @@ exports.getFixturesLive = function(req, res) {
                 error: Codes.errorMsg.F_NO_LIVE
             });
             return;
-		} 
+		}
 
 		var fixturesSet = [];
 		if(matches.length > 0){
@@ -178,7 +178,7 @@ exports.getFixturesLive = function(req, res) {
 					            error: Codes.errorMsg.UNEXP_ERROR
 					        });
 					       	 return;
-							}	
+							}
 
 							var fixture = [];
 							fixture.push(match)
@@ -187,7 +187,7 @@ exports.getFixturesLive = function(req, res) {
 							teams.team2 = team2;
 							fixture.push(teams);
 							fixture.push(season);
-							
+
 							//TEAM ACTIVE FILTER
 							// if(team1.active || team2.active){
 								//fixturesSet.push(fixture);
@@ -213,7 +213,7 @@ exports.getFixturesLive = function(req, res) {
 					});
 
 			});
-			
+
 		}
 	});
 }
@@ -223,7 +223,7 @@ exports.getFixturesUpcoming = function(req, res) {
 
 	var now = moment.utc().format("YYYY-MM-DD HH:mm:ss");
 	var sevenDaysAfter = moment.utc().add('7','d').format("YYYY-MM-DD HH:mm:ss");
-	
+
 	console.log(now)
 	console.log(sevenDaysAfter)
 
@@ -245,7 +245,7 @@ exports.getFixturesUpcoming = function(req, res) {
                 error: Codes.errorMsg.F_NO_UP
             });
             return;
-		} 
+		}
 		console.log(matches.length + ' upcoming all matches');
 		var fixturesSet = [];
 		var matchCount = 0;
@@ -281,7 +281,7 @@ exports.getFixturesUpcoming = function(req, res) {
 					            error: Codes.errorMsg.UNEXP_ERROR
 					        });
 					       	 return;
-							}	
+							}
 
 							var fixture = [];
 							fixture.push(match)
@@ -321,7 +321,7 @@ exports.getFixturesUpcoming = function(req, res) {
 						});
 					});
 			});
-			
+
 		}
 	});
 }
@@ -331,7 +331,7 @@ exports.getFixturesHistoryAdmin = function(req, res) {
 
 	var twoHoursBefore= moment.utc().subtract('2','h').format("YYYY-MM-DD HH:mm:ss");
 	var sevenDaysBefore = moment.utc().subtract('7','d').format("YYYY-MM-DD HH:mm:ss");
-	
+
 	console.log(twoHoursBefore)
 	console.log(sevenDaysBefore);
 
@@ -388,7 +388,7 @@ exports.getFixturesHistoryAdmin = function(req, res) {
 					            error: Codes.errorMsg.UNEXP_ERROR
 					        });
 					       	 return;
-							}	
+							}
 
 							var fixture = [];
 							fixture.push(match)
@@ -415,7 +415,7 @@ exports.getFixturesHistoryAdmin = function(req, res) {
 					});
 
 			});
-			
+
 		}
 	});
 }
@@ -448,7 +448,7 @@ exports.getFixturesLiveAdmin = function(req, res) {
                 error: Codes.errorMsg.F_NO_LIVE
             });
             return;
-		} 
+		}
 
 		var fixturesSet = [];
 		if(matches.length > 0){
@@ -483,7 +483,7 @@ exports.getFixturesLiveAdmin = function(req, res) {
 					            error: Codes.errorMsg.UNEXP_ERROR
 					        });
 					       	 return;
-							}	
+							}
 
 							var fixture = [];
 							fixture.push(match)
@@ -509,7 +509,7 @@ exports.getFixturesLiveAdmin = function(req, res) {
 					});
 
 			});
-			
+
 		}
 	});
 }
@@ -519,7 +519,7 @@ exports.getFixturesUpcomingAdmin = function(req, res) {
 
 	var now = moment.utc().format("YYYY-MM-DD HH:mm:ss");
 	var sevenDaysAfter = moment.utc().add('7','d').format("YYYY-MM-DD HH:mm:ss");
-	
+
 	console.log(now)
 	console.log(sevenDaysAfter)
 
@@ -541,7 +541,7 @@ exports.getFixturesUpcomingAdmin = function(req, res) {
                 error: Codes.errorMsg.F_NO_UP
             });
             return;
-		} 
+		}
 
 		var fixturesSet = [];
 		if(matches.length > 0){
@@ -576,7 +576,7 @@ exports.getFixturesUpcomingAdmin = function(req, res) {
 					            error: Codes.errorMsg.UNEXP_ERROR
 					        });
 					       	 return;
-							}	
+							}
 
 							var fixture = [];
 							fixture.push(match)
@@ -602,7 +602,7 @@ exports.getFixturesUpcomingAdmin = function(req, res) {
 						});
 					});
 			});
-			
+
 		}
 	});
 }
@@ -633,7 +633,7 @@ exports.getCompetitionsAndSeasons = function(req, res){
 		}
 
 		if(seas.length > 0){
-			
+
 			res.status(Codes.httpStatus.OK).json({
                 status: Codes.status.SUCCESS,
                 code: Codes.httpStatus.OK,
@@ -705,7 +705,7 @@ exports.getFixturesBySeason = function(req, res){
 					            error: Codes.errorMsg.UNEXP_ERROR
 					        });
 					       	 return;
-							}	
+							}
 
 							var fixture = [];
 							fixture.push(match)
@@ -731,7 +731,7 @@ exports.getFixturesBySeason = function(req, res){
 					});
 
 			});
-			
+
 		}
 
 	});
@@ -762,7 +762,7 @@ exports.getFixture = function(req, res){
             return;
 		}
 
-	
+
 		Team.find({teamId:match.team1Id}).populate('players').exec(function(team1Err, team1){
 			if(team1Err){
 				res.status(Codes.httpStatus.ISE).json({
@@ -793,7 +793,7 @@ exports.getFixture = function(req, res){
 			            error: Codes.errorMsg.UNEXP_ERROR
 			        });
 			       	 return;
-					}	
+					}
 
 					var fixture = [];
 					fixture.push(match)
@@ -803,7 +803,7 @@ exports.getFixture = function(req, res){
 					fixture.push(teams);
 					fixture.push(season);
 
-				
+
 					res.status(Codes.httpStatus.OK).json({
 						status: Codes.status.SUCCESS,
 						code: Codes.httpStatus.OK,
@@ -821,7 +821,7 @@ exports.getFixture = function(req, res){
 
 
 exports.getAllFixtures = function(req, res) {
-	
+
 	// Match.find({}).select('matchId team1Id team2Id status startingDateTime').exec(function(fixturesErr, fixtures){
 	Match.find({}).populate('events').exec(function(fixturesErr, fixtures){
 		if(fixturesErr){
@@ -874,7 +874,7 @@ exports.getFixtureIdAvailability = function(req, res){
 	            data: req.body.matchId,
 	            error: ''
 	    	});
-			return; 
+			return;
 		}
 		res.status(Codes.httpStatus.BR).json({
             status: Codes.status.FAILURE,
@@ -900,7 +900,7 @@ exports.createFixture = function(req, res){
 	        return;
 		}
 		if(fixture == null){
-			
+
 			var newFixture = new Match();
 			newFixture.matchId = req.body.matchId;
 			newFixture.team1Id = req.body.team1Id;
@@ -920,7 +920,7 @@ exports.createFixture = function(req, res){
                         error: Validation.validatingErrors(fixtureSaveErr)
                     });
                     return;
-                } 
+                }
                 if(savedFixture){
                 	res.status(Codes.httpStatus.OK).json({
 		            status: Codes.status.SUCCESS,
@@ -1038,8 +1038,3 @@ exports.deleteFixture = function(req, res){
         return;
 	});
 }
-
-
-
-
-

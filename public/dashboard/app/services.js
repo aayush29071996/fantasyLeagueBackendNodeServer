@@ -21,6 +21,8 @@ dashServices.factory('Users', function($http){
       return $http.get(baseURI+'/users');
   };
 
+  return user;
+})
 
 /*
 
@@ -61,8 +63,6 @@ dashServices.factory('Users', function($http){
       return $http.get(baseURI+'/historyFixtures');
   };*/
 
-  return user;
-})
 
 dashServices.factory('Football', function($http){
     var user={};
