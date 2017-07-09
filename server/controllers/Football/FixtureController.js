@@ -299,9 +299,9 @@ exports.getFixturesUpcoming = function(req, res) {
 							// }
 
 							//MATCH ACTIVE FILTER
-							if(match.active){
+				// 			if(match.active){
 								fixturesSet.push(fixture);
-							}
+				// 			}
 
 							matchCount = matchCount + 1;
 
