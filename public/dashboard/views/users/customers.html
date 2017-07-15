@@ -1,5 +1,5 @@
 <div class="content">
-      <div class="container">
+      <div class="container" style="display:none">
             <div class="row">
                   <div class="col-lg-4 col-md-6">
                         <div class="card-box">
@@ -88,8 +88,8 @@
                 <th tabindex="0" rowspan="1" colspan="1" style="width: 230px;">Created On</th>
                 <th tabindex="0" rowspan="1" colspan="1" style="width: 230px;">User Points</th>
                 <th tabindex="0" rowspan="1" colspan="1" style="width: 180px;">Phone Number</th>
-                <th tabindex="0" rowspan="1" colspan="1" style="width: 130px;">Country</th>
-                <th rowspan="1" colspan="1" style="width: 180px;">Address</th>
+                <th tabindex="0" rowspan="1" colspan="1" style="width: 130px;">Status</th>
+                <th rowspan="1" colspan="1" style="width: 180px;">Match Cards</th>
 
               </tr>
             </thead>
@@ -100,14 +100,14 @@
                     <td>{{user.email}}</td>
                     <td>{{userDob}}</td>
                     <td>{{user.userPoints}}</td>
-                    <td>{{users.pno}}</td>
-                    <td>{{users.country}}</td>
+                    <td>{{user.pno}}</td>
+                    <td>{{user.status}}</td>
                     <td class="actions">
                         <!--<a href="#" class="hidden on-editing save-row"><i class="fa fa-save"></i></a>-->
                         <!--<a href="#" class="hidden on-editing cancel-row"><i class="fa fa-times"></i></a>-->
-                        <!-- <a href="" class="on-default edit-row" ng-click="ViewUser(user.userId)"><i class="fa fa-eye"></i></a>
-                        <a class="on-default edit-row"><i class="fa fa-pencil"></i></a>
-                        <a class="on-default remove-row"><i class="fa fa-trash-o"></i></a> -->
+                        <a href="" class="on-default edit-row" ng-click="viewMatchCards(user)"><i class="fa fa-eye"></i></a>
+                        <!-- <a class="on-default edit-row"><i class="fa fa-pencil"></i></a> -->
+                        <!-- <a class="on-default remove-row"><i class="fa fa-trash-o"></i></a> -->
                     </td>
                 </tr>
                 </tbody>

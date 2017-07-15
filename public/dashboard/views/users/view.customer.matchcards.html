@@ -1,0 +1,71 @@
+<md-dialog cg-busy="{promise:ViewMatchCardsPromise,message:'Please Wait...'}" style="height: 100vh;width: 100vw;">
+  <form ng-cloak>
+    <md-toolbar>
+      <div class="md-toolbar-tools" style="background: #222;">
+      <img style="height: 120px;margin-top: 11vh;margin-left: 1vw;" src="{{user.avatar}}" alt="{{user.username}}">
+        <h2 style="width: 73%;text-align: center;">{{user.username}}</h2>
+        <h2 style="width: 73%;text-align: center;">{{user.email}}</h2>
+        <h2 style="width: 73%;text-align: center;">{{user.userPoints}}</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="close()">
+          <span>X</span>
+        </md-button>
+      </div>
+    </md-toolbar>
+
+    <md-dialog-content style="">
+    <form class="form-horizontal" role="form">
+        <table ng-show="userMatchCards.length!=0" class="table table-striped dataTable no-footer" style="margin-top: 10vh;margin-left: 5px; width: 60%; float: left;" id="datatable-editable" role="grid">
+            <thead style="text-align: center;">
+                <tr role="row">
+                <th tabindex="0" rowspan="1" colspan="1" style="width: 100px;color:#000;">Match ID</th>
+                <th tabindex="0" rowspan="1" colspan="1" style="width: 250px;color:#000;">Home vs Away</th>
+                <th tabindex="0" rowspan="1" colspan="1" style="width: 100px;color:#000;">Date</th>
+                <th tabindex="0" rowspan="1" colspan="1" style="width: 80px;color:#000;">Match Points</th>
+                <th tabindex="0" rowspan="1" colspan="1" style="width: 80px;color:#000;">User Points</th>
+                <th tabindex="0" rowspan="1" colspan="1" style="width: 80px;color:#000;">View Player Set</th>
+            </thead>
+            <tbody>
+            <tr class="gradeA odd" role="row" ng-repeat="matchCardItem in userMatchCards | orderBy: matchCardSort" ng-style="isMatchCardSelected($index)">
+                    <td style="color:#000;">{{matchCardItem.matchCard.match.matchId}}</td>
+                    <td style="color:#000;">{{matchCardItem.team1.name}} vs {{matchCardItem.team2.name}}</td>
+                    <td style="color:#000;">{{returnIST(matchCardItem.matchCard.match.startingDateTime)}}</td>
+                    <td style="color:#000;">{{matchCardItem.matchCard.matchPoints}}</td>
+                    <td style="color:#000;">{{returnTotalUserPoints($index)}}</td>
+                    <td class="actions">
+                        <!-- <a href="#" class="hidden on-editing save-row"><i class="fa fa-save"></i></a> -->
+                    <!--    <a href="#" class="hidden on-editing cancel-row"><i class="fa fa-times"></i></a>-->
+                        <a href="" class="on-default edit-row" ng-click="viewPlayerSet($index)"><i class="fa fa-eye"></i></a>
+                    <!--    <a class="on-default edit-row"><i class="fa fa-pencil"></i></a>-->
+                    <!--    <a class="on-default remove-row"><i class="fa fa-trash-o"></i></a>-->
+                    </td>
+                </tr>
+                </tbody>
+        </table>
+        <table class="table table-striped dataTable no-footer" style="margin-top: 10vh; margin-left: 5vh; width: 35%; float:left;" grid="role">
+            <thead style="text-align: center;">
+                <tr role="row">
+                <th tabindex="0" rowspan="1" colspan="1" style="width: 100px;color:#000;">Player ID</th>
+                <th tabindex="0" rowspan="1" colspan="1" style="width: 150px;color:#000;">Name</th>
+                <th tabindex="0" rowspan="1" colspan="1" style="width: 100px;color:#000;">Position</th>
+                <th tabindex="0" rowspan="1" colspan="1" style="width: 100px;color:#000;">Position ID</th>
+                <th tabindex="0" rowspan="1" colspan="1" style="width: 60px;color:#000;">Points</th>
+            </thead>
+            <tbody>
+            <tr class="gradeA odd" role="row" ng-repeat="player in userPlayerSet | orderBy: playerSort">
+                    <td style="color:#000;">{{player.playerId}}</td>
+                    <td style="color:#000;">{{player.name}}</td>
+                    <td style="color:#000;">{{player.position}}</td>
+                    <td style="color:#000;">{{player.positionId}}</td>
+                    <td style="color:#000;">{{player.points}}</td>
+                </tr>
+                </tbody>
+        </table>
+        
+        <h4 ng-show="userMatchCards.length==0" style="font-variant:small-caps;margin-top: 32vh;font-size: 25px;color:#000;text-align:center;">No Match Cards for this User!</h4>
+    </form>
+    
+    </md-dialog-content>
+
+  </form>
+</md-dialog>

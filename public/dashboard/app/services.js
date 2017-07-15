@@ -2,8 +2,8 @@
 
 
 var dashServices = angular.module('dashServices', ['ngResource','dashControllers']);
-// var baseURI = "http://localhost:9000";
-var baseURI = "https://inyards.com";
+var baseURI = "http://localhost:9000";
+// var baseURI = "https://inyards.com";
 
 dashServices.factory('Auth', function($http){
     var user={};
@@ -18,9 +18,12 @@ dashServices.factory('Auth', function($http){
 dashServices.factory('Users', function($http){
   var user={};
   user.getAllUsers=function() {
-      return $http.get(baseURI+'/users');
-  };
+      return $http.get(baseURI + '/users');
+  }; 
 
+  user.getMatchCards = function(userId) {
+    return $http.get(baseURI + '/getMatchCardsByUser/' + userId)
+  };
 
 /*
 

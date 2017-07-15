@@ -90,9 +90,9 @@ exports.getFixturesHistory = function(req, res) {
 							// }
 
 							//MATCH ACTIVE FILTER
-							if(match.active){
+							// if(match.active){
 								fixturesSet.push(fixture);
-							}
+							// }
 
 							if(fixturesSet.length == matches.length){
 								res.status(Codes.httpStatus.OK).json({
@@ -194,9 +194,9 @@ exports.getFixturesLive = function(req, res) {
 							// }
 
 							//MATCH ACTIVE FILTER
-							if(match.active){
+							// if(match.active){
 								fixturesSet.push(fixture);
-							}
+							// }
 
 							if(fixturesSet.length == matches.length){
 								res.status(Codes.httpStatus.OK).json({
@@ -299,9 +299,9 @@ exports.getFixturesUpcoming = function(req, res) {
 							// }
 
 							//MATCH ACTIVE FILTER
-							if(match.active){
+							// if(match.active){
 								fixturesSet.push(fixture);
-							}
+							// }
 
 							matchCount = matchCount + 1;
 

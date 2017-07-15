@@ -1,5 +1,5 @@
 angular.module('userCustCtrl',['dashServices'])
-.controller('UserCust', function($scope,$window,Users){
+.controller('UserCust', function($scope,$window,Users, $mdDialog,moment){
   new Morris.Line({
     element: 'myfirstchart',
     data: [
@@ -43,26 +43,75 @@ angular.module('userCustCtrl',['dashServices'])
     parseTime: false,
     labels: ['Users']
   });
-<<<<<<< HEAD
+
+
+  function ViewMatchCardsPopupCtrl($scope,$mdDialog,Users,user){
+     
+     $scope.close=function(){
+         $mdDialog.hide();
+     };
+
+     $scope.ViewMatchCardsPromise = Users.getMatchCards(user._id).then(function(res){
+              res=res.data.data;
+              $scope.userMatchCards = res;
+              $scope.user = user;
+              $scope.returnIST = function(date){
+                return moment(date).utcOffset('+0530').format('YYYY-MM-DD HH:mm');
+              };
+              $scope.returnTotalUserPoints = function(index){
+                var points = 0;
+                $scope.userMatchCards[index].matchCard.players.forEach(function(player, playerIndex){
+                  points = points + player.points;
+                    if(playerIndex == $scope.userMatchCards[index].matchCard.players.length - 1){
+                      return points;
+                    } 
+                });
+              };
+              $scope.userPlayerSet = $scope.userMatchCards[0].matchCard.players;
+              $scope.selectedMatchCardIndex = 0;
+              $scope.viewPlayerSet = function(index){
+                   $scope.userPlayerSet = $scope.userMatchCards[index].matchCard.players;
+                   $scope.selectedMatchCardIndex = index;
+              };
+              $scope.isMatchCardSelected = function(index){
+                var weight = index == $scope.selectedMatchCardIndex ? '700' : '300'
+                return {'font-weight':weight}
+              }
+              $scope.playerSort = 'positionId';
+              $scope.matchCardSort = 'startingDateTime';
+
+
+        }).catch(function(e){
+      });
+  };
 
   Users.getAllUsers().then(function(response){
    $scope.users=response.data.data;
-   console.log($scope.users)
+   // console.log($scope.users)
    $scope.userDob = moment($scope.users.createdOn).format('YYYY-MM-DD');
-
-   // $scope.useDob=moment(response.data.createdOn);
-   console.log($scope.userDob);
+   // console.log($scope.userDob);
  });
 
 
-=======
-  Users.getAllUsers().then(function(response){
-    $scope.users=response.data.data;
-    console.log($scope.users)
-    $scope.userDob = moment($scope.users.createdOn).format('YYYY-MM-DD');
 
-    // $scope.useDob=moment(response.data.createdOn);
-    console.log($scope.userDob);
-  });
->>>>>>> 5efeb2f62233e61d95ae739b72a8da0df0f0b151
+
+ $scope.viewMatchCards = function(user,ev) {
+    $mdDialog.show({
+      controller: ViewMatchCardsPopupCtrl,
+      templateUrl: 'dashboard/views/users/view.customer.matchcards.html',
+      parent: angular.element(document.body),
+      targetEvent: ev,
+      locals:{
+          user: user
+          },
+      clickOutsideToClose:true,
+      fullscreen: true
+    });
+  };
+
+  
+
+
+
+
 });

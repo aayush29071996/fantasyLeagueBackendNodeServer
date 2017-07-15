@@ -613,7 +613,7 @@ exports.changePassword = function(req, res){
 
 
 exports.getAllUsers = function(req, res){
-	User.find({}).select('username email userPoints createdOn').populate('users').exec(function(err, users){
+	User.find({}).select('-password -token').populate('users').exec(function(err, users){
 		if(err){
 			res.status(httpStatus.ISE).json({
 				status: status.FAILURE,

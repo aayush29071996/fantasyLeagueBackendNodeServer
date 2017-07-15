@@ -28,7 +28,9 @@ exports.errorMsg = {
 	ST_NO : 'currently, no pitches',
 	CT_NO : 'currently, no categories',
 	PS_INV_ID: 'invalid point system id',
-	F_INV_MCID: 'invalid match card id'
+	F_INV_MCID: 'invalid match card id',
+	T_INV_TID: 'invalid team id',
+	F_NO_MC: 'no match cards for user'
 }
 
 exports.status = {

@@ -126,6 +126,8 @@ module.exports = function(app) {
 	//seed routes
 	app.get('/seedCompetitionsSeasons', FixturesHandler.populateCompetitionsAndSeasons);
 	app.get('/seedFixtures', FixturesHandler.populateSeasonsWithFixtures);
+	app.get('/seedFixtures/:seasonId', FixturesHandler.populateSeasonWithFixtures);
+	app.get('/seedFixture/:fixtureId', FixturesHandler.populateFixture);
 	app.get('/seedTeams',TeamsHandler.populateTeamsForAllSeasons);
 	app.get('/seedPlayers',PlayersHandler.populatePlayersForAllTeams);
 
@@ -171,6 +173,7 @@ module.exports = function(app) {
 
 	//MatchCard routes
 	app.post('/createMatchCard', PointsSystemController.createMatchCard);
+	app.get('/getMatchCardsByUser/:userId', PointsSystemController.getMatchCards);
 	app.get('/displayPlayers', PointsSystemController.displayPlayers);
 	app.get('/leaderboard/:matchId', PointsSystemController.getMatchLeaderboard);
 

@@ -176,6 +176,7 @@ exports.populateCompetitionsAndSeasons = function(req, res) {
 }
 
 
+
 exports.populateSeasonsWithFixtures = function(req, res) {
 
 
@@ -457,5 +458,533 @@ exports.populateSeasonsWithFixtures = function(req, res) {
 	    }
 	});
 }
+
+
+exports.populateSeasonWithFixtures = function(req, res) {
+
+	Season.findOne({seasonId:req.params.seasonId}).populate('competition').exec(function(seasonErr, season) {
+
+	    if (seasonErr) {
+	        res.status(Codes.httpStatus.ISE).json({
+	            status: Codes.status.FAILURE,
+	            code: Codes.httpStatus.ISE,
+	            data: '',
+	            error: Codes.errorMsg.UNEXP_ERROR
+	        });
+	        return;
+	    }
+	  
+	    if (season == null) {
+	        console.log('invalid season id');
+	        return false;
+	    }
+    
+        	console.log('season id ' + season.seasonId)
+            params = 'seasons/' + season.seasonId;
+            //fixtures - future
+            //matches - all
+            // must change below also in getting data: data = data.matches.data;
+            include = 'fixtures.events,fixtures.lineup';
+
+            request.get(fireUrl(params, include), function(err, response, data) {
+
+            	console.log('Firing ' + fireUrl(params, include));
+
+
+                if (err) {
+                	res.status(Codes.httpStatus.ISE).json({
+                        status: Codes.status.FAILURE,
+                        code: Codes.httpStatus.ISE,
+                        data: '',
+                        error: Codes.errorMsg.UNEXP_ERROR
+                    });
+                    return;
+                }
+
+                if (response.statusCode == Codes.httpStatus.NF) {
+                    res.status(Codes.httpStatus.BR).json({
+                        status: Codes.status.FAILURE,
+                        code: Codes.httpStatus.BR,
+                        data: '',
+                        error: Codes.errorMsg.INVALID_REQ
+                    });
+                    return;
+
+                }
+                if (response.statusCode == Codes.httpStatus.UNAUTH) {
+                    res.status(Codes.httpStatus.UNAUTH).json({
+                        status: Codes.status.FAILURE,
+                        code: Codes.httpStatus.UNAUTH,
+                        data: '',
+                        error: Codes.errorMsg.UNAUTH_KEY
+                    });
+                    return;
+                }
+
+                if (response.statusCode == Codes.httpStatus.OK) {
+
+                    data = JSON.parse(data);
+
+                    if (data.hasOwnProperty("error")) {
+                        if (data.error.code == Codes.httpStatus.ISE) {
+                            res.status(Codes.httpStatus.BR).json({
+                                status: Codes.status.FAILURE,
+                                code: Codes.httpStatus.BR,
+                                data: '',
+                                error: Codes.errorMsg.INVALID_REQ
+                            });
+                            return;
+                        }
+                    }
+                    // if(include = 'matches'){
+                    // 	 data = data.matches.data;
+                    // } else if(include = 'fixtures'){
+                    // 	  data = data.fixtures.data;
+                    // }
+                    console.log(Object.keys(data));
+                    data = data.data.fixtures.data;
+                    console.log(data.length + ' matches for the competition ' + season.competition.name + ' of season ' + season.name);  
+                    if(data.length > 0){
+                    	// console.log(data.length + ' matches for the competition ' + season.competition.name + ' of season ' + season.name);
+		                data.forEach(function(fixture, index) {
+		                console.log('match id ' + fixture.id + ' of index ' + index);		           
+                        
+                        Match.findOne({ matchId: fixture.id }, function(matchErr, match) {
+                            if (matchErr) {
+                                res.status(Codes.httpStatus.ISE).json({
+                                    status: Codes.status.FAILURE,
+                                    code: Codes.httpStatus.ISE,
+                                    data: '',
+                                    error: Codes.errorMsg.UNEXP_ERROR
+                                });
+                                return;
+                            }
+
+                            if (match != null) {
+                                console.log('match with id ' + match.matchId + ' already exists')
+                                return false;
+                            }
+
+                            if (match == null) {
+                               // console.log('adding new match')
+                                var newMatch = new Match();
+                                newMatch.matchId = fixture.id;
+                                newMatch.team1Id = fixture.localteam_id;
+                                newMatch.team2Id = fixture.visitorteam_id;
+                                newMatch.status = fixture.time.status;
+                                newMatch.team1Score = fixture.scores.localteam_score;
+                                newMatch.team2Score = fixture.scores.visitorteam_score;
+                                newMatch.team1Penalties = fixture.scores.localteam_pen_score;
+                                newMatch.team2Penalties = fixture.scores.visitorteam_pen_score;
+                                // if (fixture.date_time_tba == 1 || fixture.date_time_tba == true) {
+                                //     newMatch.dateTimeTBA = true;
+                                // } else if (fixture.date_time_tba == 0 || fixture.date_time_tba == false) {
+                                //     newMatch.dateTimeTBA = false;
+                                // }
+                                newMatch.startingDateTime = moment.utc(fixture.time.starting_at.date_time);
+                                newMatch.minute = fixture.time.minute;
+                                newMatch.extraMinute = fixture.time.extra_minute;
+                                newMatch.seasonId = fixture.season_id;
+                                newMatch.stageId = fixture.stage_id;
+                                newMatch.roundId = fixture.round_id;
+                                newMatch.venueId = fixture.venue_id;
+
+                                if (fixture.weather_report == null) {
+                                    newMatch.weather == null;
+                                } else {	                                
+                                	newMatch.weather = {};
+                                	newMatch.weather.code = fixture.weather_report.code;
+                                    newMatch.weather.type = fixture.weather_report.type;
+                                    newMatch.weather.icon = fixture.weather_report.icon;
+                                    newMatch.weather.temperature = fixture.weather_report.temperature.temp;
+                                    newMatch.weather.temperatureUnit = fixture.weather_report.temperature.unit;
+                                    newMatch.weather.clouds = fixture.weather_report.clouds;
+                                    newMatch.weather.humidity = fixture.weather_report.humidity;
+                                    newMatch.weather.windSpeed = fixture.weather_report.wind.speed;
+                                    newMatch.weather.windDegree = fixture.weather_report.wind.degree;
+                                }
+
+                                if(fixture.lineup.data.length > 0){
+
+	                                fixture.lineup.data.forEach(function(lineup, index) {
+
+	                                    playerLP = {};
+	                                    playerLP.playerId = lineup.player_id;
+	                                    playerLP.teamId = lineup.team_id;
+	                                    if(lineup.team_id === fixture.localteam_id){
+	                                        playerLP.team = "team1";
+	                                    } else if(lineup.team_id === fixture.visitorteam_id){
+	                                        playerLP.team = "team2";
+	                                    }
+	                                    playerLP.position = lineup.position;
+	                                    playerLP.shirtNumber = lineup.number;
+	                                    playerLP.assists = lineup.stats.other.assists;
+	                                    playerLP.foulsCommited = lineup.stats.fouls.commited;
+	                                    playerLP.foulsDrawn = lineup.stats.fouls.drawn;
+	                                    playerLP.goals = lineup.stats.goals.scored;
+	                                    playerLP.offsides = lineup.stats.other.offsides;
+	                                    playerLP.missedPenalties = lineup.stats.other.pen_missed;
+	                                    playerLP.scoredPenalties = lineup.stats.other.pen_scored;
+	                                    playerLP.posx = lineup.posx;
+	                                    playerLP.posy = lineup.posy;
+	                                    playerLP.redcards = lineup.stats.cards.redcards;
+	                                    playerLP.saves = lineup.stats.other.saves;
+	                                    playerLP.shotsOnGoal = lineup.stats.shots.shots_on_goal;
+	                                    playerLP.shotsTotal = lineup.stats.shots.shots_total;
+	                                    playerLP.yellowcards = lineup.stats.cards.yellowcards;
+	                                    // playerLP.type = lineup.type;
+	                                   
+	                                    newMatch.lineup.push(playerLP);
+                                    });      
+	                            }
+
+                                if(fixture.events.data.length > 0){
+
+                                	fixture.events.data.forEach(function(event, index) {
+
+                                        var newEvent = new Event();
+                                        newEvent.eventId = event.id;
+                                        newEvent.matchId = event.fixture_id;
+                                        newEvent.teamId = event.team_id;
+                                        newEvent.minute = event.minute;
+                                        newEvent.extraMinute = event.extra_minute;
+                                        newEvent.type = event.type;
+                                        if (event.hasOwnProperty("player_id")) {
+                                            newEvent.playerId = event.player_id;
+                                        }
+                                        if (event.hasOwnProperty("related_player_id")) {
+                                            newEvent.assistPlayerId = event.related_player_id;
+                                        }
+                                        // if (event.hasOwnProperty("related_event_id")) {
+                                        //     newEvent.relatedEventId = event.related_event_id;
+                                        // }
+                                        // if (event.hasOwnProperty("player_in_id")) {
+                                        //     newEvent.playerInId = event.player_in_id;
+                                        // }
+                                        // if (event.hasOwnProperty("player_out_id")) {
+                                        //     newEvent.playerOutId = event.player_out_id;
+                                        // }
+
+                                        newEvent.save(function(savedEventErr, savedEvent) {
+                                            if (savedEventErr) {
+                                              	res.status(Codes.httpStatus.BR).json({
+			                                        status: Codes.status.FAILURE,
+			                                        code: Codes.httpStatus.BR,
+			                                        data: '',
+			                                        error: Validation.validatingErrors(savedEventErr)
+			                                    });
+			                                    return;
+                                               
+                                            }
+                                            if (savedEvent) {
+                                                newMatch.events.push(savedEvent);
+
+                                                if (newMatch.events.length == fixture.events.data.length) {
+
+                                                    newMatch.save(function(matchSaveErr, savedMatch) {          
+					                                if (matchSaveErr) {
+					                                    res.status(Codes.httpStatus.BR).json({
+					                                        status: Codes.status.FAILURE,
+					                                        code: Codes.httpStatus.BR,
+					                                        data: '',
+					                                        error: Validation.validatingErrors(matchSaveErr)
+					                                    });
+					                                    return;
+					                                }
+					                               // console.log(savedMatch + ' saved')
+					                            });
+                                                }
+                                                return;
+                                            }
+                                        });
+                                    });
+
+
+                                } else {
+                                	newMatch.save(function(matchSaveErr, savedMatch) {          
+                                    if (matchSaveErr) {
+                                        res.status(Codes.httpStatus.BR).json({
+                                            status: Codes.status.FAILURE,
+                                            code: Codes.httpStatus.BR,
+                                            data: '',
+                                            error: Validation.validatingErrors(matchSaveErr)
+                                        });
+                                        return;
+                                    }
+                                   // console.log(savedMatch + ' saved')
+                                });
+                                }
+                            }
+                        });
+							
+							if(index == data.length - 1){
+			        		console.log('final call');
+			                res.status(Codes.httpStatus.OK).json({
+			                    status: Codes.status.SUCCESS,
+			                    code: Codes.httpStatus.OK,
+			                    data: 'populated all fixtures for season ' + season.name + ' of id ' + season.seasonId,
+			                    error: ''
+			                });
+			                return;
+				        }
+
+	                    });
+
+					} else {
+						console.log('no matches available for this season');
+					}
+                } else {
+                    console.log(response.statusCode + '' + response.statusMessage);
+                }
+            });
+	});
+}
+
+exports.populateFixture = function(req, res) {
+
+    Match.findOne({ matchId: req.params.fixtureId }, function(matchErr, match) {
+        if (matchErr) {
+            res.status(Codes.httpStatus.ISE).json({
+                status: Codes.status.FAILURE,
+                code: Codes.httpStatus.ISE,
+                data: '',
+                error: Codes.errorMsg.UNEXP_ERROR
+            });
+            return;
+        }
+
+        if (match != null) {
+            console.log('match with id ' + match.matchId + ' already exists')
+			 res.status(Codes.httpStatus.BR).json({
+	                status: Codes.status.FAILURE,
+	                code: Codes.httpStatus.BR,
+	                data: '',
+	                error: 'match with id ' + match.matchId + ' already exists'
+	            });
+	    	return;
+        }
+
+        params = 'fixtures/' + req.params.fixtureId;
+        include = 'events,lineup';
+
+        request.get(fireUrl(params, include), function(err, response, data) {
+
+        	console.log('Firing ' + fireUrl(params, include));
+
+            if (err) {
+            	res.status(Codes.httpStatus.ISE).json({
+                    status: Codes.status.FAILURE,
+                    code: Codes.httpStatus.ISE,
+                    data: '',
+                    error: Codes.errorMsg.UNEXP_ERROR
+                });
+                return;
+            }
+
+            if (response.statusCode == Codes.httpStatus.NF) {
+                res.status(Codes.httpStatus.BR).json({
+                    status: Codes.status.FAILURE,
+                    code: Codes.httpStatus.BR,
+                    data: '',
+                    error: Codes.errorMsg.INVALID_REQ
+                });
+                return;
+
+            }
+            if (response.statusCode == Codes.httpStatus.UNAUTH) {
+                res.status(Codes.httpStatus.UNAUTH).json({
+                    status: Codes.status.FAILURE,
+                    code: Codes.httpStatus.UNAUTH,
+                    data: '',
+                    error: Codes.errorMsg.UNAUTH_KEY
+                });
+                return;
+            }
+
+            if (response.statusCode == Codes.httpStatus.OK) {
+
+                data = JSON.parse(data);
+
+                if (data.hasOwnProperty("error")) {
+                    if (data.error.code == Codes.httpStatus.ISE) {
+                        res.status(Codes.httpStatus.BR).json({
+                            status: Codes.status.FAILURE,
+                            code: Codes.httpStatus.BR,
+                            data: '',
+                            error: Codes.errorMsg.INVALID_REQ
+                        });
+                        return;
+                    }
+                }
+              
+
+        console.log(data);
+        var fixture = data.data;
+
+        if (match == null) {
+           // console.log('adding new match')
+            var newMatch = new Match();
+            newMatch.matchId = fixture.id;
+            newMatch.team1Id = fixture.localteam_id;
+            newMatch.team2Id = fixture.visitorteam_id;
+            newMatch.status = fixture.time.status;
+            newMatch.team1Score = fixture.scores.localteam_score;
+            newMatch.team2Score = fixture.scores.visitorteam_score;
+            newMatch.team1Penalties = fixture.scores.localteam_pen_score;
+            newMatch.team2Penalties = fixture.scores.visitorteam_pen_score;
+            // if (fixture.date_time_tba == 1 || fixture.date_time_tba == true) {
+            //     newMatch.dateTimeTBA = true;
+            // } else if (fixture.date_time_tba == 0 || fixture.date_time_tba == false) {
+            //     newMatch.dateTimeTBA = false;
+            // }
+            newMatch.startingDateTime = moment.utc(fixture.time.starting_at.date_time);
+            newMatch.minute = fixture.time.minute;
+            newMatch.extraMinute = fixture.time.extra_minute;
+            newMatch.seasonId = fixture.season_id;
+            newMatch.stageId = fixture.stage_id;
+            newMatch.roundId = fixture.round_id;
+            newMatch.venueId = fixture.venue_id;
+
+            if (fixture.weather_report == null) {
+                newMatch.weather == null;
+            } else {	                                
+            	newMatch.weather = {};
+            	newMatch.weather.code = fixture.weather_report.code;
+                newMatch.weather.type = fixture.weather_report.type;
+                newMatch.weather.icon = fixture.weather_report.icon;
+                newMatch.weather.temperature = fixture.weather_report.temperature.temp;
+                newMatch.weather.temperatureUnit = fixture.weather_report.temperature.unit;
+                newMatch.weather.clouds = fixture.weather_report.clouds;
+                newMatch.weather.humidity = fixture.weather_report.humidity;
+                newMatch.weather.windSpeed = fixture.weather_report.wind.speed;
+                newMatch.weather.windDegree = fixture.weather_report.wind.degree;
+            }
+
+            if(fixture.lineup.data.length > 0){
+
+                fixture.lineup.data.forEach(function(lineup, index) {
+
+                    playerLP = {};
+                    playerLP.playerId = lineup.player_id;
+                    playerLP.teamId = lineup.team_id;
+                    if(lineup.team_id === fixture.localteam_id){
+                        playerLP.team = "team1";
+                    } else if(lineup.team_id === fixture.visitorteam_id){
+                        playerLP.team = "team2";
+                    }
+                    playerLP.position = lineup.position;
+                    playerLP.shirtNumber = lineup.number;
+                    playerLP.assists = lineup.stats.other.assists;
+                    playerLP.foulsCommited = lineup.stats.fouls.commited;
+                    playerLP.foulsDrawn = lineup.stats.fouls.drawn;
+                    playerLP.goals = lineup.stats.goals.scored;
+                    playerLP.offsides = lineup.stats.other.offsides;
+                    playerLP.missedPenalties = lineup.stats.other.pen_missed;
+                    playerLP.scoredPenalties = lineup.stats.other.pen_scored;
+                    playerLP.posx = lineup.posx;
+                    playerLP.posy = lineup.posy;
+                    playerLP.redcards = lineup.stats.cards.redcards;
+                    playerLP.saves = lineup.stats.other.saves;
+                    playerLP.shotsOnGoal = lineup.stats.shots.shots_on_goal;
+                    playerLP.shotsTotal = lineup.stats.shots.shots_total;
+                    playerLP.yellowcards = lineup.stats.cards.yellowcards;
+                    // playerLP.type = lineup.type;
+                   
+                    newMatch.lineup.push(playerLP);
+                });      
+            }
+
+            if(fixture.events.data.length > 0){
+
+            	fixture.events.data.forEach(function(event, index) {
+
+                    var newEvent = new Event();
+                    newEvent.eventId = event.id;
+                    newEvent.matchId = event.fixture_id;
+                    newEvent.teamId = event.team_id;
+                    newEvent.minute = event.minute;
+                    newEvent.extraMinute = event.extra_minute;
+                    newEvent.type = event.type;
+                    if (event.hasOwnProperty("player_id")) {
+                        newEvent.playerId = event.player_id;
+                    }
+                    if (event.hasOwnProperty("related_player_id")) {
+                        newEvent.assistPlayerId = event.related_player_id;
+                    }
+                    // if (event.hasOwnProperty("related_event_id")) {
+                    //     newEvent.relatedEventId = event.related_event_id;
+                    // }
+                    // if (event.hasOwnProperty("player_in_id")) {
+                    //     newEvent.playerInId = event.player_in_id;
+                    // }
+                    // if (event.hasOwnProperty("player_out_id")) {
+                    //     newEvent.playerOutId = event.player_out_id;
+                    // }
+
+                    newEvent.save(function(savedEventErr, savedEvent) {
+                        if (savedEventErr) {
+                          	res.status(Codes.httpStatus.BR).json({
+                                status: Codes.status.FAILURE,
+                                code: Codes.httpStatus.BR,
+                                data: '',
+                                error: Validation.validatingErrors(savedEventErr)
+                            });
+                            return;
+                           
+                        }
+                        if (savedEvent) {
+                            newMatch.events.push(savedEvent);
+
+                            if (newMatch.events.length == fixture.events.data.length) {
+
+                                newMatch.save(function(matchSaveErr, savedMatch) {          
+                                if (matchSaveErr) {
+                                    res.status(Codes.httpStatus.BR).json({
+                                        status: Codes.status.FAILURE,
+                                        code: Codes.httpStatus.BR,
+                                        data: '',
+                                        error: Validation.validatingErrors(matchSaveErr)
+                                    });
+                                    return;
+                                }
+                               // console.log(savedMatch + ' saved')
+                            });
+                            }
+                            return;
+                        }
+                    });
+                });
+
+
+		        } else {
+		        	newMatch.save(function(matchSaveErr, savedMatch) {          
+		            if (matchSaveErr) {
+		                res.status(Codes.httpStatus.BR).json({
+		                    status: Codes.status.FAILURE,
+		                    code: Codes.httpStatus.BR,
+		                    data: '',
+		                    error: Validation.validatingErrors(matchSaveErr)
+		                });
+		                return;
+		            }
+		               res.status(Codes.httpStatus.OK).json({
+		                status: Codes.status.SUCCESS,
+		                code: Codes.httpStatus.OK,
+		                data: 'match ' + fixture.id + ' seeded', 
+		                error: ''	
+		       		 });
+		        });
+		        }
+		    }
+		}
+	});
+	});
+}
+
+
+
+
+
+
 
 

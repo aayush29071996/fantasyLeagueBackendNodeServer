@@ -52,8 +52,9 @@ exports.updateFixturesJob = function() {
             console.log(moment().format('MMMM Do YYYY, h:mm:ss a'));
             console.log('Update Fixture Job Called')
 
-            //must be livescore/now 
-            params = 'livescores'
+            //must be livescores/now 
+            params = 'livescores/now'
+            // params = 'livescores'
             include = ''
 
             request.get(fireUrl(params, include), function(err, response, data) {
@@ -409,6 +410,8 @@ exports.calculatePointsJob = function() {
 
                 var twoHoursBefore = moment(moment().subtract('2','h').format("YYYY-MM-DD HH:mm:ss")).toISOString();
                 var thirtyMinsAfter = moment(moment().add('30','m').format("YYYY-MM-DD HH:mm:ss")).toISOString();
+                // var twoHoursBefore = moment(moment().subtract('3','d').format("YYYY-MM-DD HH:mm:ss")).toISOString();
+                // var thirtyMinsAfter = moment(moment().add('3','d').format("YYYY-MM-DD HH:mm:ss")).toISOString();
                 console.log('From ' + twoHoursBefore + ' To ' + thirtyMinsAfter);
                  console.log('calculatePointsJob called')
                 Match.find({startingDateTime:{$gte:twoHoursBefore, $lt:thirtyMinsAfter}}).populate('events').exec( function(matchesErr, matches){
@@ -433,22 +436,22 @@ exports.calculatePointsJob = function() {
 
                             var pos = playerLP.position;
                             //defense
-                            if(pos === "CD" || pos ===  "CD-L" || pos === "CD-R" || pos === "LB" || pos === "RB" || pos === "D"){
+                            if(pos === "D"){//pos === "CD" || pos ===  "CD-L" || pos === "CD-R" || pos === "LB" || pos === "RB" ||
                                 console.log(pos + ' - defense');
                                 return computePointsDefense(event);
                             } else
                             //midfielder    
-                            if(pos === "Midfielder" || pos === "CM-L" || pos === "CM-R" || pos === "CM" ||  pos === "LM" || pos === "RM" || pos === "AM" || pos === "M"){
+                            if(pos === "M"){//pos === "Midfielder" || pos === "CM-L" || pos === "CM-R" || pos === "CM" ||  pos === "LM" || pos === "RM" || pos === "AM" || 
                                 return computePointsMidfield(event);
                                 console.log(pos + ' - midfielder');
                             } else
                             //forward
-                            if(pos === "Forward" || pos === "LF" || pos === "RF" || pos === "CF" || pos === "CF-L" || pos ==="CF-R" || pos === "F"){
+                            if(pos === "F"){//pos === "Forward" || pos === "LF" || pos === "RF" || pos === "CF" || pos === "CF-L" || pos ==="CF-R" || 
                                 console.log(pos + ' - forward');
                                 return computePointsForward(event);
                             } else
                             //goalkeeper    
-                            if(pos === "Goalkeeper" || pos === "G"){
+                            if(pos === "G"){//pos === "Goalkeeper" || 
                                 console.log(pos + ' - goalkeeper');
                                 return computePointsGoalkeeper(event);
                             } else
@@ -640,6 +643,14 @@ exports.calculatePointsJob = function() {
 
                                 case "substitution":
                                     substitution.push(event);
+                                    break;
+                                
+                                case "pen_shootout_miss":
+                                    goalByPenalty.push(event);
+                                    break;
+
+                                case "pen_shootout_goal":
+                                    goalByPenaltyMissed.push(event);
                                     break;
 
                                 default:

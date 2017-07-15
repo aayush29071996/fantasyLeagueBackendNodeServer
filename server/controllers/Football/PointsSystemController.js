@@ -342,8 +342,90 @@ exports.createMatchCard = function(req, res) {
 		});
 	});
 
+}
 
 
+exports.getMatchCards = function(req, res){
+
+	MatchCard.find({user:req.params.userId}).populate('match').exec(function(matchCardsErr, matchCards){
+
+		if(matchCardsErr){
+			res.status(Codes.httpStatus.ISE).json({
+	            status: Codes.status.FAILURE,
+	            code: Codes.httpStatus.ISE,
+	            data: '',
+	            error: Codes.errorMsg.UNEXP_ERROR
+	        });
+	        return;
+		}
+
+		if(matchCards == null ){
+			res.status(Codes.httpStatus.OK).json({
+	            status: Codes.status.SUCCESS,
+	            code: Codes.httpStatus.OK,
+	            data: '',
+	            error: Codes.errorMsg.F_INV_MCID
+	        });
+	        return;
+		}
+
+		if(matchCards.length == 0){
+			res.status(Codes.httpStatus.OK).json({
+	            status: Codes.status.SUCCESS,
+	            code: Codes.httpStatus.OK,
+	            data: [],
+	            error: Codes.errorMsg.F_NO_MC
+	        });
+	        return;
+		}
+
+		var matchCardSet = [];
+		matchCards.forEach(function(matchCard, index){
+			Team.find({$or:[{teamId:matchCard.match.team1Id},{teamId:matchCard.match.team2Id}]}).select('teamId name').exec(function(teamsErr, teams){
+
+				if(teamsErr){
+					res.status(Codes.httpStatus.ISE).json({
+			            status: Codes.status.FAILURE,
+			            code: Codes.httpStatus.ISE,
+			            data: '',
+			            error: Codes.errorMsg.UNEXP_ERROR
+			        });
+			        return;
+				}
+
+				if(teams == null){
+					res.status(Codes.httpStatus.OK).json({
+			            status: Codes.status.SUCCESS,
+			            code: Codes.httpStatus.OK,
+			            data: '',
+			            error: Codes.errorMsg.T_INV_TID
+			        });
+			        return;
+				}
+
+				var team1 = _.where(teams, {teamId:matchCard.match.team1Id})[0];
+				var team2 = _.where(teams, {teamId:matchCard.match.team2Id})[0];
+
+				var matchCardObj = {};
+				matchCardObj.matchCard = matchCard;
+				matchCardObj.team1 = team1;
+				matchCardObj.team2 = team2;
+
+				matchCardSet.push(matchCardObj);
+				if(matchCardSet.length == matchCards.length){
+					res.status(Codes.httpStatus.OK).json({
+			            status: Codes.status.SUCCESS,
+			            code: Codes.httpStatus.OK,
+			            data: matchCardSet,
+			            error: ''
+					});
+					return;
+				}
+
+			});
+		});
+
+	});
 }
 
 
