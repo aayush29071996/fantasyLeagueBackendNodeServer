@@ -85,15 +85,13 @@ angular.module('userCustCtrl',['dashServices'])
       });
   };
 
+
   Users.getAllUsers().then(function(response){
    $scope.users=response.data.data;
    // console.log($scope.users)
    $scope.userDob = moment($scope.users.createdOn).format('YYYY-MM-DD');
    // console.log($scope.userDob);
  });
-
-
-
 
  $scope.viewMatchCards = function(user,ev) {
     $mdDialog.show({
@@ -108,10 +106,5 @@ angular.module('userCustCtrl',['dashServices'])
       fullscreen: true
     });
   };
-
-  
-
-
-
 
 });

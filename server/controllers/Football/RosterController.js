@@ -32,7 +32,7 @@ exports.getRoster = function(req, res){
             return;
 		}
 
-	
+
 		Team.find({teamId:match.team1Id}).select('-_id -__v -competitions -name').populate('players','-active -teams -position -_id -__v').exec(function(team1Err, team1){
 			if(team1Err){
 				res.status(Codes.httpStatus.ISE).json({
@@ -70,7 +70,7 @@ exports.getRoster = function(req, res){
 						position:fixture.team1.players[i].positionId,
 						teamId:fixture.team1.teamId
 						});
-					
+
 				}
 				for(var i=0;i<fixture.team2.players.length;i++){
 					var theColor=getRosterColorCode(fixture.team2.players[i].positionId);
@@ -83,14 +83,14 @@ exports.getRoster = function(req, res){
 						position:fixture.team2.players[i].positionId,
 						teamId:fixture.team2.teamId
 						});
-					
+
 				}
 				var totalRoster=splitRoster(players);
 				var fwd=totalRoster[0];
 				var mid=totalRoster[1];
 				var def=totalRoster[2];
 				var gk=totalRoster[3];
-				
+
 					res.status(Codes.httpStatus.OK).json({
 						status: Codes.status.SUCCESS,
 						code: Codes.httpStatus.OK,
@@ -127,7 +127,7 @@ var gk=[];
 		else if(pos==4)
 			fwd.push(players[i]);
 	}
-	
+
 	return [fwd,mid,def,gk];
 };
 
@@ -149,8 +149,8 @@ function getRosterColorCode(pos){
 		default:
 			cc="#9b59b6";
 			break;
-			
-		}	
+
+		}
 	return cc;
 };
 
