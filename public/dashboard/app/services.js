@@ -19,7 +19,7 @@ dashServices.factory('Users', function($http){
   var user={};
   user.getAllUsers=function() {
       return $http.get(baseURI + '/users');
-  }; 
+  };
 
 
   user.getMatchCards = function(userId) {
