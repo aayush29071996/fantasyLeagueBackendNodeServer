@@ -17,7 +17,7 @@
 			<div ng-show="upcomingActive" class="tab-pane active in">
 				<div class="row">
                     <div class="col-md-12">
-                        
+
                         <table cg-busy="{promise:UpcomingMatchPromise,message:'Please Wait...'}" class="table table-striped dataTable no-footer" id="datatable-editable" role="grid">
             <thead>
                 <tr role="row">
@@ -47,15 +47,15 @@
                 </tr>
                 </tbody>
         </table>
-        
-                        
+
+
                     </div>
 				</div>
 			</div>
 			<div ng-show="liveActive" class="tab-pane active in">
 				<div class="row">
 					<div class="col-md-12">
-                        
+
                         <table cg-busy="{promise:LiveMatchPromise,message:'Please Wait...'}" class="table table-striped dataTable no-footer" id="datatable-editable" role="grid">
             <thead ng-show="liveMatches.data!=''">
                 <tr role="row">
@@ -80,7 +80,7 @@
 			<div ng-show="historyActive" class="tab-pane active in">
 				<div class="row">
 					<div class="col-md-12">
-                        
+
                         <table cg-busy="{promise:PastMatchPromise,message:'Please Wait...'}" class="table table-striped dataTable no-footer" id="datatable-editable" role="grid">
             <thead>
                 <tr role="row">
@@ -96,7 +96,10 @@
                     <td style="text-align:center;">{{returnIST(match[0].startingDateTime)}}</td>
                     <td style="text-align:center;" ng-style="{color: match[0].team1Score==match[0].team2Score? '#cd9400' : (match[0].team1Score>match[0].team2Score? '#5acd5a' : '#cd5a5a')}">{{match[1].team1[0].name + ' (' + match[0].team1Score + ')'}}</td>
                     <td style="text-align:center;" ng-style="{color: match[0].team1Score==match[0].team2Score? '#cd9400' : (match[0].team1Score>match[0].team2Score? '#cd5a5a' : '#5acd5a')}">{{match[1].team2[0].name + ' (' + match[0].team2Score + ')'}}</td>
-                    <td style="text-align:center;"><button style="color: #ffcc33;background: transparent;border: solid 1px #ffcc33;border-radius: 30px;width: 9vw;">Leaderboard</button></td>
+                    <td style="text-align:center;">
+                      <a class="w-100" ng-click="ViewLeaderboard(match[0].matchId)">
+                      <button style="color: #ffcc33;background: transparent;border: solid 1px #ffcc33;border-radius: 30px;width: 9vw;">Leaderboard</button></a>
+                    </td>
                 </tr>
                 </tbody>
         </table>
