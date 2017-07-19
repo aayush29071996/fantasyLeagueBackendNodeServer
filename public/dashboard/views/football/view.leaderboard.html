@@ -12,15 +12,17 @@
 
     <md-dialog-content style="">
     <form class="form-horizontal" role="form">
-        <div class="form-group" style="margin-top:20px;">
+        <div class="form-group" style="margin-top:20px;" >
             <label class="col-md-2 control-label" style="width: 26vw;margin-left: 22vw;">Username</label>
-            <label class="col-md-2 control-label" style="width: 26vw;text-align:center;">scores</label>
-            <label class="col-md-2 control-label" style="width: 26vw;margin-left: 22vw;">{{username}}</label>
-            <label class="col-md-2 control-label" style="width: 26vw;text-align:center;">{{matchPoints}}</label>
+            <label class="col-md-2 control-label" style="width: 26vw;text-align:center;">Scores</label>
+        <div ng-repeat="details in records">
+            <h2 class="col-md-2 control-label" style="width: 26vw;margin-left: 12vw;font-size:16px;text-align: center;color:#000;">{{details.user.username}}</h2>
+            <h2 class="col-md-2 control-label" style="width:26vw;margin-left: 10vw;text-align: center;font-size:16px;color:#000;">{{details.matchPoints}}</h2>
+        </div>
         </div>
 
         <!-- <h4 ng-show="teams.length==0" style="font-variant:small-caps;margin-top: 32vh;font-size: 25px;color:#000;text-align:center;">This {{playerPosition}} is not in any team.</h4> -->
-        <h4 ng-show="teams.length!=0" style="font-variant:small-caps;margin-top: 32vh;font-size: 25px;color:#000;text-align:center;">Oops!! No Participants</h4>
+        <h4 ng-show="totalParticipants==0" style="font-variant:small-caps;margin-top: 32vh;font-size: 25px;color:#000;text-align:center;">Oops!! No Participants</h4>
     </form>
 
     </md-dialog-content>

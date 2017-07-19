@@ -2,7 +2,7 @@
   <form ng-cloak>
     <md-toolbar>
       <div class="md-toolbar-tools" style="background: #222;">
-      <img style="height: 120px;margin-top: 11vh;margin-left: 1vw;" src="{{user.avatar}}" alt="{{user.username}}">
+      <img style="height: 55px;margin-top: 1vh;margin-left: 1vw;width: 55px;border-radius: 25px;" src="{{user.avatar}}" alt="{{user.username}}">
         <h2 style="width: 73%;text-align: center;">{{user.username}}</h2>
         <h2 style="width: 73%;text-align: center;">{{user.email}}</h2>
         <h2 style="width: 73%;text-align: center;">{{user.userPoints}}</h2>
@@ -61,10 +61,10 @@
                 </tr>
                 </tbody>
         </table>
-        
+
         <h4 ng-show="userMatchCards.length==0" style="font-variant:small-caps;margin-top: 32vh;font-size: 25px;color:#000;text-align:center;">No Match Cards for this User!</h4>
     </form>
-    
+
     </md-dialog-content>
 
   </form>

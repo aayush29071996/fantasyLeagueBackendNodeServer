@@ -121,15 +121,10 @@ dashControllers.controller('FootFixtures', function($mdDialog, $stateParams, Lea
       var id=matchId;
       LeaderboardApi.getLeaderboard(id).then(function(resp){
               resp=resp.data.data;
-              $scope.records=resp;
+              $scope.leaderboard=resp;
               $scope.totalParticipants=resp.length;
               console.log(resp);
-              for(var i=1;i<=$scope.totalParticipants;i++){
-                $scope.username=$scope.records[i].user.username;
-                $scope.matchPoints = $scope.records[i].matchPoints;
-                console.log($scope.username);
-                console.log($scope.matchPoints);
-              }
+              $scope.records=resp;
             }).catch(function(e){
               });
   };
