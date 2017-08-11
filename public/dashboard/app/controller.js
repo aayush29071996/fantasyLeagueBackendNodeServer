@@ -32,7 +32,8 @@ dashControllers.controller('Dashboard', function () {
 })
 
 
-dashControllers.controller('FootFixtures', function($scope, Football, Auth, $state, $timeout, moment, $mdDialog, $filter) {
+
+dashControllers.controller('FootFixtures', function($mdDialog, $stateParams, LeaderboardApi, $scope, Football, Auth, $state, $timeout, moment,$filter) {
     $scope.LiveMatchPromise = Football.getLiveMatches().then(function(response){
         $scope.liveMatches = response.data;
         console.log($scope.liveMatches);
@@ -55,9 +56,9 @@ dashControllers.controller('FootFixtures', function($scope, Football, Auth, $sta
     $scope.updatedFixture={};
     $scope.updatedFixture.active=false;
     $scope.EditFixture=function(matchId){
-      document.getElementById(matchId).children[4].style.display="none";  
+      document.getElementById(matchId).children[4].style.display="none";
       document.getElementById(matchId).children[5].style.display="table-cell";
-    
+
       if(document.getElementById(matchId).children[4].innerHTML=="false"){
       $scope.updatedFixture.active=false;
             document.getElementById("statusBtn").className="btn btn-danger btn-trans waves-effect waves-danger w-md m-b-5";
@@ -65,7 +66,7 @@ dashControllers.controller('FootFixtures', function($scope, Football, Auth, $sta
       else if(document.getElementById(matchId).children[4].innerHTML=="true"){
       $scope.updatedFixture.active=true;
             document.getElementById("statusBtn").className="btn btn-success btn-trans waves-effect waves-success w-md m-b-5";
-      
+
       }
       console.log($scope.updatedFixture);
       document.getElementById(matchId).children[6].children[0].style.display="table-cell";
@@ -76,11 +77,11 @@ dashControllers.controller('FootFixtures', function($scope, Football, Auth, $sta
     $scope.cancelEdit=function(matchId){
       document.getElementById(matchId).children[4].style.display="table-cell";
       document.getElementById(matchId).children[5].style.display="none";
-      
+
       document.getElementById(matchId).children[6].children[0].style.display="none";
       document.getElementById(matchId).children[6].children[1].style.display="none";
       document.getElementById(matchId).children[6].children[2].style.display="inline";
-        
+
     };
     $scope.clickedToggle=function(){
         console.log($scope.updatedFixture.active);
@@ -100,6 +101,34 @@ dashControllers.controller('FootFixtures', function($scope, Football, Auth, $sta
             window.location.reload();
          });
     };
+    $scope.ViewLeaderboard = function(id,ev) {
+    $mdDialog.show({
+      controller: ViewLeaderboardPopupCtrl,
+      templateUrl: 'dashboard/views/football/view.leaderboard.html',
+      parent: angular.element(document.body),
+      targetEvent: ev,
+      locals:{
+          matchId: id
+          },
+      clickOutsideToClose:true,
+      fullscreen: true
+    });
+    console.log(id);
+  };
+  function ViewLeaderboardPopupCtrl ($scope,$mdDialog,Football,matchId){
+       $scope.close=function(){
+           $mdDialog.hide();
+       }
+      var id=matchId;
+      LeaderboardApi.getLeaderboard(id).then(function(resp){
+              resp=resp.data.data;
+              $scope.leaderboard=resp;
+              $scope.totalParticipants=resp.length;
+              console.log(resp);
+              $scope.records=resp;
+            }).catch(function(e){
+              });
+  };
 
     function ViewEventsPopUpCtrl($scope, $mdDialog, fixture){
       $scope.close = function(){

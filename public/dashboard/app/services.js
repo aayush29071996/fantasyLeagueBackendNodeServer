@@ -5,6 +5,14 @@ var dashServices = angular.module('dashServices', ['ngResource','dashControllers
 var baseURI = "http://localhost:9000";
 // var baseURI = "https://inyards.com";
 
+dashServices.factory('LeaderboardApi', function($http){
+      var details={};
+      details.getLeaderboard = function(matchId){
+          return $http.get(baseURI + "/leaderboard/" + matchId);
+      };
+      return details;
+  });
+
 dashServices.factory('Auth', function($http){
     var user={};
 
@@ -19,7 +27,7 @@ dashServices.factory('Users', function($http){
   var user={};
   user.getAllUsers=function() {
       return $http.get(baseURI + '/users');
-  }; 
+  };
 
 
   user.getMatchCards = function(userId) {

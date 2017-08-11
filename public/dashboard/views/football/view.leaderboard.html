@@ -1,0 +1,31 @@
+<md-dialog cg-busy="{promise:ViewPlayerPromise,message:'Please Wait...'}" style="height: 100vh;width: 100vw;">
+  <form ng-cloak>
+    <md-toolbar>
+      <div class="md-toolbar-tools" style="background: #222;">
+        <h2 style="width: 73%;text-align: center;">&emsp;&emsp;Total Participants:&nbsp;{{totalParticipants}}</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="close()">
+          <span>X</span>
+        </md-button>
+      </div>
+    </md-toolbar>
+
+    <md-dialog-content style="">
+    <form class="form-horizontal" role="form">
+        <div class="form-group" style="margin-top:20px;" >
+            <label class="col-md-2 control-label" style="width: 26vw;margin-left: 22vw;">Username</label>
+            <label class="col-md-2 control-label" style="width: 26vw;text-align:center;">Scores</label>
+        <div ng-repeat="details in records">
+            <h2 class="col-md-2 control-label" style="width: 26vw;margin-left: 12vw;font-size:16px;text-align: center;color:#000;">{{details.user.username}}</h2>
+            <h2 class="col-md-2 control-label" style="width:26vw;margin-left: 10vw;text-align: center;font-size:16px;color:#000;">{{details.matchPoints}}</h2>
+        </div>
+        </div>
+
+        <!-- <h4 ng-show="teams.length==0" style="font-variant:small-caps;margin-top: 32vh;font-size: 25px;color:#000;text-align:center;">This {{playerPosition}} is not in any team.</h4> -->
+        <h4 ng-show="totalParticipants==0" style="font-variant:small-caps;margin-top: 32vh;font-size: 25px;color:#000;text-align:center;">Oops!! No Participants</h4>
+    </form>
+
+    </md-dialog-content>
+
+  </form>
+</md-dialog>
