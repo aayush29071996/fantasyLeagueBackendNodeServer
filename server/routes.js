@@ -153,6 +153,7 @@ module.exports = function(app) {
 
 	//CRUD admin routes for teams
 	app.get('/teams', TeamController.getAllTeams);
+	app.get('/teamsWithPlayers', TeamController.getAllTeamsWithPlayers);
 	app.get('/team/:teamId', TeamController.getTeam);
 	app.post('/team/id', TeamController.getTeamIdAvailability);
 	app.post('/team/toggleStatus', TeamController.toggleTeamStatus);
@@ -173,6 +174,7 @@ module.exports = function(app) {
 
 	//MatchCard routes
 	app.post('/createMatchCard', PointsSystemController.createMatchCard);
+	// app.post('/updateMatchCard', PointsSystemController.editMatchCard);
 
 	app.get('/getMatchCardsByUser/:userId', PointsSystemController.getMatchCards);
 	// app.get('/displayPlayers', PointsSystemController.displayPlayers);
@@ -180,6 +182,7 @@ module.exports = function(app) {
 	app.get('/getRosterPlayers/:username/:matchId', PointsSystemController.getRosterPlayers);
 
 	app.get('/leaderboard/:matchId', PointsSystemController.getMatchLeaderboard);
+	app.get('/resetPointsFixture/:matchId', PointsSystemController.resetPointsFixture);
 
 	app.post('/category', PitchController.createCategory);
 	app.get('/categories', PitchController.getCategories);

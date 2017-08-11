@@ -4,6 +4,7 @@
 
  var User = require('../../models/User');
  var Match = require('../../models/Football/Match');
+ var Event = require('../../models/Football/Event');
  var MatchCard = require('../../models/Football/MatchCard');
  var PointSystem = require('../../models/Football/Master/PointSystem');
  var Player = require('../../models/Football/Master/Player');
@@ -266,6 +267,7 @@ exports.createMatchCard = function(req, res) {
 	        return;
 		}
 
+		console.log('User ID ' + user._id)
 
 
 		Match.findOne({matchId:req.body.matchId}, function(matchErr, match){
@@ -277,7 +279,7 @@ exports.createMatchCard = function(req, res) {
 		            error: Codes.errorMsg.UNEXP_ERROR
 		        });
 	        	return;
-			}
+			}	
 
 
 			if(match == null){
@@ -289,60 +291,135 @@ exports.createMatchCard = function(req, res) {
 		        });
 		        return;
 			}
-			var players = []
-			req.body.players.forEach(function(playerId, index){
-				Player.findOne({playerId:playerId}, function(playerErr, player){
-					if(matchErr){
-						res.status(Codes.httpStatus.ISE).json({
-				            status: Codes.status.FAILURE,
-				            code: Codes.httpStatus.ISE,
-				            data: '',
-				            error: Codes.errorMsg.UNEXP_ERROR
-				        });
-		        		return;
-						}
-					var newPlayer = new Player();
-					newPlayer.playerId = player.playerId;
-					newPlayer.name = player.name;
-					newPlayer.positionId = player.positionId;
-					newPlayer.position = player.position;
-					newPlayer.active = player.active;
-					players.push(newPlayer)
-					if(players.length == req.body.players.length){
 
-						var matchCard = new MatchCard;
-						matchCard.user = user;
-						matchCard.match = match;
-						matchCard.players = players
-						matchCard.createdOn = moment.utc();
-						matchCard.save(function(matchCardSaveErr, savedMatchCard){
-		            	if (matchCardSaveErr) {
-		                    res.status(Codes.httpStatus.BR).json({
-		                        status: Codes.status.FAILURE,
-		                        code: Codes.httpStatus.BR,
-		                        data: '',
-		                        error: Validation.validatingErrors(matchCardSaveErr)
-		                    });
-		                    return;
-		                }
-		                if(savedMatchCard){
-		                	res.status(Codes.httpStatus.OK).json({
-					            status: Codes.status.SUCCESS,
-					            code: Codes.httpStatus.OK,
-					            data: savedMatchCard._id,
-					            error: ''
-			        		});
-			    			return;
-		                	}
-		            	});
+			console.log('Match ID ' + match._id)
+
+			MatchCard.findOne({user:user._id, match:match._id}, function(matchCardErr, matchCard) {
+
+				if(matchCardErr){
+					res.status(Codes.httpStatus.ISE).json({
+			            status: Codes.status.FAILURE,
+			            code: Codes.httpStatus.ISE,
+			            data: '',
+			            error: Codes.errorMsg.UNEXP_ERROR
+			        });
+			        return;
+				}
+
+				console.log('MatchCard is ' + matchCard);
+
+				if(matchCard != null){
+					matchCard.players = [];
+					var players = [];
+					req.body.players.forEach(function(playerId, index){
+						Player.findOne({playerId:playerId}, function(playerErr, player){
+							if(playerErr){
+								res.status(Codes.httpStatus.ISE).json({
+						            status: Codes.status.FAILURE,
+						            code: Codes.httpStatus.ISE,
+						            data: '',
+						            error: Codes.errorMsg.UNEXP_ERROR
+						        });
+				        		return;
+							}
+							var newPlayer = new Player();
+							newPlayer.playerId = player.playerId;
+							newPlayer.name = player.name;
+							newPlayer.positionId = player.positionId;
+							newPlayer.position = player.position;
+							newPlayer.active = player.active;
+							players.push(newPlayer)
+							if(players.length == req.body.players.length){
+								matchCard.players = players
+								matchCard.createdOn = moment.utc();
+								matchCard.save(function(matchCardSaveErr, savedMatchCard){
+				            	if (matchCardSaveErr) {
+				                    res.status(Codes.httpStatus.BR).json({
+				                        status: Codes.status.FAILURE,
+				                        code: Codes.httpStatus.BR,
+				                        data: '',
+				                        error: Validation.validatingErrors(matchCardSaveErr)
+				                    });
+				                    return;
+				                }
+				                if(savedMatchCard){
+				                	res.status(Codes.httpStatus.OK).json({
+							            status: Codes.status.SUCCESS,
+							            code: Codes.httpStatus.OK,
+							            data: savedMatchCard._id,
+							            error: ''
+					        		});
+					    			return;
+				                	}
+				            	});
+							}
+
+						});
+					});
+				} else {
+					var players = []
+					req.body.players.forEach(function(playerId, index){
+						Player.findOne({playerId:playerId}, function(playerErr, player){
+							if(matchErr){
+								res.status(Codes.httpStatus.ISE).json({
+						            status: Codes.status.FAILURE,
+						            code: Codes.httpStatus.ISE,
+						            data: '',
+						            error: Codes.errorMsg.UNEXP_ERROR
+						        });
+				        		return;
+								}
+							var newPlayer = new Player();
+							newPlayer.playerId = player.playerId;
+							newPlayer.name = player.name;
+							newPlayer.positionId = player.positionId;
+							newPlayer.position = player.position;
+							newPlayer.active = player.active;
+							players.push(newPlayer)
+							if(players.length == req.body.players.length){
+
+								var matchCard = new MatchCard;	
+								matchCard.user = user;
+								matchCard.match = match;
+								matchCard.createdOn = moment.utc();
+								matchCard.players = players;
+								matchCard.save(function(matchCardSaveErr, savedMatchCard){
+				            	if (matchCardSaveErr) {
+				                    res.status(Codes.httpStatus.BR).json({
+				                        status: Codes.status.FAILURE,
+				                        code: Codes.httpStatus.BR,
+				                        data: '',
+				                        error: Validation.validatingErrors(matchCardSaveErr)
+				                    });
+				                    return;
+				                }
+				                if(savedMatchCard){
+				                	res.status(Codes.httpStatus.OK).json({
+							            status: Codes.status.SUCCESS,
+							            code: Codes.httpStatus.OK,
+							            data: savedMatchCard._id,
+							            error: ''
+					        		});
+					    			return;
+				                	}
+				            	});
+								}
+
+							});
+						});
 					}
-
-				});
 			});
-		});
-	});
 
+		});
+			
+	});
 }
+
+function getNewMatchCard(){
+	console.log('is new MC');
+	
+}
+
 
 
 exports.getMatchCards = function(req, res){
@@ -432,8 +509,6 @@ exports.getMatchCards = function(req, res){
 
 exports.editMatchCard = function(req, res) {
 
-
-
 	MatchCard.findOne({_id:req.body.matchCardId}, function(matchCardErr, matchCard) {
 
 		if(matchCardErr){
@@ -459,7 +534,7 @@ exports.editMatchCard = function(req, res) {
 		var players = [];
 		req.body.players.forEach(function(playerId, index){
 			Player.findOne({playerId:playerId}, function(playerErr, player){
-				if(matchErr){
+				if(playerErr){
 					res.status(Codes.httpStatus.ISE).json({
 			            status: Codes.status.FAILURE,
 			            code: Codes.httpStatus.ISE,
@@ -467,7 +542,7 @@ exports.editMatchCard = function(req, res) {
 			            error: Codes.errorMsg.UNEXP_ERROR
 			        });
 	        		return;
-					}
+				}
 				var newPlayer = new Player();
 				newPlayer.playerId = player.playerId;
 				newPlayer.name = player.name;
@@ -503,7 +578,7 @@ exports.editMatchCard = function(req, res) {
 
 			});
 		});
-});
+	});
 }
 
 exports.getRosterPlayers = function(req, res) {
@@ -703,3 +778,118 @@ exports.getPlayerHistory = function(req, res){
 
 	});
 };
+
+
+
+
+exports.resetPointsFixture = function(req, res){
+
+	Match.findOne({matchId:req.params.matchId}).exec(function(matchErr, match){
+		if(matchErr){
+			res.status(Codes.httpStatus.ISE).json({
+	            status: Codes.status.FAILURE,
+	            code: Codes.httpStatus.ISE,
+	            data: '',
+	            error: Codes.errorMsg.UNEXP_ERROR
+	        });
+	        return;
+		}
+
+		if(match == null){
+			res.status(Codes.httpStatus.BR).json({
+	            status: Codes.status.FAILURE,
+	            code: Codes.httpStatus.BR,
+	            data: '',
+	            error: Codes.errorMsg.F_INV_MID
+	        });
+	        return;
+		}
+
+		_.each(match.lineup, function(lineupItem, index, lineup){
+			lineupItem.points = 0;
+		});
+
+		match.events.forEach(function(event_id, index){
+			Event.update({_id:event_id}, {$set:{computed:false}}).exec(function(eventsUptErr, eventsUpt){
+				if(eventsUptErr){
+				 res.status(Codes.httpStatus.BR).json({
+                        status: Codes.status.FAILURE,
+                        code: Codes.httpStatus.BR,
+                        data: '',
+                        error: Validation.validatingErrors(eventsUptErr)
+                    });
+                    return;
+				}
+				if(match.events.length == index+1){
+					match.save(function(matchSaveErr, savedMatch){
+						console.log(matchSaveErr);
+		            	if (matchSaveErr) {
+		                    res.status(Codes.httpStatus.BR).json({
+		                        status: Codes.status.FAILURE,
+		                        code: Codes.httpStatus.BR,
+		                        data: '',
+		                        error: Validation.validatingErrors(matchSaveErr)
+		                    });
+		                    return;
+		                }
+
+		                MatchCard.find({match:savedMatch._id}, function(matchCardsErr, matchCards){
+		                	if(matchCardsErr){
+								res.status(Codes.httpStatus.ISE).json({
+						            status: Codes.status.FAILURE,
+						            code: Codes.httpStatus.ISE,
+						            data: '',
+						            error: Codes.errorMsg.UNEXP_ERROR
+						        });
+						        return;
+							}
+
+							if(matchCards.length == 0){
+								res.status(Codes.httpStatus.OK).json({
+						            status: Codes.status.SUCCESS,
+						            code: Codes.httpStatus.OK,
+						            data: 'Lineup, Events resetted and ' + Codes.errorMsg.F_NO_MC_M,
+						            error: ''
+						        });
+						        return;
+							}
+
+							_.each(matchCards, function(matchCard, index, matchCards){
+								matchCard.matchPoints = 0;
+								_each(matchCard.players, function(player, pIndex, players){
+									player.points = 0;
+									if(players.length == pIndex + 1){
+										matchCard.save(function(matchCardSaveErr, matchCard){
+										 	res.status(Codes.httpStatus.BR).json({
+						                        status: Codes.status.FAILURE,
+						                        code: Codes.httpStatus.BR,
+						                        data: '',
+						                        error: Validation.validatingErrors(matchCardSaveErr)
+						                    });
+						                    return;
+						                    res.status(Codes.httpStatus.OK).json({
+									            status: Codes.status.SUCCESS,
+									            code: Codes.httpStatus.OK,
+									            data: 'Lineup, Events and MatchCards resetted',
+									            error: ''
+											});
+
+										});
+									}
+								});
+							});
+
+
+		                });
+					});
+				}
+			});
+		});
+	});
+
+
+};
+
+
+
+

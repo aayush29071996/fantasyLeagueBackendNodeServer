@@ -32,7 +32,7 @@ dashControllers.controller('Dashboard', function () {
 })
 
 
-dashControllers.controller('FootFixtures', function($scope, Football, Auth, $state, $timeout, moment) {
+dashControllers.controller('FootFixtures', function($scope, Football, Auth, $state, $timeout, moment, $mdDialog, $filter) {
     $scope.LiveMatchPromise = Football.getLiveMatches().then(function(response){
         $scope.liveMatches = response.data;
         console.log($scope.liveMatches);
@@ -101,7 +101,89 @@ dashControllers.controller('FootFixtures', function($scope, Football, Auth, $sta
          });
     };
 
-})
+    function ViewEventsPopUpCtrl($scope, $mdDialog, fixture){
+      $scope.close = function(){
+        $mdDialog.hide();
+      };
+
+      $scope.fixture = fixture;
+      $scope.returnIST = function(date){
+        return moment(date).utcOffset('+0530').format('YYYY-MM-DD HH:mm');
+      };
+    };
+    
+    function ViewLineupPopUpCtrl($scope, $mdDialog, fixture, Football){
+      $scope.close = function(){
+        $mdDialog.hide();
+      };
+      
+      $scope.fixture = fixture;
+
+      $scope.fixturePromise = Football.getMatch(fixture.match.matchId).then(function(res){
+        var match = res.data.data;
+        var players = match.team1.players.concat(match.team2.players);
+        var playerLineup = [];
+        console.log('lineup length => ' + fixture.match.lineup.length);
+        console.log('players length => ' + players.length);
+        fixture.match.lineup.forEach(function(lineup, index){
+          console.log('Fetching player -> ' + lineup.playerId);
+          var playerObj = players.filter(function(player){
+              return lineup.playerId === player.playerId;
+          });
+          // playerObj = playerObj[0];
+          if(playerObj.length == 1){
+            playerObj = playerObj[0];
+            console.log('Got player -> ' + playerObj.playerId);
+            var newPlayerObj = {};
+            newPlayerObj.playerId = playerObj.playerId;
+            newPlayerObj.playerName = playerObj.name;
+            newPlayerObj.playerPosition = playerObj.position;
+            newPlayerObj.playerPositionId = playerObj.positionId;
+            newPlayerObj.playerActive = playerObj.active;
+            newPlayerObj.playerDetails = lineup;
+            playerLineup.push(newPlayerObj);
+            // console.log('Index ->' + index);
+           $scope.playerLineup = playerLineup;
+          }
+        }); 
+      });
+
+      $scope.returnIST = function(date){
+        return moment(date).utcOffset('+0530').format('YYYY-MM-DD HH:mm');
+      };
+    };
+
+    $scope.ViewEvents = function(fixture, event){
+      // console.log(fixture);
+      $mdDialog.show({
+        controller:ViewEventsPopUpCtrl,
+        templateUrl:'dashboard/views/football/view.events.html',
+        parent:angular.element(document.body),
+        locals:{
+          fixture:fixture
+        },
+        targetEvemt:event,
+        clickOutsideToClose:false,
+        fullscreen:false
+      });
+    };
+
+    $scope.ViewLineup = function(fixture, event){
+      // console.log(fixture);
+      $mdDialog.show({
+        controller:ViewLineupPopUpCtrl,
+        templateUrl:'dashboard/views/football/view.lineup.html',
+        parent:angular.element(document.body),
+        locals:{
+          fixture:fixture
+        },
+        targetEvemt:event,
+        clickOutsideToClose:false,
+        fullscreen:false
+      });
+    };
+
+})  
 
 
 dashControllers.controller('Points', function($scope) {

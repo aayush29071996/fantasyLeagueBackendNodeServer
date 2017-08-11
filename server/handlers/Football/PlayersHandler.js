@@ -51,7 +51,7 @@ exports.populatePlayersForAllTeams = function(req, res) {
                 include = 'squad.player'
                 params = 'teams/' + team.teamId;
 
-                // if(teamIndex >= 800 && teamIndex < 1000){
+                if(teamIndex >= 900 && teamIndex < 1000){
 
                 request.get(fireUrl(params, include, teamIndex), function(err, response, data) {
                     // console.log('team no ' + teamIndex + " with id " + team.teamId);
@@ -169,7 +169,17 @@ exports.populatePlayersForAllTeams = function(req, res) {
                                     newPlayer.teams.push(team);
                                     // if (player.hasOwnProperty('position')) {
                                     newPlayer.positionId = player.position_id;
-                                        // newPlayer.position = player.position.name;
+                                    var posName = "X";
+                                    if(player.position_id === "1" || player.position_id == 1){
+                                        posName = "G";
+                                    } else if(player.position_id === "2" || player.position_id == 2){
+                                        posName = "D";
+                                    } else if(player.position_id === "3" || player.position_id == 3){
+                                        posName = "M";
+                                    } else if(player.position_id === "4" || player.position_id == 4){
+                                        posName = "F";
+                                    } 
+                                    newPlayer.position = posName;
                                     // }
                                     newPlayer.save(function(playerSaveErr, savedPlayer) {
                                         if (playerSaveErr) {
@@ -227,7 +237,7 @@ exports.populatePlayersForAllTeams = function(req, res) {
                         });
                     }
                 });
-            // }//'if' ends with this brace
+            }//'if' ends with this brace
             });
         }
 

@@ -30,7 +30,8 @@ exports.errorMsg = {
 	PS_INV_ID: 'invalid point system id',
 	F_INV_MCID: 'invalid match card id',
 	T_INV_TID: 'invalid team id',
-	F_NO_MC: 'no match cards for user'
+	F_NO_MC: 'no match cards for user',
+	F_NO_MC_M: 'no match cards for match'
 }
 
 exports.status = {

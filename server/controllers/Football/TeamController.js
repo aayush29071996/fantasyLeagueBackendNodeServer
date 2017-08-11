@@ -42,6 +42,41 @@ exports.getAllTeams = function(req, res) {
 	});
 }
 
+//get list of all teams as an array obj
+exports.getAllTeamsWithPlayers = function(req, res) {
+	
+	Team.find({}).populate('players competitions').exec(function(teamsErr, teams){
+		if(teamsErr){
+			res.status(Codes.httpStatus.ISE).json({
+	            status: Codes.status.FAILURE,
+	            code: Codes.httpStatus.ISE,
+	            data: '',
+	            error: Codes.errorMsg.UNEXP_ERROR
+	        });
+	        return;
+		}
+		if(teams.length == 0){
+			res.status(Codes.httpStatus.OK).json({
+                status: Codes.status.SUCCESS,
+                code: Codes.httpStatus.OK,
+                data: '',
+                error: Codes.errorMsg.T_NO
+            });
+            return;
+		}
+
+		if(teams.length > 0){
+			res.status(Codes.httpStatus.OK).json({
+                status: Codes.status.SUCCESS,
+                code: Codes.httpStatus.OK,
+                data: teams,
+                error: ''
+            });
+            return;
+		}
+	});
+}
+
 //get team details
 exports.getTeam = function(req, res){
 	Team.find({teamId:req.params.teamId}).populate('players competitions','playerId name active').exec(function(teamErr, team){

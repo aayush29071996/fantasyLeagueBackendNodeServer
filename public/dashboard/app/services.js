@@ -137,6 +137,10 @@ dashServices.factory('Football', function($http){
         return $http.get(baseURI+'/historyFixturesAdmin');
     };
 
+    user.getMatch=function(fixtureId){
+        return $http.get(baseURI+'/fixture/'+fixtureId);
+    }
+
 
 
     return user;

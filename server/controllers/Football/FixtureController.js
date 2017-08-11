@@ -3,12 +3,15 @@
  */
 
 var moment = require('moment');
+var _ = require('underscore');
 
 var Competition = require('../../models/Football/Competition');
 var Season = require('../../models/Football/Season');
 var Match = require('../../models/Football/Match');
 var Event = require('../../models/Football/Event');
 var Team = require('../../models/Football/Master/Team');
+
+
 
 var Codes = require('../../Codes');
 var Validation = require('../Validation');
@@ -22,7 +25,7 @@ exports.getFixturesHistory = function(req, res) {
 	console.log(sevenDaysBefore);
 
 
-	Match.find({startingDateTime:{$gte:sevenDaysBefore, $lt:twoHoursBefore}}).sort({"startingDateTime":1}).exec( function(matchesErr, matches){
+	Match.find({startingDateTime:{$gte:sevenDaysBefore, $lt:twoHoursBefore}}).exec( function(matchesErr, matches){
 		if(matchesErr){
 			res.status(Codes.httpStatus.ISE).json({
 	            status: Codes.status.FAILURE,
@@ -44,6 +47,7 @@ exports.getFixturesHistory = function(req, res) {
 		var fixturesSet = [];
 		if(matches.length > 0){
 			matches.forEach(function(match, index){
+
 				Team.find({teamId:match.team1Id}, {players: 0}, function(team1Err, team1){
 					if(team1Err){
 						res.status(Codes.httpStatus.ISE).json({
@@ -76,13 +80,22 @@ exports.getFixturesHistory = function(req, res) {
 					       	 return;
 							}
 
-							var fixture = [];
-							fixture.push(match)
-							var teams = {};
-							teams.team1 = team1;
-							teams.team2 = team2;
-							fixture.push(teams);
-							fixture.push(season);
+							// var fixture = [];
+							// fixture.push(match);
+							// var teams = {};
+							// teams.team1 = team1;
+							// teams.team2 = team2;
+							// fixture.push(teams);
+							// fixture.push(season);
+
+
+							var fixture = {};
+							fixture.match = match;
+							fixture.team1 = team1;
+							fixture.team2 = team2;
+							fixture.season = season;
+
+
 
 							//TEAM ACTIVE FILTER
 							// if(team1.active || team2.active){
@@ -95,6 +108,23 @@ exports.getFixturesHistory = function(req, res) {
 							// }
 
 							if(fixturesSet.length == matches.length){
+
+
+								// fixturesSet = _.sortBy(fixturesSet, {match:startingDateTime});
+
+								// console.log('------------');
+
+								// _.each(fixturesSet, function(fixture, index){
+								// 	console.log(fixture.match.startingDateTime);
+								// });
+								// console.log('------------');
+
+								// fixturesSet = _.sortBy(fixturesSet, 'startingDateTime');
+								// _.each(fixturesSet, function(fixture, index){
+								// 	console.log(fixture.match.startingDateTime);
+								// });
+
+
 								res.status(Codes.httpStatus.OK).json({
 									status: Codes.status.SUCCESS,
 									code: Codes.httpStatus.OK,
@@ -336,7 +366,7 @@ exports.getFixturesHistoryAdmin = function(req, res) {
 	console.log(sevenDaysBefore);
 
 
-	Match.find({startingDateTime:{$gte:sevenDaysBefore, $lt:twoHoursBefore}}).sort({"startingDateTime":1}).populate('events').exec( function(matchesErr, matches){
+	Match.find({startingDateTime:{$gte:sevenDaysBefore, $lt:twoHoursBefore}}).populate('events').exec( function(matchesErr, matches){
 		if(matchesErr){
 			res.status(Codes.httpStatus.ISE).json({
 	            status: Codes.status.FAILURE,
@@ -358,7 +388,7 @@ exports.getFixturesHistoryAdmin = function(req, res) {
 		var fixturesSet = [];
 		if(matches.length > 0){
 			matches.forEach(function(match, index){
-				Team.find({teamId:match.team1Id}, {players: 0}, function(team1Err, team1){
+				Team.findOne({teamId:match.team1Id}, {players: 0}, function(team1Err, team1){
 					if(team1Err){
 						res.status(Codes.httpStatus.ISE).json({
 			            status: Codes.status.FAILURE,
@@ -369,7 +399,7 @@ exports.getFixturesHistoryAdmin = function(req, res) {
 			       	 return;
 					}
 
-						Team.find({teamId:match.team2Id},{players: 0}, function(team2Err, team2){
+						Team.findOne({teamId:match.team2Id},{players: 0}, function(team2Err, team2){
 						if(team2Err){
 							res.status(Codes.httpStatus.ISE).json({
 				            status: Codes.status.FAILURE,
@@ -390,16 +420,25 @@ exports.getFixturesHistoryAdmin = function(req, res) {
 					       	 return;
 							}
 
-							var fixture = [];
-							fixture.push(match)
-							var teams = {};
-							teams.team1 = team1;
-							teams.team2 = team2;
-							fixture.push(teams);
-							fixture.push(season);
+							// var fixture = [];
+							// fixture.push(match)
+							// var teams = {};
+							// teams.team1 = team1;
+							// teams.team2 = team2;
+							// fixture.push(teams);
+							// fixture.push(season);
+
+
+							var fixture = {};
+							fixture.match = match;
+							fixture.team1 = team1;
+							fixture.team2 = team2;
+							fixture.season = season;
+
 							fixturesSet.push(fixture);
 
 							if(fixturesSet.length == matches.length){
+
 								res.status(Codes.httpStatus.OK).json({
 									status: Codes.status.SUCCESS,
 									code: Codes.httpStatus.OK,
@@ -422,15 +461,20 @@ exports.getFixturesHistoryAdmin = function(req, res) {
 
 exports.getFixturesLiveAdmin = function(req, res) {
 
-	var twoHoursBefore= moment.utc().subtract('2','h').format("YYYY-MM-DD HH:mm:ss");
-	var thirtyMinsAfter= moment.utc().add('30','m').format("YYYY-MM-DD HH:mm:ss");
+	// var twoHoursBefore= moment.utc().subtract('2','h').format("YYYY-MM-DD HH:mm:ss");
+	// var thirtyMinsAfter= moment.utc().add('30','m').format("YYYY-MM-DD HH:mm:ss");
+
+	//CHANGE THISSSS
+	var thirtyMinsAfter= moment.utc().subtract('2','h').format("YYYY-MM-DD HH:mm:ss");
+	var twoHoursBefore = moment.utc().subtract('7','d').format("YYYY-MM-DD HH:mm:ss");
+
 	//var now = moment.utc().format("YYYY-MM-DD HH:mm:ss");
 
 	console.log(twoHoursBefore)
 	console.log(thirtyMinsAfter)
 
 
-	Match.find({startingDateTime:{$gte:twoHoursBefore, $lt:thirtyMinsAfter}}).sort({"startingDateTime":1}).populate('events').exec( function(matchesErr, matches){
+	Match.find({startingDateTime:{$gte:twoHoursBefore, $lt:thirtyMinsAfter}}).populate('events').exec( function(matchesErr, matches){
 		if(matchesErr){
 			res.status(Codes.httpStatus.ISE).json({
 	            status: Codes.status.FAILURE,
@@ -453,7 +497,7 @@ exports.getFixturesLiveAdmin = function(req, res) {
 		var fixturesSet = [];
 		if(matches.length > 0){
 			matches.forEach(function(match, index){
-				Team.find({teamId:match.team1Id}, {players: 0}, function(team1Err, team1){
+				Team.findOne({teamId:match.team1Id}, {players: 0}, function(team1Err, team1){
 					if(team1Err){
 						res.status(Codes.httpStatus.ISE).json({
 			            status: Codes.status.FAILURE,
@@ -464,7 +508,7 @@ exports.getFixturesLiveAdmin = function(req, res) {
 			       	 return;
 					}
 
-						Team.find({teamId:match.team2Id},{players: 0}, function(team2Err, team2){
+						Team.findOne({teamId:match.team2Id},{players: 0}, function(team2Err, team2){
 						if(team2Err){
 							res.status(Codes.httpStatus.ISE).json({
 				            status: Codes.status.FAILURE,
@@ -485,13 +529,20 @@ exports.getFixturesLiveAdmin = function(req, res) {
 					       	 return;
 							}
 
-							var fixture = [];
-							fixture.push(match)
-							var teams = {};
-							teams.team1 = team1;
-							teams.team2 = team2;
-							fixture.push(teams);
-							fixture.push(season);
+							// var fixture = [];
+							// fixture.push(match)
+							// var teams = {};
+							// teams.team1 = team1;
+							// teams.team2 = team2;
+							// fixture.push(teams);
+							// fixture.push(season);
+
+							var fixture = {};
+							fixture.match = match;
+							fixture.team1 = team1;
+							fixture.team2 = team2;
+							fixture.season = season;
+
 							fixturesSet.push(fixture);
 
 							if(fixturesSet.length == matches.length){
@@ -518,12 +569,12 @@ exports.getFixturesLiveAdmin = function(req, res) {
 exports.getFixturesUpcomingAdmin = function(req, res) {
 
 	var now = moment.utc().format("YYYY-MM-DD HH:mm:ss");
-	var sevenDaysAfter = moment.utc().add('7','d').format("YYYY-MM-DD HH:mm:ss");
+	var sevenDaysAfter = moment.utc().add('15','d').format("YYYY-MM-DD HH:mm:ss");
 
 	console.log(now)
 	console.log(sevenDaysAfter)
 
-	Match.find({startingDateTime:{$gte:now, $lt:sevenDaysAfter}}).sort({"startingDateTime":1}).populate('events').exec( function(matchesErr, matches){
+	Match.find({startingDateTime:{$gte:now, $lt:sevenDaysAfter}}).populate('events').exec( function(matchesErr, matches){
 		if(matchesErr){
 			res.status(Codes.httpStatus.ISE).json({
 	            status: Codes.status.FAILURE,
@@ -546,7 +597,7 @@ exports.getFixturesUpcomingAdmin = function(req, res) {
 		var fixturesSet = [];
 		if(matches.length > 0){
 			matches.forEach(function(match, index){
-				Team.find({teamId:match.team1Id}, {players: 0}, function(team1Err, team1){
+				Team.findOne({teamId:match.team1Id}, {players: 0}, function(team1Err, team1){
 					if(team1Err){
 						res.status(Codes.httpStatus.ISE).json({
 			            status: Codes.status.FAILURE,
@@ -557,7 +608,7 @@ exports.getFixturesUpcomingAdmin = function(req, res) {
 			       	 return;
 					}
 
-						Team.find({teamId:match.team2Id},{players: 0}, function(team2Err, team2){
+						Team.findOne({teamId:match.team2Id},{players: 0}, function(team2Err, team2){
 						if(team2Err){
 							res.status(Codes.httpStatus.ISE).json({
 				            status: Codes.status.FAILURE,
@@ -578,13 +629,20 @@ exports.getFixturesUpcomingAdmin = function(req, res) {
 					       	 return;
 							}
 
-							var fixture = [];
-							fixture.push(match)
-							var teams = {};
-							teams.team1 = team1;
-							teams.team2 = team2;
-							fixture.push(teams);
-							fixture.push(season);
+							// var fixture = [];
+							// fixture.push(match)
+							// var teams = {};
+							// teams.team1 = team1;
+							// teams.team2 = team2;
+							// fixture.push(teams);
+							// fixture.push(season);
+
+							var fixture = {};
+							fixture.match = match;
+							fixture.team1 = team1;
+							fixture.team2 = team2;
+							fixture.season = season;
+
 							fixturesSet.push(fixture);
 
 							if(fixturesSet.length == matches.length){
@@ -707,13 +765,20 @@ exports.getFixturesBySeason = function(req, res){
 					       	 return;
 							}
 
-							var fixture = [];
-							fixture.push(match)
-							var teams = {};
-							teams.team1 = team1;
-							teams.team2 = team2;
-							fixture.push(teams);
-							fixture.push(season);
+							// var fixture = [];
+							// fixture.push(match)
+							// var teams = {};
+							// teams.team1 = team1;
+							// teams.team2 = team2;
+							// fixture.push(teams);
+							// fixture.push(season);
+
+							var fixture = {};
+							fixture.match = match;
+							fixture.team1 = team1;
+							fixture.team2 = team2;
+							fixture.season = season;
+
 							fixturesSet.push(fixture);
 
 							if(index == matches.length - 1){
@@ -763,7 +828,7 @@ exports.getFixture = function(req, res){
 		}
 
 
-		Team.find({teamId:match.team1Id}).populate('players').exec(function(team1Err, team1){
+		Team.findOne({teamId:match.team1Id}).populate('players').exec(function(team1Err, team1){
 			if(team1Err){
 				res.status(Codes.httpStatus.ISE).json({
 	            status: Codes.status.FAILURE,
@@ -774,7 +839,7 @@ exports.getFixture = function(req, res){
 	       	 return;
 			}
 
-				Team.find({teamId:match.team2Id}).populate('players').exec(function(team2Err, team2){
+				Team.findOne({teamId:match.team2Id}).populate('players').exec(function(team2Err, team2){
 				if(team2Err){
 					res.status(Codes.httpStatus.ISE).json({
 		            status: Codes.status.FAILURE,
@@ -795,13 +860,11 @@ exports.getFixture = function(req, res){
 			       	 return;
 					}
 
-					var fixture = [];
-					fixture.push(match)
-					var teams = {};
-					teams.team1 = team1;
-					teams.team2 = team2;
-					fixture.push(teams);
-					fixture.push(season);
+					var fixture = {};
+					fixture.match = match;
+					fixture.team1 = team1;
+					fixture.team2 = team2;
+					fixture.season = season;
 
 
 					res.status(Codes.httpStatus.OK).json({

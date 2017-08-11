@@ -1,108 +1,115 @@
-<div class="panel panel-color panel-tabs panel-success" style="margin-top:75px;padding: 29px;" ng-init="upcomingActive=true;liveActive=false;historyActive=false;">
+<div class="panel panel-color panel-tabs panel-success" style="margin-top:75px;padding: 29px;" ng-init="upcomingActive=false;liveActive=true;historyActive=false;">
     <div class="panel-heading">
         <ul class="nav nav-pills" style="display: block;margin: auto;width: 25vw;">
-			<li ng-class="upcomingActive?'active':''">
-				<a style="cursor: pointer;" ng-click="upcomingActive=true;liveActive=false;historyActive=false;">Upcoming</a>
-			</li>
-			<li ng-class="liveActive?'active':''">
-				<a style="cursor: pointer;" ng-click="upcomingActive=false;liveActive=true;historyActive=false;">Live</a>
-			</li>
-			<li ng-class="historyActive?'active':''">
-				<a style="cursor: pointer;" ng-click="upcomingActive=false;liveActive=false;historyActive=true;">History</a>
-			</li>
-		</ul>
+            <li ng-class="upcomingActive?'active':''">
+                <a style="cursor: pointer;" ng-click="upcomingActive=true;liveActive=false;historyActive=false;">Upcoming</a>
+            </li>
+            <li ng-class="liveActive?'active':''">
+                <a style="cursor: pointer;" ng-click="upcomingActive=false;liveActive=true;historyActive=false;">Live</a>
+            </li>
+            <li ng-class="historyActive?'active':''">
+                <a style="cursor: pointer;" ng-click="upcomingActive=false;liveActive=false;historyActive=true;">History</a>
+            </li>
+        </ul>
     </div>
     <div class="panel-body">
-		<div class="tab-content">
-			<div ng-show="upcomingActive" class="tab-pane active in">
-				<div class="row">
+        <div class="tab-content">
+            <div ng-show="upcomingActive" class="tab-pane active in">
+                <div class="row">
                     <div class="col-md-12">
-                        
                         <table cg-busy="{promise:UpcomingMatchPromise,message:'Please Wait...'}" class="table table-striped dataTable no-footer" id="datatable-editable" role="grid">
-            <thead>
-                <tr role="row">
-                <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Match Id</th>
-                <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Date</th>
-                <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Home</th>
-                <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Away</th>
-                <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Status</th>
-                <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Action</th>
-            </thead>
-            <tbody>
-            <tr class="gradeA odd" role="row" id="{{match[0].matchId}}" ng-repeat="match in upcomingMatches.data">
-                    <td style="text-align:center;">{{match[0].matchId}}</td>
-                    <td style="text-align:center;">{{returnIST(match[0].startingDateTime)}}</td>
-                    <td style="text-align:center;">{{match[1].team1[0].name}}</td>
-                    <td style="text-align:center;">{{match[1].team2[0].name}}</td>
-                    <td style="text-align:center;">{{match[0].active}}</td>
-                    <td style="display:none;text-align:center;">
-                    <button type="button" id="statusBtn" ng-click="clickedToggle();" class="btn btn-trans waves-effect w-md m-b-5">{{updatedFixture.active}}</button>
-                    </td>
-                    <td class="actions" style="text-align:center;text-align:-webkit-center">
-                        <a style="display:none;" href="" class="on-editing save-row" ng-click="postEdited(match[0].matchId)"><i class="fa fa-save"></i></a>
-                        <a style="display:none;" href="" class="on-editing cancel-row" ng-click="cancelEdit(match[0].matchId)"><i class="fa fa-times"></i></a>
-                        <!-- <a href="" class="on-default edit-row" ng-click="ViewFixture(match[0].matchId)"><i class="fa fa-eye"></i></a> -->
-                        <a href="" class="on-default edit-row" ng-click="EditFixture(match[0].matchId)" ><i class="fa fa-pencil"></i></a>
-                    </td>
-                </tr>
-                </tbody>
-        </table>
-        
-                        
+                            <thead>
+                                <tr role="row">
+                                    <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Match Id</th>
+                                    <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Date &amp; Time</th>
+                                    <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Home</th>
+                                    <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Away</th>
+                                    <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Status</th>
+                                    <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Action</th>
+                            </thead>
+                            <tbody>
+                                <tr class="gradeA odd" role="row" id="{{fixture.match.matchId}}" ng-repeat="fixture in upcomingMatches.data | orderBy:'match.startingDateTime':false">
+                                    <td style="text-align:center;">{{fixture.match.matchId}}</td>
+                                    <td style="text-align:center;">{{returnIST(fixture.match.startingDateTime)}}</td>
+                                    <td style="text-align:center;">{{fixture.team1.name}} <b>({{fixture.team1.teamId}})</b></td>
+                                    <td style="text-align:center;">{{fixture.team2.name}} <b>({{fixture.team2.teamId}})</b></td>
+                                    <td style="text-align:center;">{{fixture.match.active}}</td>
+                                    <td style="display:none;text-align:center;">
+                                        <button type="button" id="statusBtn" ng-click="clickedToggle();" class="btn btn-trans waves-effect w-md m-b-5">{{updatedFixture.active}}</button>
+                                    </td>
+                                    <td class="actions" style="text-align:center;text-align:-webkit-center">
+                                        <a style="display:none;" href="" class="on-editing save-row" ng-click="postEdited(fixture.match.matchId)"><i class="fa fa-save"></i></a>
+                                        <a style="display:none;" href="" class="on-editing cancel-row" ng-click="cancelEdit(fixture.match.matchId)"><i class="fa fa-times"></i></a>
+                                        <!-- <a href="" class="on-default edit-row" ng-click="ViewFixture(match[0].matchId)"><i class="fa fa-eye"></i></a> -->
+                                        <a href="" class="on-default edit-row" ng-click="EditFixture(fixture.match.matchId)"><i class="fa fa-pencil"></i></a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
-				</div>
-			</div>
-			<div ng-show="liveActive" class="tab-pane active in">
-				<div class="row">
-					<div class="col-md-12">
-                        
+                </div>
+            </div>
+            <div ng-show="liveActive" class="tab-pane active in">
+                <div class="row">
+                    <div class="col-md-12">
                         <table cg-busy="{promise:LiveMatchPromise,message:'Please Wait...'}" class="table table-striped dataTable no-footer" id="datatable-editable" role="grid">
-            <thead ng-show="liveMatches.data!=''">
-                <tr role="row">
-                <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Match Id</th>
-                <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Home</th>
-                <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Away</th>
-                <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Score</th>
-            </thead>
-            <tbody ng-show="liveMatches.data!=''">
-            <tr class="gradeA odd" role="row" id="{{match[0].matchId}}" ng-repeat="match in liveMatches.data">
-                    <td style="text-align:center;">{{match[0].matchId}}</td>
-                    <td style="text-align:center;">{{match[1].team1[0].name}}</td>
-                    <td style="text-align:center;">{{match[1].team2[0].name}}</td>
-                    <td style="text-align:center;">{{match[0].team1Score + ' ' + match[0].team1Score}}</td>
-                </tr>
-                </tbody>
-        </table>
-          <p ng-show="liveMatches.data==''" style="color: #fff;width: 100%;text-align: center;">The Stadium is Empty</p>
-					</div>
-				</div>
-			</div>
-			<div ng-show="historyActive" class="tab-pane active in">
-				<div class="row">
-					<div class="col-md-12">
-                        
+                            <thead ng-show="liveMatches.data!=''">
+                                <tr role="row">
+                                    <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 220px;">Match Id</th>
+                                    <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 220px;">Date &amp; Time</th>
+                                    <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 220px;">Home</th>
+                                    <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 220px;">Away</th>
+                                    <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 220px;">Auto Lineup</th>
+                                    <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 220px;">Events Count</th>
+                                    <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 220px;">Score</th>
+                            </thead>
+                            <tbody ng-show="liveMatches.data!=''">
+                                <tr class="gradeA odd" role="row" id="{{fixture.match.matchId}}" ng-repeat="fixture in liveMatches.data | orderBy: 'match.startingDateTime':false">
+                                    <td style="text-align:center;">{{fixture.match.matchId}}</td>
+                                    <td style="text-align:center;">{{returnIST(fixture.match.startingDateTime)}}</td>
+                                    <td style="text-align:center;">{{fixture.team1.name}} <b>({{fixture.team1.teamId}})</b></td>
+                                    <td style="text-align:center;">{{fixture.team2.name}} <b>({{fixture.team2.teamId}})</b></td>
+                                    <td style="text-align:center;">
+                                     <button ng-click="ViewLineup(fixture)" style="color: #ffcc33;background: transparent;border: solid 1px #ffcc33;border-radius: 100px;width: 3vw;">{{fixture.match.autoLineup ? 'YES' : 'NO'}}</button>
+                                    </td>
+                                    <td style="text-align:center;">
+                                        <button ng-click="ViewEvents(fixture)" style="color: #ffcc33;background: transparent;border: solid 1px #ffcc33;border-radius: 100px;width: 2vw;">{{fixture.match.events.length}}</button>
+                                    </td>
+                                    <td style="text-align:center;"><b>{{fixture.match.team1Score + ' - ' + fixture.match.team2Score}}</b></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p ng-show="liveMatches.data==''" style="color: #fff;width: 100%;text-align: center;">The Stadium is Empty</p>
+                    </div>
+                </div>
+            </div>
+            <div ng-show="historyActive" class="tab-pane active in">
+                <div class="row">
+                    <div class="col-md-12">
                         <table cg-busy="{promise:PastMatchPromise,message:'Please Wait...'}" class="table table-striped dataTable no-footer" id="datatable-editable" role="grid">
-            <thead>
-                <tr role="row">
-                <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Match Id</th>
-                <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Date</th>
-                <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Home</th>
-                <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Away</th>
-                <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Actions</th>
-            </thead>
-            <tbody>
-            <tr class="gradeA odd" role="row" id="{{match[0].matchId}}" ng-repeat="match in pastMatches.data">
-                    <td style="text-align:center;">{{match[0].matchId}}</td>
-                    <td style="text-align:center;">{{returnIST(match[0].startingDateTime)}}</td>
-                    <td style="text-align:center;" ng-style="{color: match[0].team1Score==match[0].team2Score? '#cd9400' : (match[0].team1Score>match[0].team2Score? '#5acd5a' : '#cd5a5a')}">{{match[1].team1[0].name + ' (' + match[0].team1Score + ')'}}</td>
-                    <td style="text-align:center;" ng-style="{color: match[0].team1Score==match[0].team2Score? '#cd9400' : (match[0].team1Score>match[0].team2Score? '#cd5a5a' : '#5acd5a')}">{{match[1].team2[0].name + ' (' + match[0].team2Score + ')'}}</td>
-                    <td style="text-align:center;"><button style="color: #ffcc33;background: transparent;border: solid 1px #ffcc33;border-radius: 30px;width: 9vw;">Leaderboard</button></td>
-                </tr>
-                </tbody>
-        </table>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+                            <thead>
+                                <tr role="row">
+                                    <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Match Id</th>
+                                    <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Date &amp; Time</th>
+                                    <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Home</th>
+                                    <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Away</th>
+                                    <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Actions</th>
+                            </thead>
+                            <tbody>
+                                <tr class="gradeA odd" role="row" id="{{fixture.match.matchId}}" ng-repeat="fixture in pastMatches.data | orderBy: 'match.startingDateTime':true">
+                                    <td style="text-align:center;">{{fixture.match.matchId}}</td>
+                                    <td style="text-align:center;">{{returnIST(fixture.match.startingDateTime)}}</td>
+                                    <td style="text-align:center;" ng-style="{color: fixture.match.team1Score==fixture.match.team2Score? '#cd9400' : (fixture.match.team1Score>fixture.match.team2Score? '#5acd5a' : '#cd5a5a')}">{{fixture.team1.name + ' (' + fixture.match.team1Score + ')'}}</td>
+                                    <td style="text-align:center;" ng-style="{color: fixture.match.team1Score==fixture.match.team2Score? '#cd9400' : (fixture.match.team1Score>fixture.match.team2Score? '#cd5a5a' : '#5acd5a')}">{{fixture.team2.name + ' (' + fixture.match.team2Score + ')'}}</td>
+                                    <td style="text-align:center;">
+                                        <button ng-click="" style="color: #ffcc33;background: transparent;border: solid 1px #ffcc33;border-radius: 30px;width: 9vw;">Leaderboard</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
