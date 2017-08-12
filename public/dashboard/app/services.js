@@ -149,6 +149,10 @@ dashServices.factory('Football', function($http){
         return $http.get(baseURI+'/fixture/'+fixtureId);
     }
 
+    user.getMatchLP=function(fixtureId){
+        return $http.get(baseURI+'/fixtureLP/'+fixtureId);
+    }
+
 
 
     return user;

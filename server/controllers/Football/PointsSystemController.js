@@ -369,6 +369,9 @@ exports.createMatchCard = function(req, res) {
 						        });
 				        		return;
 								}
+							if(player == null){
+								console.log("NULL for " + playerId);
+							}	
 							var newPlayer = new Player();
 							newPlayer.playerId = player.playerId;
 							newPlayer.name = player.name;
@@ -436,7 +439,7 @@ exports.getMatchCards = function(req, res){
 	        return;
 		}
 
-		if(matchCards == null ){
+		if(matchCards.length == 0 ){
 			res.status(Codes.httpStatus.OK).json({
 	            status: Codes.status.SUCCESS,
 	            code: Codes.httpStatus.OK,

@@ -24,6 +24,7 @@
                                     <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Date &amp; Time</th>
                                     <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Home</th>
                                     <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Away</th>
+                                    <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 220px;">Auto Lineup</th>
                                     <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Status</th>
                                     <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Action</th>
                             </thead>
@@ -33,6 +34,9 @@
                                     <td style="text-align:center;">{{returnIST(fixture.match.startingDateTime)}}</td>
                                     <td style="text-align:center;">{{fixture.team1.name}} <b>({{fixture.team1.teamId}})</b></td>
                                     <td style="text-align:center;">{{fixture.team2.name}} <b>({{fixture.team2.teamId}})</b></td>
+                                    <td style="text-align:center;">
+                                     <button ng-click="ViewLineup(fixture)" style="color: #ffcc33;background: transparent;border: solid 1px #ffcc33;border-radius: 100px;width: 3vw;">{{fixture.match.autoLineup ? 'YES' : 'NO'}}</button>
+                                    </td>
                                     <td style="text-align:center;">{{fixture.match.active}}</td>
                                     <td style="display:none;text-align:center;">
                                         <button type="button" id="statusBtn" ng-click="clickedToggle();" class="btn btn-trans waves-effect w-md m-b-5">{{updatedFixture.active}}</button>
@@ -93,6 +97,8 @@
                                     <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Date &amp; Time</th>
                                     <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Home</th>
                                     <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Away</th>
+                                     <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 220px;">Auto Lineup</th>
+                                    <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 220px;">Events Count</th>
                                     <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Actions</th>
                             </thead>
                             <tbody>
@@ -101,6 +107,12 @@
                                     <td style="text-align:center;">{{returnIST(fixture.match.startingDateTime)}}</td>
                                     <td style="text-align:center;" ng-style="{color: fixture.match.team1Score==fixture.match.team2Score? '#cd9400' : (fixture.match.team1Score>fixture.match.team2Score? '#5acd5a' : '#cd5a5a')}">{{fixture.team1.name + ' (' + fixture.match.team1Score + ')'}}</td>
                                     <td style="text-align:center;" ng-style="{color: fixture.match.team1Score==fixture.match.team2Score? '#cd9400' : (fixture.match.team1Score>fixture.match.team2Score? '#cd5a5a' : '#5acd5a')}">{{fixture.team2.name + ' (' + fixture.match.team2Score + ')'}}</td>
+                                     <td style="text-align:center;">
+                                     <button ng-click="ViewLineup(fixture)" style="color: #ffcc33;background: transparent;border: solid 1px #ffcc33;border-radius: 100px;width: 3vw;">{{fixture.match.autoLineup ? 'YES' : 'NO'}}</button>
+                                    </td>
+                                    <td style="text-align:center;">
+                                        <button ng-click="ViewEvents(fixture)" style="color: #ffcc33;background: transparent;border: solid 1px #ffcc33;border-radius: 100px;width: 2vw;">{{fixture.match.events.length}}</button>
+                                    </td>
                                     <td style="text-align:center;">
                                         <button ng-click="" style="color: #ffcc33;background: transparent;border: solid 1px #ffcc33;border-radius: 30px;width: 9vw;">Leaderboard</button>
                                     </td>

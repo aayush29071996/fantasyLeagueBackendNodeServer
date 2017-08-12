@@ -2,15 +2,15 @@
     <form>
         <md-toolbar>
             <div class="md-toolbar-tools" style="background: #222;">
-                <img style="height: 150px;margin-top: 11vh;margin-left: 1vw;" src="{{fixture.team1.logo}}" alt="{{fixture.team1.name}}">
-                <h2 style="width: 35%;text-align: center;">{{fixture.team1.name}} ({{fixture.team1.teamId}}</h2>
+                <img style="height: 100px;margin-top: 10vh;margin-left: -1vw;" src="{{fixture.team1.logo}}" alt="{{fixture.team1.name}}">
+                <h2 style="width: 35%;text-align: center;">{{fixture.team1.name}} ({{fixture.team1.teamId}})</h2>
                 <h1 style="width: 10%;text-align: center;">{{fixture.match.team1Formation}}</h1>
                 <h1 style="width: 5%;text-align: right; color: #ffcc33;">{{fixture.match.team1Score}}</h1>
                 <h1 style="width: 10%;text-align: center;">VS</h1>
                 <h1 style="width: 5%;text-align: left; color: #ffcc33;">{{fixture.match.team2Score}}</h1>
                 <h1 style="width: 10%;text-align: center;"">{{fixture.match.team2Formation}}</h1>
                 <h2 style="width: 35%;text-align: center;">{{fixture.team2.name}} ({{fixture.team2.teamId}})</h2>
-                <img style="height: 120px;margin-top: 11vh;margin-right: 1vw;" src="{{fixture.team2.logo}}" alt="{{fixture.team2.name}}">
+                <img style="height: 100px;margin-top: 10vh;margin-right: -1vw;" src="{{fixture.team2.logo}}" alt="{{fixture.team2.name}}">
                 <md-button class="md-icon-button" ng-click="close()">
                     <span>X</span>
                 </md-button>
@@ -19,7 +19,7 @@
         <md-dialog-content style="">
             <div class="panel panel-color panel-tabs panel-success">
                 <div class="panel-heading">
-                    <ul class="nav nav-pills" style="display:block;margin: auto;width: 60vw;margin-left: 12vw">
+                    <ul class="nav nav-pills" style="display:block;margin: auto;width: 60vw;margin-left: 6vw">
                         <li class="active"><a>{{fixture.season.competition.name}} - {{fixture.season.name}}</a></li>
                         <li class="active"><a>{{returnIST(fixture.match.startingDateTime)}}</a></li>
                         <li class="active"><a>{{fixture.match.matchId}}</a></li>
@@ -32,10 +32,10 @@
                     </ul>    
                 </div>
                 <div class="panel-body">
-                    <table ng-show="fixture.match.events.length!=0" class="table table-striped dataTable no-footer" style="margin-left: 10px;" id="datatable-editable" role="grid">
+                <table class="table table-striped dataTable no-footer" style="margin-left: 10px;" id="datatable-editable" role="grid">
                         <thead>
                             <tr role="row">
-                                <th tabindex="0" rowspan="1" colspan="1" style="width: 60px;text-align:center;">Player Id</th>
+                                <th tabindex="0" rowspan="1" colspan="1" style="width: 60px;text-align:center;">Player Id </th>
                                 <th tabindex="0" rowspan="1" colspan="1" style="width: 60px;text-align:center;">Player Name</th>
                                 <th tabindex="0" rowspan="1" colspan="1" style="width: 60px;text-align:center;">Team</th>
                                 <th tabindex="0" rowspan="1" colspan="1" style="width: 60px;text-align:center;">Position Id</th>
@@ -70,7 +70,7 @@
                             </tr>
                         </tbody>
                     </table>
-                    <h4 ng-show="players.length==0" style="font-variant:small-caps;margin-top: 32vh;font-size: 25px;color:#000;text-align:center;">No Players available for this team!</h4>
+                    <h4 ng-show="playerLineup.length==0" style="font-variant:small-caps;margin-top: 32vh;font-size: 25px;color:#000;text-align:center;">No Lineup available for this team!</h4>
                     </div>
             </div>
         </md-dialog-content>

@@ -48,7 +48,7 @@ exports.updateFixturesJob = function() {
     console.log('updateFixturesJob inside')
     var fixtureAvailCheckJob = new CronJob({
 
-        cronTime: '*/120 * * * * *',
+        cronTime: '*/30 * * * * *',
         onTick: function() {
             console.log(moment().format('MMMM Do YYYY, h:mm:ss a'));
             console.log('Update Fixture Job Called')
@@ -463,8 +463,8 @@ exports.updateFixturesJob = function() {
                                             match.team2Score = updatedMatch.scores.visitorteam_score;
                                             match.team1Penalties = updatedMatch.scores.localteam_pen_score;
                                             match.team2Penalties = updatedMatch.scores.visitorteam_pen_score;
-                                            newMatch.team1Formation = fixture.formations.localteam_formation;
-                                            newMatch.team2Formation = fixture.formations.visitorteam_formation;
+                                            match.team1Formation = updatedMatch.formations.localteam_formation;
+                                            match.team2Formation = updatedMatch.formations.visitorteam_formation;
                                             match.startingDateTime = moment.utc(updatedMatch.time.starting_at.date_time);
                                             match.minute = updatedMatch.time.minute;
                                             match.extraMinute = updatedMatch.time.extra_time;
@@ -614,77 +614,136 @@ exports.updateFixturesJob = function() {
 
 
                                             console.log('------------- LINEUP HERE -------------');
-                                            if (updatedMatch.lineup.data.length > 0 && match.autoLineup) {
-
-                                                match.lineup = [];
-                                                match.save(function(matchUpdateErr, savedUpdatedMatch) {
-                                                    if (matchUpdateErr) {
-                                                        console.log(responseToConsole(Codes.status.FAILURE, Codes.httpStatus.BR, '', Validation.validatingErrors(matchUpdateErr)));
-                                                        return;
-                                                    }
-                                                    if (savedUpdatedMatch) {
-
-                                                        updatedMatch.lineup.data.forEach(function(lineup, index) {
-
-                                                            playerLP = {};
-                                                            playerLP.playerId = lineup.player_id;
-                                                            playerLP.playerName = lineup.player_name;
-                                                            playerLP.teamId = lineup.team_id;
-                                                            if(lineup.team_id === fixture.localteam_id){
-                                                                playerLP.team = "team1";
-                                                            } else if(lineup.team_id === fixture.visitorteam_id){
-                                                                playerLP.team = "team2";
-                                                            }
-                                                            playerLP.posx = lineup.posx;
-                                                            playerLP.posy = lineup.posy;
-                                                            playerLP.position = lineup.position;
-                                                            playerLP.shirtNumber = lineup.number;
-                                                            playerLP.additionalPosition = lineup.additional_position;
-                                                            playerLP.formationPosition = lineup.formation_position;
-                                                            playerLP.shotsOnGoal = lineup.stats.shots.shots_on_goal;
-                                                            playerLP.shotsTotal = lineup.stats.shots.shots_total;
-                                                            playerLP.goalsScored = lineup.stats.goals.scored;
-                                                            playerLP.goalsConceded = lineup.stats.goals.conceded;
-                                                            playerLP.foulsCommited = lineup.stats.fouls.commited;
-                                                            playerLP.foulsDrawn = lineup.stats.fouls.drawn;
-                                                            playerLP.redcards = lineup.stats.cards.redcards;
-                                                            playerLP.yellowcards = lineup.stats.cards.yellowcards;
-                                                            playerLP.crossesTotal = lineup.stats.passing.total_crosses;
-                                                            playerLP.crossesAccuracy = lineup.stats.passing.crosses_accuracy;
-                                                            playerLP.passesTotal = lineup.stats.passing.passes;
-                                                            playerLP.passesAccuracy = lineup.stats.passing.passes_accuracy;
-                                                            playerLP.assists = lineup.stats.other.assists;
-                                                            playerLP.offsides = lineup.stats.other.offsides;
-                                                            playerLP.saves = lineup.stats.other.saves;
-                                                            playerLP.scoredPenalties = lineup.stats.other.pen_scored;
-                                                            playerLP.missedPenalties = lineup.stats.other.pen_missed;
-                                                            playerLP.savedPenalties = lineup.stats.other.pen_saved;
-                                                            playerLP.tackles = lineup.stats.other.tackles;
-                                                            playerLP.blocks = lineup.stats.other.blocks;
-                                                            playerLP.interceptions = lineup.stats.other.interceptions;
-                                                            playerLP.clearances =  lineup.stats.other.clearances;
-                                                            playerLP.minutesPlayed =  lineup.stats.other.minutes_played;
-                                                               
-                                                            
-                                                            match.lineup.push(playerLP);
-
-                                                                if(match.lineup.length == updatedMatch.lineup.data.length){
-                                                                     match.save(function(matchUpdateErr, savedUpdatedMatch) {
-                                                                        if (matchUpdateErr) {
-                                                                            console.log(responseToConsole(Codes.status.FAILURE, Codes.httpStatus.BR, '', Validation.validatingErrors(matchUpdateErr)));
-                                                                            return;
-                                                                        }
-                                                                        if (savedUpdatedMatch) {
-                                                                            console.log(responseToConsole(Codes.status.SUCCESS, Codes.httpStatus.OK, 'lineup Added', ''));
-                                                                            return;
-                                                                        }
-                                                                    });
+                                            if (updatedMatch.lineup.data.length > 0) {
+                                                    if(!match.autoLineup){
+                                                        console.log('------------- HAD AUTOLINEUP...  NOW SETTING NEW LINEUP -------------');
+                                                         match.lineup = [];
+                                                            match.save(function(matchUpdateErr, savedUpdatedMatch) {
+                                                                if (matchUpdateErr) {
+                                                                    console.log(responseToConsole(Codes.status.FAILURE, Codes.httpStatus.BR, '', Validation.validatingErrors(matchUpdateErr)));
+                                                                    return;
                                                                 }
-                                                            });      
-                                                            console.log(responseToConsole(Codes.status.SUCCESS, Codes.httpStatus.OK, 'Match ' + match.matchId + ' 1 Updated', ''));
-                                                            return;
+                                                                if (savedUpdatedMatch) {
+
+                                                                    savedUpdatedMatch.autoLineup = true;
+                                                                    updatedMatch.lineup.data.forEach(function(lineup, index) {
+
+                                                                        playerLP = {};
+                                                                        playerLP.playerId = lineup.player_id;
+                                                                        playerLP.playerName = lineup.player_name;
+                                                                        playerLP.teamId = lineup.team_id;
+                                                                        if(lineup.team_id === savedUpdatedMatch.team1Id){
+                                                                            playerLP.team = "team1";
+                                                                        } else if(lineup.team_id === savedUpdatedMatch.team2Id){
+                                                                            playerLP.team = "team2";
+                                                                        }
+                                                                        playerLP.posx = lineup.posx;
+                                                                        playerLP.posy = lineup.posy;
+                                                                        playerLP.position = lineup.position;
+                                                                        playerLP.shirtNumber = lineup.number;
+                                                                        playerLP.additionalPosition = lineup.additional_position;
+                                                                        playerLP.formationPosition = lineup.formation_position;
+                                                                        playerLP.shotsOnGoal = lineup.stats.shots.shots_on_goal;
+                                                                        playerLP.shotsTotal = lineup.stats.shots.shots_total;
+                                                                        playerLP.goalsScored = lineup.stats.goals.scored;
+                                                                        playerLP.goalsConceded = lineup.stats.goals.conceded;
+                                                                        playerLP.foulsCommited = lineup.stats.fouls.commited;
+                                                                        playerLP.foulsDrawn = lineup.stats.fouls.drawn;
+                                                                        playerLP.redcards = lineup.stats.cards.redcards;
+                                                                        playerLP.yellowcards = lineup.stats.cards.yellowcards;
+                                                                        playerLP.crossesTotal = lineup.stats.passing.total_crosses;
+                                                                        playerLP.crossesAccuracy = lineup.stats.passing.crosses_accuracy;
+                                                                        playerLP.passesTotal = lineup.stats.passing.passes;
+                                                                        playerLP.passesAccuracy = lineup.stats.passing.passes_accuracy;
+                                                                        playerLP.assists = lineup.stats.other.assists;
+                                                                        playerLP.offsides = lineup.stats.other.offsides;
+                                                                        playerLP.saves = lineup.stats.other.saves;
+                                                                        playerLP.scoredPenalties = lineup.stats.other.pen_scored;
+                                                                        playerLP.missedPenalties = lineup.stats.other.pen_missed;
+                                                                        playerLP.savedPenalties = lineup.stats.other.pen_saved;
+                                                                        playerLP.tackles = lineup.stats.other.tackles;
+                                                                        playerLP.blocks = lineup.stats.other.blocks;
+                                                                        playerLP.interceptions = lineup.stats.other.interceptions;
+                                                                        playerLP.clearances =  lineup.stats.other.clearances;
+                                                                        playerLP.minutesPlayed =  lineup.stats.other.minutes_played;
+                                                                           
+                                                                        
+                                                                        match.lineup.push(playerLP);
+
+                                                                            if(match.lineup.length == updatedMatch.lineup.data.length){
+                                                                                 match.save(function(matchUpdateErr, savedUpdatedMatch) {
+                                                                                    if (matchUpdateErr) {
+                                                                                        console.log(responseToConsole(Codes.status.FAILURE, Codes.httpStatus.BR, '', Validation.validatingErrors(matchUpdateErr)));
+                                                                                        return;
+                                                                                    }
+                                                                                    if (savedUpdatedMatch) {
+                                                                                        console.log(responseToConsole(Codes.status.SUCCESS, Codes.httpStatus.OK, 'lineup Added', ''));
+                                                                                        return;
+                                                                                    }
+                                                                                });
+                                                                            }
+                                                                        });      
+                                                                        console.log(responseToConsole(Codes.status.SUCCESS, Codes.httpStatus.OK, 'Match ' + match.matchId + ' 1 Updated', ''));
+                                                                        return;
+                                                                }
+                                                            });
+                                                    } else {
+                                                        console.log('------------- UPDATING PLAYER LINEUP STATS -------------');
+                                                        match.lineup.forEach(function(playerLP, index){
+                                                            var lineup = updatedMatch.lineup.data.filter(function(playerObj){
+                                                                return Number(playerLP.playerId) === playerObj.player_id;
+                                                            })[0];
+                                                            if(lineup != null){
+                                                                console.log("PLAYER LP " + lineup.player_id);
+                                                                playerLP.posx = lineup.posx;
+                                                                playerLP.posy = lineup.posy;
+                                                                playerLP.position = lineup.position;
+                                                                playerLP.shirtNumber = lineup.number;
+                                                                playerLP.additionalPosition = lineup.additional_position;
+                                                                playerLP.formationPosition = lineup.formation_position;
+                                                                playerLP.shotsOnGoal = lineup.stats.shots.shots_on_goal;
+                                                                playerLP.shotsTotal = lineup.stats.shots.shots_total;
+                                                                playerLP.goalsScored = lineup.stats.goals.scored;
+                                                                playerLP.goalsConceded = lineup.stats.goals.conceded;
+                                                                playerLP.foulsCommited = lineup.stats.fouls.commited;
+                                                                playerLP.foulsDrawn = lineup.stats.fouls.drawn;
+                                                                playerLP.redcards = lineup.stats.cards.redcards;
+                                                                playerLP.yellowcards = lineup.stats.cards.yellowcards;
+                                                                playerLP.crossesTotal = lineup.stats.passing.total_crosses;
+                                                                playerLP.crossesAccuracy = lineup.stats.passing.crosses_accuracy;
+                                                                playerLP.passesTotal = lineup.stats.passing.passes;
+                                                                playerLP.passesAccuracy = lineup.stats.passing.passes_accuracy;
+                                                                playerLP.assists = lineup.stats.other.assists;
+                                                                playerLP.offsides = lineup.stats.other.offsides;
+                                                                playerLP.saves = lineup.stats.other.saves;
+                                                                playerLP.scoredPenalties = lineup.stats.other.pen_scored;
+                                                                playerLP.missedPenalties = lineup.stats.other.pen_missed;
+                                                                playerLP.savedPenalties = lineup.stats.other.pen_saved;
+                                                                playerLP.tackles = lineup.stats.other.tackles;
+                                                                playerLP.blocks = lineup.stats.other.blocks;
+                                                                playerLP.interceptions = lineup.stats.other.interceptions;
+                                                                playerLP.clearances =  lineup.stats.other.clearances;
+                                                                playerLP.minutesPlayed =  lineup.stats.other.minutes_played;
+                                                            } else {
+                                                                 console.log('------------- UPDATING PLAYER LINEUP STATS -----> NULL <---------');
+                                                            }
+                                                             if(match.lineup.length == index+1){
+                                                                 match.save(function(matchUpdateErr, savedUpdatedMatch) {
+                                                                    if (matchUpdateErr) {
+                                                                        console.log(responseToConsole(Codes.status.FAILURE, Codes.httpStatus.BR, '', Validation.validatingErrors(matchUpdateErr)));
+                                                                        return;
+                                                                    }
+                                                                    if (savedUpdatedMatch) {
+                                                                        console.log(responseToConsole(Codes.status.SUCCESS, Codes.httpStatus.OK, 'lineup Added', ''));
+                                                                        return;
+                                                                    }
+                                                                });
+                                                            }
+
+                                                        }); 
+
                                                     }
-                                                });
+                                               
                                                 }
                                             }
 
@@ -719,22 +778,21 @@ exports.calculatePointsJob = function() {
         cronTime: '*/30 * * * * *',
         onTick: function() {
 
-                // var twoHoursBefore = moment(moment().subtract('2','h').format("YYYY-MM-DD HH:mm:ss")).toISOString();
-                // var thirtyMinsAfter = moment(moment().add('30','m').format("YYYY-MM-DD HH:mm:ss")).toISOString();
-                var twoHoursBefore = moment(moment().subtract('6','d').format("YYYY-MM-DD HH:mm:ss")).toISOString();
-                var thirtyMinsAfter = moment(moment().subtract('2','d').format("YYYY-MM-DD HH:mm:ss")).toISOString();
+                var twoHoursBefore = moment().utcOffset(330).subtract('2','h').format("YYYY-MM-DD HH:mm:ss");
+                var thirtyMinsAfter = moment().utcOffset(330).add('30','m').format("YYYY-MM-DD HH:mm:ss");
+                // var twoHoursBefore = moment(moment().subtract('6','d').format("YYYY-MM-DD HH:mm:ss")).toISOString();
+                // var thirtyMinsAfter = moment(moment().subtract('2','d').format("YYYY-MM-DD HH:mm:ss")).toISOString();
                 console.log('From ' + twoHoursBefore + ' To ' + thirtyMinsAfter);
                  console.log('calculatePointsJob called')
                 Match.find({startingDateTime:{$gte:twoHoursBefore, $lt:thirtyMinsAfter}}).populate('events').exec( function(matchesErr, matches){
                      console.log(' ******** MATCHES TO BE CALCULATED  :: ' + matches.length + '  ********');
                     if(matchesErr){
-
                            console.log(responseToConsole(Codes.status.FAILURE, Codes.httpStatus.ISE, matchesErr, Codes.errorMsg.UNEXP_ERROR));
                     }
 
                     matches.forEach(function(match, index){
                         
-                        if(index == 0){
+                        // if(index == 0){
 
                         // if(match.active){
 
@@ -1136,7 +1194,7 @@ exports.calculatePointsJob = function() {
 
                             });
                         // } //match.active
-                        }
+                        // } // index == 0 
 
                     });              
                 });

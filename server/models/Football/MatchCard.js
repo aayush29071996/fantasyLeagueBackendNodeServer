@@ -14,7 +14,7 @@ var PlayerSchema = new mongoose.Schema({
 	points:{type:Number, default:0}
 });
 
-var MatchCardSchema = 	new mongoose.Schema({
+var MatchCardSchema = new mongoose.Schema({
 
 	user:{type:Schema.Types.ObjectId, ref:'User'},
 	match:{type:Schema.Types.ObjectId, ref:'Match'},

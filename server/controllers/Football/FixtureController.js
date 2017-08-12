@@ -359,8 +359,11 @@ exports.getFixturesUpcoming = function(req, res) {
 
 exports.getFixturesHistoryAdmin = function(req, res) {
 
-	var twoHoursBefore= moment.utc().subtract('2','h').format("YYYY-MM-DD HH:mm:ss");
-	var sevenDaysBefore = moment.utc().subtract('7','d').format("YYYY-MM-DD HH:mm:ss");
+	var twoHoursBefore= moment().utcOffset(330).subtract('2','h').format("YYYY-MM-DD HH:mm:ss");
+	var sevenDaysBefore = moment().utcOffset(330).subtract('15','d').format("YYYY-MM-DD HH:mm:ss");
+
+	// var twoHoursBefore= moment.utc().subtract('2','h').format("YYYY-MM-DD HH:mm:ss");
+	// var sevenDaysBefore = moment.utc().subtract('7','d').format("YYYY-MM-DD HH:mm:ss");
 
 	console.log(twoHoursBefore)
 	console.log(sevenDaysBefore);
@@ -461,20 +464,23 @@ exports.getFixturesHistoryAdmin = function(req, res) {
 
 exports.getFixturesLiveAdmin = function(req, res) {
 
-	// var twoHoursBefore= moment.utc().subtract('2','h').format("YYYY-MM-DD HH:mm:ss");
-	// var thirtyMinsAfter= moment.utc().add('30','m').format("YYYY-MM-DD HH:mm:ss");
+	var twoHoursBefore= moment().utcOffset("+05:30").subtract('3','h').format("YYYY-MM-DD HH:mm:ss");
+	var threeHoursAfter= moment().utcOffset("+05:30").add('3','h').format("YYYY-MM-DD HH:mm:ss");
 
 	//CHANGE THISSSS
-	var thirtyMinsAfter= moment.utc().subtract('2','h').format("YYYY-MM-DD HH:mm:ss");
-	var twoHoursBefore = moment.utc().subtract('7','d').format("YYYY-MM-DD HH:mm:ss");
+	// var thirtyMinsAfter= moment.utc().subtract('2','h').format("YYYY-MM-DD HH:mm:ss");
+	// var twoHoursBefore = moment.utc().subtract('7','d').format("YYYY-MM-DD HH:mm:ss");
 
 	//var now = moment.utc().format("YYYY-MM-DD HH:mm:ss");
 
 	console.log(twoHoursBefore)
-	console.log(thirtyMinsAfter)
+	console.log(threeHoursAfter)
 
 
-	Match.find({startingDateTime:{$gte:twoHoursBefore, $lt:thirtyMinsAfter}}).populate('events').exec( function(matchesErr, matches){
+	Match.find({startingDateTime:{$gte:twoHoursBefore, $lt:threeHoursAfter}}).populate('events').exec( function(matchesErr, matches){
+
+		console.log(matches.length);
+
 		if(matchesErr){
 			res.status(Codes.httpStatus.ISE).json({
 	            status: Codes.status.FAILURE,
@@ -568,8 +574,11 @@ exports.getFixturesLiveAdmin = function(req, res) {
 
 exports.getFixturesUpcomingAdmin = function(req, res) {
 
-	var now = moment.utc().format("YYYY-MM-DD HH:mm:ss");
-	var sevenDaysAfter = moment.utc().add('15','d').format("YYYY-MM-DD HH:mm:ss");
+	var now = moment().utcOffset(330).format("YYYY-MM-DD HH:mm:ss");
+	var sevenDaysAfter = moment().utcOffset(330).add('15','d').format("YYYY-MM-DD HH:mm:ss");
+
+	// var now = moment.utc().format("YYYY-MM-DD HH:mm:ss");
+	// var sevenDaysAfter = moment.utc().add('15','d').format("YYYY-MM-DD HH:mm:ss");
 
 	console.log(now)
 	console.log(sevenDaysAfter)
@@ -880,6 +889,98 @@ exports.getFixture = function(req, res){
 			});
 
 		});
+}
+
+exports.getFixtureLP = function(req, res){
+
+	Match.findOne({matchId:req.params.matchId}).populate('events').exec(function(matchErr, match){
+		console.log(req.params)
+		if(matchErr){
+			res.status(Codes.httpStatus.ISE).json({
+	            status: Codes.status.FAILURE,
+	            code: Codes.httpStatus.ISE,
+	            data: '',
+	            error: Codes.errorMsg.UNEXP_ERROR
+	        });
+	        return;
+		}
+
+		if(match == null){
+			res.status(Codes.httpStatus.OK).json({
+	            status: Codes.status.SUCCESS,
+	            code: Codes.httpStatus.OK,
+	            data: '',
+	            error: Codes.errorMsg.F_INV_MID
+	        });
+	        return;
+		}
+
+
+		Team.findOne({teamId:match.team1Id}).populate('players').exec(function(team1Err, team1){
+			if(team1Err){
+				res.status(Codes.httpStatus.ISE).json({
+	            status: Codes.status.FAILURE,
+	            code: Codes.httpStatus.ISE,
+	            data: '',
+	            error: Codes.errorMsg.UNEXP_ERROR
+	        });
+	       	 return;
+			}
+
+				Team.findOne({teamId:match.team2Id}).populate('players').exec(function(team2Err, team2){
+				if(team2Err){
+					res.status(Codes.httpStatus.ISE).json({
+		            status: Codes.status.FAILURE,
+		            code: Codes.httpStatus.ISE,
+		            data: '',
+		            error: Codes.errorMsg.UNEXP_ERROR
+		        });
+		       	 return;
+				}
+				var playerLineup = [];
+				var fairCount = 0, undefinedCount = 0;
+				var players = team1.players.concat(team2.players);
+				_.each(match.lineup, function(lineup, index){
+					var playerObj = _.find(players, function(player){
+						return lineup.playerId === player.playerId;
+					});
+
+					if(typeof playerObj !== 'undefined' && playerObj){
+						var playerX = {};
+						playerX.playerId = playerObj.playerId;
+						playerX.playerName = playerObj.name;
+						playerX.playerPosition = playerObj.position;
+						playerX.playerPositionId = playerObj.positionId;
+						playerX.playerActive = playerObj.active;
+						playerX.playerDetails = lineup;
+						playerLineup.push(playerX);
+						fairCount = fairCount + 1;
+					} else {
+						undefinedCount = undefinedCount + 1;
+					}
+
+					// console.log("IN-> " + index);
+					// console.log("FC-> " + fairCount);
+					// console.log("UC-> " + undefinedCount);
+					// console.log("--\n");
+
+					if(match.lineup.length == fairCount + undefinedCount){
+						res.status(Codes.httpStatus.OK).json({
+							status: Codes.status.SUCCESS,
+							code: Codes.httpStatus.OK,
+							data: playerLineup,
+							error: ''
+						});
+					}
+				});
+				return;
+
+
+				
+			});
+		});
+
+	});
 }
 
 

@@ -147,6 +147,7 @@ module.exports = function(app) {
 	app.get('/fixtures', FixtureController.getAllFixtures);
 	app.get('/fixtures/:seasonId', FixtureController.getFixturesBySeason);
 	app.get('/fixture/:matchId',FixtureController.getFixture);
+	app.get('/fixtureLP/:matchId',FixtureController.getFixtureLP);
 	app.put('/fixture',FixtureController.toggleFixtureStatus);
 	//TODO: app.put('/fixture/:id', FixtureController.updateFixture);
 	//TODO: app.delete('/fixture/:id', FixtureController.deleteFixture);

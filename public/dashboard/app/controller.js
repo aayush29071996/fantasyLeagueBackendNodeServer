@@ -141,40 +141,45 @@ dashControllers.controller('FootFixtures', function($mdDialog, $stateParams, Lea
       };
     };
     
-    function ViewLineupPopUpCtrl($scope, $mdDialog, fixture, Football){
+    function ViewLineupPopUpCtrl($scope, $mdDialog, fixture, Football, $filter){
       $scope.close = function(){
         $mdDialog.hide();
       };
       
       $scope.fixture = fixture;
+      $scope.fixturePromise = Football.getMatchLP(fixture.match.matchId).then(function(res){
+        // var match = res.data.data;
+        // var players = match.team1.players.concat(match.team2.players);
+        // var playerLineup = [];
+        // console.log('lineup length => ' + fixture.match.lineup.length);
+        // console.log('players length => ' + players.length);
+        // fixture.match.lineup.forEach(function(lineup, index){
+        //   console.log('Fetching player -> ' + lineup.playerId);
+        //   var playerObj = players.filter(function(player){
+        //       return lineup.playerId === player.playerId;
+        //   })[0];
+        //   console.log(playerObj);
+        //   if(typeof playerObj !== 'undefined'){
+        //     console.log('Got player -> ' + playerObj.playerId);
+        //     var newPlayerObj = {};
+        //     newPlayerObj.playerId = playerObj.playerId;
+        //     newPlayerObj.playerName = playerObj.name;
+        //     newPlayerObj.playerPosition = playerObj.position;
+        //     newPlayerObj.playerPositionId = playerObj.positionId;
+        //     newPlayerObj.playerActive = playerObj.active;
+        //     newPlayerObj.playerDetails = lineup;
+        //     playerLineup.push(newPlayerObj);
+        //      console.log("FINAL ARRAY LENGTH -> " + playerLength.length);
+        //     // console.log('Index ->' + index);
+        //     $scope.playerLineup = playerLineup;
+        //   } else {
+        //     console.log('undefined player');
+        //   }
+        // }); 
 
-      $scope.fixturePromise = Football.getMatch(fixture.match.matchId).then(function(res){
-        var match = res.data.data;
-        var players = match.team1.players.concat(match.team2.players);
-        var playerLineup = [];
-        console.log('lineup length => ' + fixture.match.lineup.length);
-        console.log('players length => ' + players.length);
-        fixture.match.lineup.forEach(function(lineup, index){
-          console.log('Fetching player -> ' + lineup.playerId);
-          var playerObj = players.filter(function(player){
-              return lineup.playerId === player.playerId;
-          });
-          // playerObj = playerObj[0];
-          if(playerObj.length == 1){
-            playerObj = playerObj[0];
-            console.log('Got player -> ' + playerObj.playerId);
-            var newPlayerObj = {};
-            newPlayerObj.playerId = playerObj.playerId;
-            newPlayerObj.playerName = playerObj.name;
-            newPlayerObj.playerPosition = playerObj.position;
-            newPlayerObj.playerPositionId = playerObj.positionId;
-            newPlayerObj.playerActive = playerObj.active;
-            newPlayerObj.playerDetails = lineup;
-            playerLineup.push(newPlayerObj);
-            // console.log('Index ->' + index);
-           $scope.playerLineup = playerLineup;
-          }
-        }); 
+        $scope.playerLineup = res.data.data;
+
+
       });
 
       $scope.returnIST = function(date){
