@@ -51,7 +51,7 @@ exports.populatePlayersForAllTeams = function(req, res) {
                 include = 'squad.player'
                 params = 'teams/' + team.teamId;
 
-                if(teamIndex >= 900 && teamIndex < 1000){
+                // if(teamIndex >= 900 && teamIndex < 1000){
 
                 request.get(fireUrl(params, include, teamIndex), function(err, response, data) {
                     // console.log('team no ' + teamIndex + " with id " + team.teamId);
@@ -237,7 +237,7 @@ exports.populatePlayersForAllTeams = function(req, res) {
                         });
                     }
                 });
-            }//'if' ends with this brace
+            // }//'if' ends with this brace
             });
         }
 
