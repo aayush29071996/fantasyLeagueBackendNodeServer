@@ -48,7 +48,7 @@ exports.populateTeamsForAllSeasons = function(req, res){
 		//console.log(seasons)
 
 		if(seasons.length > 0){
-			seasons.forEach(function(season, index){
+			seasons.forEach(function(season, sIrndex){
 
 				include = ''
 				params = 'teams/season/' + season.seasonId;
@@ -103,7 +103,7 @@ exports.populateTeamsForAllSeasons = function(req, res){
 
 			            data = data.data;
 
-			           	data.forEach(function(team, index){
+			           	data.forEach(function(team, tIndex){
 
 			           		Team.findOne({ teamId: team.id }, function(teamErr, teamObj) {
 			                    if (teamErr) {
@@ -150,7 +150,7 @@ exports.populateTeamsForAllSeasons = function(req, res){
 
 			                    if (teamObj == null) {
 
-			                        console.log('adding new team')
+			                        console.log('adding new team ' + team.name + ' of competition ' + season.competition.name + ' :: with index ' + tIndex);
 			                        var newTeam = new Team();
 			                        newTeam.teamId = team.id;
 			                        newTeam.name = team.name;
@@ -178,7 +178,7 @@ exports.populateTeamsForAllSeasons = function(req, res){
 			        }
 				});
 
-				if(index == seasons.length - 1){
+				if(sIndex == seasons.length - 1){
                 	res.status(Codes.httpStatus.OK).json({
 		                status: Codes.status.SUCCESS,
 		                code: Codes.httpStatus.OK,
@@ -194,6 +194,173 @@ exports.populateTeamsForAllSeasons = function(req, res){
 
 }	
 
+
+exports.populateTeamsForSeason = function(req, res){
+
+	Season.findOne({seasonId:req.params.seasonId}).populate('competition').exec(function(seasErr, season){
+
+		if(seasErr){
+			res.status(Codes.httpStatus.ISE).json({
+	            status: Codes.status.FAILURE,
+	            code: Codes.httpStatus.ISE,
+	            data: '',
+	            error: Codes.errorMsg.UNEXP_ERROR
+	        });
+	        return;
+		}
+		if(season == null){
+			res.status(Codes.httpStatus.OK).json({
+                status: Codes.status.SUCCESS,
+                code: Codes.httpStatus.OK,
+                data: '',
+                error: Codes.errorMsg.S_NO
+            });
+            return;
+		}
+		//console.log(seasons)
+		var teamLength = 100;
+
+		include = ''
+		params = 'teams/season/' + season.seasonId;
+		
+		request.get(fireUrl(params, include), function(err, response, data){
+
+			if (err) {
+	            res.status(Codes.httpStatus.ISE).json({
+	                status: Codes.status.FAILURE,
+	                code: Codes.httpStatus.ISE,
+	                data: '',
+	                error: Codes.errorMsg.UNEXP_ERROR
+	            });
+	            return;
+	        }
+
+	        if (response.statusCode == Codes.httpStatus.NF) {
+	            res.status(Codes.httpStatus.BR).json({
+	                status: Codes.status.FAILURE,
+	                code: Codes.httpStatus.BR,
+	                data: '',
+	                error: Codes.errorMsg.INVALID_REQ
+	            });
+	            return;
+
+	        }
+
+	        if (response.statusCode == Codes.httpStatus.UNAUTH) {
+	            res.status(Codes.httpStatus.UNAUTH).json({
+	                status: Codes.status.FAILURE,
+	                code: Codes.httpStatus.UNAUTH,
+	                data: '',
+	                error: Codes.errorMsg.UNAUTH_KEY
+	            });
+	            return;
+	        }
+
+	        if (response.statusCode == Codes.httpStatus.OK) {
+	            data = JSON.parse(data);
+
+	            if (data.hasOwnProperty("error")) {
+	                if (data.error.code == Codes.httpStatus.ISE) {
+	                    res.status(Codes.httpStatus.BR).json({
+	                        status: Codes.status.FAILURE,
+	                        code: Codes.httpStatus.BR,
+	                        data: '',
+	                        error: Codes.errorMsg.INVALID_REQ
+	                    });
+	                    return;
+	                }
+	            }
+
+	            data = data.data;
+	            teamLength = data.length;
+
+	           	data.forEach(function(team, tIndex){
+
+	           		Team.findOne({ teamId: team.id }, function(teamErr, teamObj) {
+	                    if (teamErr) {
+	                        res.status(Codes.httpStatus.ISE).json({
+	                            status: Codes.status.FAILURE,
+	                            code: Codes.httpStatus.ISE,
+	                            data: '',
+	                            error: Codes.errorMsg.UNEXP_ERROR
+	                        });
+	                        return;
+	                    }
+
+	                    if (teamObj != null) {
+
+	                    	if(teamObj.competitions.length > 0){
+	                    		console.log('adding new competition to team refernce');
+	                    		
+                      				console.log('existing:' + teamObj.competitions);
+                      				console.log('season:' + season.competition._id);
+                      				console.log('Index Of: ' + teamObj.competitions.indexOf(season.competition._id));
+
+                      				if(teamObj.competitions.indexOf(season.competition._id) == -1){
+                      					console.log('new competition');
+                      					teamObj.competitions.push(season.competition._id);
+                      					teamObj.save(function(teamSaveErr, savedTeam){
+			                        	if (teamSaveErr) {
+			                                console.log('teamSaveErr1')
+				                                res.status(Codes.httpStatus.BR).json({
+				                                    status: Codes.status.FAILURE,
+				                                    code: Codes.httpStatus.BR,
+				                                    data: '',
+				                                    error: Validation.validatingErrors(teamSaveErr)
+				                                });
+			                                return;
+			                            	}
+			                        	});
+                      				}
+
+	                    	}
+
+	                        console.log('team with id ' + teamObj.teamId + ' and name ' + teamObj.name + ' already exists')
+	                        return false;
+	                    }
+
+	                    if (teamObj == null) {
+
+	                        console.log('adding new team ' + team.name + ' of competition ' + season.competition.name + ' :: with index ' + tIndex);
+	                        var newTeam = new Team();
+	                        newTeam.teamId = team.id;
+	                        newTeam.name = team.name;
+	                        newTeam.logo = team.logo_path;
+	                        newTeam.players = [];
+	                        newTeam.competitions = [];
+	                        newTeam.competitions.push(season.competition);
+	                        newTeam.save(function(teamSaveErr, savedTeam){
+	                        	if (teamSaveErr) {
+	                        		console.log(newTeam.teamId)
+	                                console.log('teamSaveErr')
+	                                res.status(Codes.httpStatus.BR).json({
+	                                    status: Codes.status.FAILURE,
+	                                    code: Codes.httpStatus.BR,
+	                                    data: '',
+	                                    error: Validation.validatingErrors(teamSaveErr)
+	                                });
+	                                return;
+	                            }
+	                        });
+	                    }
+
+	                    if(tIndex == teamLength - 1){
+				        	res.status(Codes.httpStatus.OK).json({
+				                status: Codes.status.SUCCESS,
+				                code: Codes.httpStatus.OK,
+				                data: 'populated all teams for season ' + season.competition.name + ' :: ' + season.name + ' of id ' + season.seasonId,
+				                error: ''
+				            });
+				            return;
+				        }
+	                });
+
+	           	});
+	        }
+		});
+	});
+
+}	
 
 
 

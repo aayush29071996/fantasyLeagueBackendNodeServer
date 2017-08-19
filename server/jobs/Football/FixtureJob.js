@@ -136,7 +136,10 @@ exports.updateFixturesJob = function() {
 
                                         if (match == null) {
                                             // console.log(responseToConsole(Codes.status.FAILURE, Codes.httpStatus.BR, '', Codes.errorMsg.F_INV_MID));
-                                            console.log('******** MATCH ID NOT FOUND IN DB ::  ' + updatedMatch.id + ' NOW SEEDING FIXTURE');
+                                           
+                                            console.log('******** MATCH ID NOT FOUND IN DB ::  ' + updatedMatch.id + ' NOT SEEDING FIXTURE');
+                                           
+                                            /*console.log('******** MATCH ID NOT FOUND IN DB ::  ' + updatedMatch.id + ' NOW SEEDING FIXTURE');
 
                                                // console.log('adding new match')
                                                 var fixture = updatedMatch;
@@ -452,7 +455,7 @@ exports.updateFixturesJob = function() {
                                                             });
 
                                                         }
-                                                }
+                                                }*/
 
                                         }
 

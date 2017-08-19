@@ -2,6 +2,7 @@
 
 
 var dashServices = angular.module('dashServices', ['ngResource','dashControllers']);
+// var baseURI = "http://192.168.0.5:9000";
 // var baseURI = "http://localhost:9000";
 var baseURI = "https://inyards.com";
 

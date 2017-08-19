@@ -87,10 +87,10 @@ module.exports = function(app) {
 	//user routes
 	app.post('/username', UserController.validate);
 	app.post('/register', UserController.save);
-
-	app.get('/users', UserController.getAllUsers);
 	app.post('/getUser', UserController.getUser);
-
+	app.post('/updateUser', UserController.update);
+	app.get('/users', UserController.getAllUsers);
+	
 	// app.get('/auth/google',passport.athenticate('google',{scope:['profile','email']}));
 
 	// app.get('/auth/google/callback',
@@ -129,6 +129,7 @@ module.exports = function(app) {
 	app.get('/seedFixtures/:seasonId', FixturesHandler.populateSeasonWithFixtures);
 	app.get('/seedFixture/:fixtureId', FixturesHandler.populateFixture);
 	app.get('/seedTeams',TeamsHandler.populateTeamsForAllSeasons);
+	app.get('/seedTeams/:seasonId',TeamsHandler.populateTeamsForSeason);
 	app.get('/seedPlayers',PlayersHandler.populatePlayersForAllTeams);
 
 	app.get('/mergeTeams',TeamsHandler.mergeTeamDuplicates);
