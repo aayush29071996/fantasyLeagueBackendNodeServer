@@ -178,7 +178,7 @@ exports.populateTeamsForAllSeasons = function(req, res){
 			        }
 				});
 
-				if(sIndex == seasons.length - 1){
+				if(sIrndex == seasons.length - 1){
                 	res.status(Codes.httpStatus.OK).json({
 		                status: Codes.status.SUCCESS,
 		                code: Codes.httpStatus.OK,

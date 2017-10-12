@@ -217,7 +217,26 @@ dashControllers.controller('FootFixtures', function($mdDialog, $stateParams, Lea
       });
     };
 
-})  
+})
+
+
+
+dashControllers.controller('Play', function ($scope, Auth, $state, $timeout,Football) {
+    $scope.user={};
+    $scope.btnplay="PLAY";
+    $scope.playFootball=function(){
+        $scope.btnplay="Playing In...";
+
+
+        // Auth.authenticate(userData).then(function(res){
+
+            $state.go('play');
+
+        // });
+    };
+});
+
+
 
 
 dashControllers.controller('Points', function($scope) {

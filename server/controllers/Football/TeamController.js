@@ -173,6 +173,8 @@ exports.getTeamIdAvailability = function(req, res){
 
 
 //create new team
+//Added the new schema functionalities by Aayush
+
 exports.createTeam = function(req, res){
 	Team.findOne({teamId:req.body.teamId}, function(teamErr, team){
 		if(teamErr){
@@ -189,7 +191,10 @@ exports.createTeam = function(req, res){
 			var newTeam = new Team();
 			newTeam.teamId = req.body.teamId;
 			newTeam.name = req.body.name;
+			newTeam.shortName = req.body.shortName;
 			newTeam.logo = req.body.logo;
+			newTeam.duplicateLogo = req.body.duplicateLogo;
+			newTeam.tshirtDesign = req.body.tshirtDesign;
 			newTeam.players = [];
 			newTeam.save(function(teamSaveErr, savedTeam){
             	if (teamSaveErr) {
@@ -226,8 +231,9 @@ exports.createTeam = function(req, res){
 
 
 //update team details
+//added new updates by aayush
 exports.updateTeam = function(req, res){
-	Team.findOneAndUpdate({teamId:req.body.teamId}, {$set:{active: req.body.active, name:req.body.name}},{"new":true}).populate('players','playerId name active').exec(function(teamErr, team){
+	Team.findOneAndUpdate({teamId:req.body.teamId}, {$set:{active: req.body.active, name:req.body.name, shortName:req.body.shortName, duplicateLogo:req.body.duplicateLogo, tshirtDesign:req.body.tshirtDesign}},{"new":true}).populate('players','playerId name active shortName duplicateLogo tshirtDesign').exec(function(teamErr, team){
 		if(teamErr){
 			res.status(Codes.httpStatus.ISE).json({
 	            status: Codes.status.FAILURE,
