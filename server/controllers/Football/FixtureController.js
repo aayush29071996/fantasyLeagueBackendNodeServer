@@ -816,6 +816,7 @@ exports.getFixturesHistoryAdmin = function (req, res) {
     });
 }
 
+
 exports.getFixturesLiveAdmin = function (req, res) {
 
     var twoHoursBefore = moment().utcOffset("+05:30").subtract('3', 'h').format("YYYY-MM-DD HH:mm:ss");
