@@ -299,18 +299,18 @@ exports.getFixturesHistory = function (req, res) {
 
 exports.getFixturesLive = function (req, res) {
 
-    var twoHoursBefore = moment.utc().subtract('2', 'h').format("YYYY-MM-DD HH:mm:ss");
-    var thirtyMinsAfter = moment.utc().add('30', 'm').format("YYYY-MM-DD HH:mm:ss");
+    var oneMinuteBefore = moment.utc().subtract('1', 'm').format("YYYY-MM-DD HH:mm:ss");
+    var twoHoursAfter = moment.utc().add('2', 'h').format("YYYY-MM-DD HH:mm:ss");
     //var now = moment.utc().format("YYYY-MM-DD HH:mm:ss");
 
-    console.log(twoHoursBefore)
-    console.log(thirtyMinsAfter)
+    console.log(oneMinuteBefore)
+    console.log(twoHoursAfter)
 
 
     Match.find({
         startingDateTime: {
-            $gte: twoHoursBefore,
-            $lt: thirtyMinsAfter
+            $gte: oneMinuteBefore,
+            $lt: twoHoursAfter
         }
     }).sort({"startingDateTime": 1}).exec(function (matchesErr, matches) {
         if (matchesErr) {
@@ -410,21 +410,21 @@ exports.getFixturesLive = function (req, res) {
 
 exports.getFixturesUpcoming = function (req, res) {
 
-    var now = moment.utc().format("YYYY-MM-DD HH:mm:ss");
+    var oneMinuteAfter = moment.utc().add('1', 'm').format("YYYY-MM-DD HH:mm:ss");
     var sevenDaysAfter = moment.utc().add('7', 'd').format("YYYY-MM-DD HH:mm:ss");
     var fourteenDaysAfter = moment.utc().add('14', 'd').format("YYYY-MM-DD HH:mm:ss");
     var twentyoneDaysAfter = moment.utc().add('21', 'd').format("YYYY-MM-DD HH:mm:ss");
 
 
 
-    console.log(now)
+    console.log(oneMinuteAfter)
     console.log(sevenDaysAfter)
 
 
 
     Match.find({
         startingDateTime: {
-            $gte: now,
+            $gte: oneMinuteAfter,
             $lt: sevenDaysAfter
         }
     }).sort({"startingDateTime": 1}).exec(function (matchesErr, matches) {
@@ -441,7 +441,7 @@ exports.getFixturesUpcoming = function (req, res) {
 
             Match.find({
                 startingDateTime: {
-                    $gte: now,
+                    $gte: oneMinuteAfter,
                     $lt: fourteenDaysAfter
                 }
             }).sort({"startingDateTime": 1}).exec(function (matchesErr, matches) {
@@ -457,7 +457,7 @@ exports.getFixturesUpcoming = function (req, res) {
                 if (matches.length == 0 || matches.length < 7) {
                     Match.find({
                         startingDateTime: {
-                            $gte: now,
+                            $gte: oneMinuteAfter,
                             $lt: twentyoneDaysAfter
                         }
                     }).sort({"startingDateTime": 1}).exec(function (matchesErr, matches) {
@@ -819,8 +819,8 @@ exports.getFixturesHistoryAdmin = function (req, res) {
 
 exports.getFixturesLiveAdmin = function (req, res) {
 
-    var twoHoursBefore = moment().utcOffset("+05:30").subtract('3', 'h').format("YYYY-MM-DD HH:mm:ss");
-    var threeHoursAfter = moment().utcOffset("+05:30").add('3', 'h').format("YYYY-MM-DD HH:mm:ss");
+    var oneMinuteBefore = moment().utcOffset("+05:30").subtract('1', 'm').format("YYYY-MM-DD HH:mm:ss");
+    var twoHoursAfter = moment().utcOffset("+05:30").add('2', 'h').format("YYYY-MM-DD HH:mm:ss");
 
     //CHANGE THISSSS
     // var thirtyMinsAfter= moment.utc().subtract('2','h').format("YYYY-MM-DD HH:mm:ss");
@@ -828,14 +828,14 @@ exports.getFixturesLiveAdmin = function (req, res) {
 
     //var now = moment.utc().format("YYYY-MM-DD HH:mm:ss");
 
-    console.log(twoHoursBefore)
-    console.log(threeHoursAfter)
+    console.log(oneMinuteBefore)
+    console.log(twoHoursAfter)
 
 
     Match.find({
         startingDateTime: {
-            $gte: twoHoursBefore,
-            $lt: threeHoursAfter
+            $gte: oneMinuteBefore,
+            $lt: twoHoursAfter
         }
     }).populate('events').exec(function (matchesErr, matches) {
 
@@ -928,18 +928,18 @@ exports.getFixturesLiveAdmin = function (req, res) {
 
 exports.getFixturesUpcomingAdmin = function (req, res) {
 
-    var now = moment().utcOffset(330).format("YYYY-MM-DD HH:mm:ss");
+    var oneMinuteAfter = moment().utcOffset(330).add('1', 'm').format("YYYY-MM-DD HH:mm:ss");
     var fifteenDaysAfter = moment().utcOffset(330).add('15', 'd').format("YYYY-MM-DD HH:mm:ss");
 
     // var now = moment.utc().format("YYYY-MM-DD HH:mm:ss");
     // var sevenDaysAfter = moment.utc().add('15','d').format("YYYY-MM-DD HH:mm:ss");
 
-    console.log(now)
+    console.log(oneMinuteAfter)
     console.log(fifteenDaysAfter)
 
     Match.find({
         startingDateTime: {
-            $gte: now,
+            $gte: oneMinuteAfter,
             $lt: fifteenDaysAfter
         }
     }).populate('events').exec(function (matchesErr, matches) {

@@ -1110,9 +1110,9 @@ exports.calculatePointsJob = function() {
                                                     console.log('---------------- GOAL BY ASSIST ----------------\n');
                                                     // console.log(key + " - goal for player " + _.findWhere(match.lineup,{"playerId":_event.playerId}).playerId);
                                                     // console.log(key + " - assist for player " + _.findWhere(match.lineup,{"playerId":_event.relatedPlayerId}).playerId);
-                                                    
+                 //BUG TO BE TAKEN CARE OFF
                                                     _.findWhere(match.lineup,{"playerId":_event.playerId}).points = _.findWhere(match.lineup,{"playerId":_event.playerId}).points + computePoints(_.findWhere(match.lineup,{"playerId":_event.playerId}),"goal");
-                                                    
+
                                                     if(_event.relatedPlayerId != null){
 
                                                         _.findWhere(match.lineup,{"playerId":_event.relatedPlayerId}).points = _.findWhere(match.lineup,{"playerId":_event.relatedPlayerId}).points + computePoints(_.findWhere(match.lineup,{"playerId":_event.relatedPlayerId}),"goalByAssist");
