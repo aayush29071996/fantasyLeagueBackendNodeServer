@@ -22,10 +22,12 @@ var Validation = require('../Validation');
 
 exports.getFixturesHistory = function (req, res) {
 
-    var twoHoursBefore = moment.utc().subtract('2', 'h').format("YYYY-MM-DD HH:mm:ss");
-    var sevenDaysBefore = moment.utc().subtract('7', 'd').format("YYYY-MM-DD HH:mm:ss");
-    var fourteenDaysBefore = moment.utc().subtract('14', 'd').format("YYYY-MM-DD HH:mm:ss");
-    var twentyoneDaysBefore = moment.utc().subtract('21', 'd').format("YYYY-MM-DD HH:mm:ss");
+    var twoHoursBefore = moment().utcOffset(330).subtract('2', 'h').format("YYYY-MM-DD HH:mm:ss");
+    var sevenDaysBefore = moment().utcOffset(330).subtract('7', 'd').format("YYYY-MM-DD HH:mm:ss");
+    var fourteenDaysBefore = moment().utcOffset(330).subtract('14', 'd').format("YYYY-MM-DD HH:mm:ss");
+    var twentyoneDaysBefore = moment().utcOffset(330).subtract('21', 'd').format("YYYY-MM-DD HH:mm:ss");
+
+
 
 
 
@@ -118,9 +120,9 @@ exports.getFixturesHistory = function (req, res) {
 
 
                                             //TEAM ACTIVE FILTER
-                                            if(team1.active || team2.active){
+                                          if(team1.active || team2.active){
                                                 fixturesSet.push(fixture);
-                                            }
+                                          }
 
                                             //MATCH ACTIVE FILTER
                                           //   if(match.active){
@@ -194,7 +196,7 @@ exports.getFixturesHistory = function (req, res) {
                                     //TEAM ACTIVE FILTER
                                     if(team1.active || team2.active){
                                         fixturesSet.push(fixture);
-                                    }
+                                   }
 
                                     //MATCH ACTIVE FILTER
                                     // if(match.active){
@@ -259,23 +261,26 @@ exports.getFixturesHistory = function (req, res) {
                             }
 
                             var fixture = {};
-                            fixture.match = match;
-                            fixture.team1 = team1;
-                            fixture.team2 = team2;
-                            fixture.season = season;
+                                fixture.match = match;
+                                fixture.team1 = team1;
+                                fixture.team2 = team2;
+                                fixture.season = season;
+
 
 
                             //TEAM ACTIVE FILTER
-                             if(team1.active || team2.active){
-                            fixturesSet.push(fixture);
-                             }
+                        if(team1.active || team2.active){
+                              fixturesSet.push(fixture);
+
+                            }
 
                             //MATCH ACTIVE FILTER
                             // if(match.active){
                           //  fixturesSet.push(fixture);
-                            // }
+                        //     }
 
-                            if (fixturesSet.length == matches.length) {
+                          if (fixturesSet.length == 7) {
+
 
                                 res.status(Codes.httpStatus.OK).json({
                                     status: Codes.status.SUCCESS,
@@ -283,7 +288,7 @@ exports.getFixturesHistory = function (req, res) {
                                     data: fixturesSet,
                                     error: ''
                                 });
-                                return;
+                               return;
                             }
 
                         });
@@ -299,18 +304,22 @@ exports.getFixturesHistory = function (req, res) {
 
 exports.getFixturesLive = function (req, res) {
 
-    var oneMinuteBefore = moment.utc().subtract('1', 'm').format("YYYY-MM-DD HH:mm:ss");
-    var twoHoursAfter = moment.utc().add('2', 'h').format("YYYY-MM-DD HH:mm:ss");
+    var twoHoursBefore = moment().utcOffset(330).subtract('2', 'h').format("YYYY-MM-DD HH:mm:ss");
+
+    var oneMinuteAfter = moment().utcOffset(330).add('1', 'm').format("YYYY-MM-DD HH:mm:ss");
+
+
+
     //var now = moment.utc().format("YYYY-MM-DD HH:mm:ss");
 
-    console.log(oneMinuteBefore)
-    console.log(twoHoursAfter)
+    console.log(twoHoursBefore)
+    console.log(oneMinuteAfter)
 
 
     Match.find({
         startingDateTime: {
-            $gte: oneMinuteBefore,
-            $lt: twoHoursAfter
+            $gte: twoHoursBefore,
+            $lt: oneMinuteAfter
         }
     }).sort({"startingDateTime": 1}).exec(function (matchesErr, matches) {
         if (matchesErr) {
@@ -373,14 +382,17 @@ exports.getFixturesLive = function (req, res) {
                             fixture.team2 = team2;
                             fixture.season = season;
 
+
+
                             //TEAM ACTIVE FILTER
-                            // if(team1.active || team2.active){
-                            //fixturesSet.push(fixture);
-                            // }
+                            if(team1.active || team2.active){
+                                 fixturesSet.push(fixture);
+                             }
+
 
                             //MATCH ACTIVE FILTER
                             // if(match.active){
-                            fixturesSet.push(fixture);
+                            //fixturesSet.push(fixture);
                             // }
 
                             if (fixturesSet.length == matches.length) {
@@ -410,10 +422,10 @@ exports.getFixturesLive = function (req, res) {
 
 exports.getFixturesUpcoming = function (req, res) {
 
-    var oneMinuteAfter = moment.utc().add('1', 'm').format("YYYY-MM-DD HH:mm:ss");
-    var sevenDaysAfter = moment.utc().add('7', 'd').format("YYYY-MM-DD HH:mm:ss");
-    var fourteenDaysAfter = moment.utc().add('14', 'd').format("YYYY-MM-DD HH:mm:ss");
-    var twentyoneDaysAfter = moment.utc().add('21', 'd').format("YYYY-MM-DD HH:mm:ss");
+    var oneMinuteAfter = moment().utcOffset(330).add('1', 'm').format("YYYY-MM-DD HH:mm:ss");
+    var sevenDaysAfter = moment().utcOffset(330).add('7', 'd').format("YYYY-MM-DD HH:mm:ss");
+    var fourteenDaysAfter = moment().utcOffset(330).add('14', 'd').format("YYYY-MM-DD HH:mm:ss");
+    var twentyoneDaysAfter = moment().utcOffset(330).add('21', 'd').format("YYYY-MM-DD HH:mm:ss");
 
 
 
@@ -711,6 +723,7 @@ exports.getFixturesHistoryAdmin = function (req, res) {
     var twoHoursBefore = moment().utcOffset(330).subtract('2', 'h').format("YYYY-MM-DD HH:mm:ss");
     var fifteenDaysBefore = moment().utcOffset(330).subtract('15', 'd').format("YYYY-MM-DD HH:mm:ss");
 
+
     // var twoHoursBefore= moment.utc().subtract('2','h').format("YYYY-MM-DD HH:mm:ss");
     // var sevenDaysBefore = moment.utc().subtract('7','d').format("YYYY-MM-DD HH:mm:ss");
 
@@ -819,8 +832,10 @@ exports.getFixturesHistoryAdmin = function (req, res) {
 
 exports.getFixturesLiveAdmin = function (req, res) {
 
-    var oneMinuteBefore = moment().utcOffset("+05:30").subtract('1', 'm').format("YYYY-MM-DD HH:mm:ss");
-    var twoHoursAfter = moment().utcOffset("+05:30").add('2', 'h').format("YYYY-MM-DD HH:mm:ss");
+    var twoHoursBefore = moment().utcOffset(330).subtract('2', 'h').format("YYYY-MM-DD HH:mm:ss");
+    var oneMinuteAfter = moment().utcOffset(330).add('1', 'm').format("YYYY-MM-DD HH:mm:ss");
+
+
 
     //CHANGE THISSSS
     // var thirtyMinsAfter= moment.utc().subtract('2','h').format("YYYY-MM-DD HH:mm:ss");
@@ -828,14 +843,14 @@ exports.getFixturesLiveAdmin = function (req, res) {
 
     //var now = moment.utc().format("YYYY-MM-DD HH:mm:ss");
 
-    console.log(oneMinuteBefore)
-    console.log(twoHoursAfter)
+   console.log(twoHoursBefore)
+    console.log(oneMinuteAfter)
 
 
     Match.find({
         startingDateTime: {
-            $gte: oneMinuteBefore,
-            $lt: twoHoursAfter
+            $gte: twoHoursBefore,
+            $lt: oneMinuteAfter
         }
     }).populate('events').exec(function (matchesErr, matches) {
 
@@ -1157,6 +1172,7 @@ exports.getFixturesBySeason = function (req, res) {
 }
 
 //get fixture details
+
 exports.getFixture = function (req, res) {
 
     Match.findOne({matchId: req.params.matchId}).populate('events').exec(function (matchErr, match) {

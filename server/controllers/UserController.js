@@ -14,6 +14,7 @@ var md5 = require('md5');
 var nodemailer = require('nodemailer');
 var fs = require('fs');
 var key = 'jallikattu';
+var UserProfile = require('../models/UserProfile')
 // var LocalStrategy    = require('passport-local').Strategy;
 // var FacebookStrategy = require('passport-facebook').Strategy;
 // var TwitterStrategy  = require('passport-twitter').Strategy;
@@ -740,6 +741,99 @@ exports.getUser = function(req, res){
 		});
 	});
 }
+
+//Profile Route by Aayush Patel
+
+exports.updateProfile = function(req, res){
+	console.log(req.body);
+	UserProfile.findOne({'user' : req.body._id}, function(err, user){
+		if(err){
+			res.status(httpStatus.ISE).json({
+				status: status.FAILURE,
+				code: httpStatus.ISE,
+				data: '',
+				error: errorMsg.UNEXP_ERROR
+			});
+			return;
+		}
+		if(user == null){
+			res.status(httpStatus.BR).json({
+				status: status.FAILURE,
+				code: httpStatus.BR,
+				data: '',
+				error: errorMsg.NO_USERS_FOUND
+			});
+		}
+
+
+		var user = new UserProfile;
+		user.name = req.body.name;
+		user.mobileNumber = req.body.mobileNumber;
+		user.gender = req.body.gender;
+		user.address.line1 = req.body.line1;
+		user.address.line2 = req.body.line2;
+		user.address.city = req.body.city;
+		user.address.state = req.body.state;
+		user.address.pincode = req.body.pincode;
+		user.address.country = req.body.country;
+
+
+		user.createdOn = moment.utc();
+		user.save(function (saveErr, saveUser){
+			if(saveErr){
+				res.status(httpStatus.BR).json({
+					status: status.FAILURE,
+					code: httpStatus.BR,
+					data: '',
+					error: Validation.validatingErrors(saveErr)
+				});
+				return;
+			}
+			res.status(httpStatus.OK).json({
+				status: status.SUCCESS,
+				code: httpStatus.OK,
+				data: user,
+				error: ''
+			});
+		});
+		return;
+
+	})
+
+};
+
+
+exports.getProfile = function(req, res){
+	console.log(req.body);
+
+	UserProfile.findOne({user:req.body._id}, function(err, user){
+		if(err){
+			res.status(httpStatus.ISE).json({
+				status: status.FAILURE,
+				code: httpStatus.ISE,
+				data: '',
+				error: errorMsg.UNEXP_ERROR
+			})
+			return;
+		}
+		if(user == null){
+			res.status(httpStatus.BR).json({
+				status: status.FAILURE,
+				code: httpStatus.BR,
+				data: '',
+				error: errorMsg.USER_NOT_FOUND
+			})
+			return;
+		}
+		res.status(httpStatus.OK).json({
+			status: status.SUCCESS,
+			code: httpStatus.OK,
+			data: user,
+			error:''
+		});
+	});
+
+};
 
 
 function encrypt(key, data){

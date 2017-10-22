@@ -211,4 +211,8 @@ module.exports = function(app) {
 	// app.get('/Videos',PitchController.Videos);
 	// app.get('/TopScorers',PitchController.TopScorers);
 
+	app.post('/updateProfile', UserController.updateProfile);
+	app.get('/getProfile', UserController.getProfile);
+
+
 };
