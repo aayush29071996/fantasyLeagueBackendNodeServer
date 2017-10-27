@@ -424,13 +424,32 @@ exports.save = function(req, res){
 				}
 				sendWelcomeMail(user.email);
 				user.password = null;
-				res.status(httpStatus.OK).json({
-					status: status.SUCCESS,
-					code: httpStatus.OK,
-					data: user,
-					error: ''
+				// Save for USERPROFILE
+
+				var userProfile = new UserProfile;
+				userProfile.username = trimmed(req.body.username);
+				userProfile.createdOn = moment.utc();
+
+				userProfile.save(function (saveErr, saveUser){
+					if(saveErr){
+						res.status(httpStatus.BR).json({
+							status: status.FAILURE,
+							code: httpStatus.BR,
+							data: '',
+							error: Validation.validatingErrors(saveErr)
+						});
+						return;
+					}
+					res.status(httpStatus.OK).json({
+						status: status.SUCCESS,
+						code: httpStatus.OK,
+						data: userProfile,
+						error: ''
+					});
 				});
+
 			});
+
 			return;
 		}
 
@@ -746,7 +765,7 @@ exports.getUser = function(req, res){
 
 exports.updateProfile = function(req, res){
 	console.log(req.body);
-	UserProfile.findOne({'user' : req.body._id}, function(err, user){
+	UserProfile.findOneAndUpdate({user: req.body._id} , req.body ,{new:true}, function(err, user){
 		if(err){
 			res.status(httpStatus.ISE).json({
 				status: status.FAILURE,
@@ -765,37 +784,14 @@ exports.updateProfile = function(req, res){
 			});
 		}
 
-
-		var user = new UserProfile;
-		user.name = req.body.name;
-		user.mobileNumber = req.body.mobileNumber;
-		user.gender = req.body.gender;
-		user.address.line1 = req.body.line1;
-		user.address.line2 = req.body.line2;
-		user.address.city = req.body.city;
-		user.address.state = req.body.state;
-		user.address.pincode = req.body.pincode;
-		user.address.country = req.body.country;
-
-
-		user.createdOn = moment.utc();
-		user.save(function (saveErr, saveUser){
-			if(saveErr){
-				res.status(httpStatus.BR).json({
-					status: status.FAILURE,
-					code: httpStatus.BR,
-					data: '',
-					error: Validation.validatingErrors(saveErr)
-				});
-				return;
-			}
+		if(user){
 			res.status(httpStatus.OK).json({
 				status: status.SUCCESS,
 				code: httpStatus.OK,
 				data: user,
 				error: ''
 			});
-		});
+		}
 		return;
 
 	})
@@ -804,9 +800,9 @@ exports.updateProfile = function(req, res){
 
 
 exports.getProfile = function(req, res){
-	console.log(req.body);
+	console.log(req.params._id);
 
-	UserProfile.findOne({user:req.body._id}, function(err, user){
+	UserProfile.findById({_id:req.params._id}, function(err, userProfile){
 		if(err){
 			res.status(httpStatus.ISE).json({
 				status: status.FAILURE,
@@ -816,7 +812,7 @@ exports.getProfile = function(req, res){
 			})
 			return;
 		}
-		if(user == null){
+		if(userProfile == null){
 			res.status(httpStatus.BR).json({
 				status: status.FAILURE,
 				code: httpStatus.BR,
@@ -825,10 +821,11 @@ exports.getProfile = function(req, res){
 			})
 			return;
 		}
+
 		res.status(httpStatus.OK).json({
 			status: status.SUCCESS,
 			code: httpStatus.OK,
-			data: user,
+			data: userProfile ,
 			error:''
 		});
 	});

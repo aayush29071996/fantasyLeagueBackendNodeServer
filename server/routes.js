@@ -185,6 +185,8 @@ module.exports = function(app) {
 
 	app.get('/leaderboard/:matchId', PointsSystemController.getMatchLeaderboard);
 	app.get('/resetPointsFixture/:matchId', PointsSystemController.resetPointsFixture);
+	//app.post('/getm', PointsSystemController.getm);
+
 
 	app.post('/category', PitchController.createCategory);
 	app.get('/categories', PitchController.getCategories);
@@ -212,7 +214,7 @@ module.exports = function(app) {
 	// app.get('/TopScorers',PitchController.TopScorers);
 
 	app.post('/updateProfile', UserController.updateProfile);
-	app.get('/getProfile', UserController.getProfile);
+	app.get('/getProfile/:_id', UserController.getProfile);
 
 
 };

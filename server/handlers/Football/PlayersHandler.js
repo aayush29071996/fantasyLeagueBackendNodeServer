@@ -357,7 +357,6 @@ exports.populatePlayersForAllTeamsPromise = function(req, res) {
 
                         var playerArray = data;
 
-
                   var fn =  function playerSeeding(player, playerIndex) {
 
 

@@ -8,8 +8,9 @@ Schema = mongoose.Schema;
 var UserProfileSchema = new mongoose.Schema({
 	user: {type:Schema.Types.ObjectId, ref:'User'},
 	name:{type:String, default:null},
+	username:{type:String, unique: true },
 	gender:{type:String, enum:['MALE','FEMALE']},
-	mobileNumber:{type:String, unique:true},
+	mobileNumber:{type:String, default:null},
 	emailVerification:{type:Boolean, default:false},
 	mobileVerification:{type:Boolean, default:false},
 	panVerification:{type:Boolean, default:false},
@@ -21,8 +22,8 @@ var UserProfileSchema = new mongoose.Schema({
 		line1:{type:String},
 		line2:{type:String},
 		city:{type:String},
-		state:{type:Schema.Types.ObjectId, ref:'State'},
-		pincode:{type:Number},
+		state:{type: String},
+		pincode:{type:String, default:null},
 		country:{type:String, default:'India'}
 	}
 });
