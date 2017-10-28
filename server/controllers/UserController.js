@@ -422,15 +422,16 @@ exports.save = function(req, res){
 					});
 					return;
 				}
-				sendWelcomeMail(user.email);
-				user.password = null;
+				sendWelcomeMail(saveUser.email);
+				delete saveUser.password;
 				// Save for USERPROFILE
 
 				var userProfile = new UserProfile;
+				userProfile.user = saveUser._id
 				userProfile.username = trimmed(req.body.username);
 				userProfile.createdOn = moment.utc();
 
-				userProfile.save(function (saveErr, saveUser){
+				userProfile.save(function (saveErr, savedUserProfile){
 					if(saveErr){
 						res.status(httpStatus.BR).json({
 							status: status.FAILURE,
@@ -440,12 +441,14 @@ exports.save = function(req, res){
 						});
 						return;
 					}
-					res.status(httpStatus.OK).json({
-						status: status.SUCCESS,
-						code: httpStatus.OK,
-						data: userProfile,
-						error: ''
-					});
+					res
+						.status(httpStatus.OK)
+						.json({
+							status: status.SUCCESS,
+							code: httpStatus.OK,
+							data: saveUser,
+							error: ''
+						});
 				});
 
 			});
@@ -764,8 +767,9 @@ exports.getUser = function(req, res){
 //Profile Route by Aayush Patel
 
 exports.updateProfile = function(req, res){
-	console.log(req.body);
-	UserProfile.findOneAndUpdate({user: req.body._id} , req.body ,{new:true}, function(err, user){
+	const updates = Object.assign({}, req.body)
+	delete updates._id
+	UserProfile.findOneAndUpdate({user: req.body._id} , updates ,{new:true}, function(err, user){
 		if(err){
 			res.status(httpStatus.ISE).json({
 				status: status.FAILURE,
@@ -802,7 +806,7 @@ exports.updateProfile = function(req, res){
 exports.getProfile = function(req, res){
 	console.log(req.params._id);
 
-	UserProfile.findById({_id:req.params._id}, function(err, userProfile){
+	UserProfile.findOne({ user: req.params._id}, function(err, userProfile){
 		if(err){
 			res.status(httpStatus.ISE).json({
 				status: status.FAILURE,

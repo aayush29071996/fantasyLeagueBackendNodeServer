@@ -331,6 +331,7 @@ exports.createMatchCard = function(req, res) {
 							players.push(newPlayer)
 							if(players.length == req.body.players.length){
 								matchCard.players = players
+								matchCard.matchId = req.body.matchId;
 								matchCard.createdOn = moment.utc();
 								matchCard.save(function(matchCardSaveErr, savedMatchCard){
 				            	if (matchCardSaveErr) {
@@ -383,6 +384,7 @@ exports.createMatchCard = function(req, res) {
 
 								var matchCard = new MatchCard;	
 								matchCard.user = user;
+								matchCard.matchId = req.body.matchId;
 								matchCard.match = match;
 								matchCard.createdOn = moment.utc();
 								matchCard.players = players;
