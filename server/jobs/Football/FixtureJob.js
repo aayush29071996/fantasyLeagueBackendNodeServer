@@ -1166,12 +1166,7 @@ exports.calculatePointsJob = function() {
                                                         });
                                                         return;
                                                     }
-                                                    res.status(httpStatus.OK).json({
-                                                        status: status.SUCCESS,
-                                                        code: httpStatus.OK,
-                                                        data: eventHistory,
-                                                        error: ''
-                                                    });
+                                                    // SAVES eventHistory
                                                 });
 
 
