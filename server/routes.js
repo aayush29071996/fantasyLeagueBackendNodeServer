@@ -181,7 +181,7 @@ module.exports = function(app) {
 	app.get('/getMatchCardsByUser/:userId', PointsSystemController.getMatchCards);
 	// app.get('/displayPlayers', PointsSystemController.displayPlayers);
 
-	app.get('/getRosterPlayers/:username/:matchId', PointsSystemController.getRosterPlayers);
+	app.get('/getRosterPlayers/:user/:matchId', PointsSystemController.getRosterPlayers);
 
 	app.get('/leaderboard/:matchId', PointsSystemController.getMatchLeaderboard);
 	app.get('/resetPointsFixture/:matchId', PointsSystemController.resetPointsFixture);

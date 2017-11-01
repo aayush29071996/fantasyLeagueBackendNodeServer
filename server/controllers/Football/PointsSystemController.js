@@ -588,7 +588,7 @@ exports.editMatchCard = function(req, res) {
 
 exports.getRosterPlayers = function(req, res) {
 
-		MatchCard.findOne({username:req.body.username, match:req.body.matchId}).populate('match').exec(function(matchCardErr, matchCard){
+		MatchCard.findOne({user:req.params.user, matchId:req.params.matchId}).populate('match').exec(function(matchCardErr, matchCard){
 			if(matchCardErr){
 				res.status(Codes.httpStatus.ISE).json({
 		            status: Codes.status.FAILURE,

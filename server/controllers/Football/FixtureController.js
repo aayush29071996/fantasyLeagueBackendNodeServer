@@ -4,6 +4,8 @@
 
 var moment = require('moment');
 var _ = require('underscore');
+async = require("async");
+
 
 var Competition = require('../../models/Football/Competition');
 var Season = require('../../models/Football/Season');
@@ -45,6 +47,8 @@ exports.getFixturesHistory = function (req, res) {
             });
             return;
         }
+
+
         if (matches.length == 0) {
             Match.find({startingDateTime: {$gte: fourteenDaysBefore, $lt: twoHoursBefore}}).exec(function (matchesErr, matches) {
                 if (matchesErr) {
@@ -76,7 +80,9 @@ exports.getFixturesHistory = function (req, res) {
                             });
                             return;
                         }
+
                         var fixturesSet = [];
+                         var matchCount = 0;
                         if (matches.length > 0) {
                             matches.forEach(function (match, index) {
 
@@ -123,13 +129,14 @@ exports.getFixturesHistory = function (req, res) {
                                           if(team1.active || team2.active){
                                                 fixturesSet.push(fixture);
                                           }
+                                            matchCount = matchCount + 1;
 
                                             //MATCH ACTIVE FILTER
                                           //   if(match.active){
                                           //    fixturesSet.push(fixture);
                                           //   }
 
-                                            if (fixturesSet.length == matches.length) {
+                                            if (matchCount == matches.length) {
 
                                                 res.status(Codes.httpStatus.OK).json({
                                                     status: Codes.status.SUCCESS,
@@ -150,7 +157,9 @@ exports.getFixturesHistory = function (req, res) {
                         }
                     });
                 }
+
                 var fixturesSet = [];
+                var  matchCount = 0;
                 if (matches.length > 0) {
                     matches.forEach(function (match, index) {
 
@@ -203,7 +212,9 @@ exports.getFixturesHistory = function (req, res) {
                                     //  fixturesSet.push(fixture);
                                     // }
 
-                                    if (fixturesSet.length == matches.length) {
+                                    matchCount = matchCount +1;
+
+                                    if (matchCount == matches.length) {
 
                                         res.status(Codes.httpStatus.OK).json({
                                             status: Codes.status.SUCCESS,
@@ -224,7 +235,49 @@ exports.getFixturesHistory = function (req, res) {
                 }
             });
         }
+       /*
+       IMPLEMENTED USING PROMISE
+
+       if (matches.length > 0) {
+
+            const matchesPromises = matches.map(function (match) {
+                return Promise.all([
+                    Promise.resolve(match),
+                    Team.findOne({teamId: match.team1Id}, {players: 0}),
+                    Team.findOne({teamId: match.team2Id}, {players: 0}),
+                    Season.findOne({seasonId: match.seasonId}).populate('competition')
+                ])
+            })
+            console.log(matchesPromises)
+
+            Promise
+                .all(matchesPromises)
+                .then(function (dataset) {
+                    const fixturesSet = dataset.map(([match, team1, team2, season])=> team1.active || team2.active?{match, team1, team2, season}: null)
+                    return Promise.resolve(fixturesSet)
+                })
+                .then(function (fixturesSet){
+                        res.status(Codes.httpStatus.OK).json({
+                        status: Codes.status.SUCCESS,
+                        code: Codes.httpStatus.OK,
+                        data: fixturesSet.filter(fixture => fixture != null),
+                        error: ''
+                    });
+                })
+                .catch(function (err){
+                    console.log(err)
+                        res.status(Codes.httpStatus.ISE).json({
+                        status: Codes.status.FAILURE,
+                        code: Codes.httpStatus.ISE,
+                        data: '',
+                        error: Codes.errorMsg.UNEXP_ERROR
+                    });
+                })
+        }*/
+
+
         var fixturesSet = [];
+        var matchCount = 0;
         if (matches.length > 0) {
             matches.forEach(function (match, index) {
 
@@ -279,16 +332,16 @@ exports.getFixturesHistory = function (req, res) {
                           //  fixturesSet.push(fixture);
                         //     }
 
-                          if (fixturesSet.length == 7) {
+                             matchCount = matchCount +1;
 
-
+                            if(matchCount == matches.length) {
                                 res.status(Codes.httpStatus.OK).json({
                                     status: Codes.status.SUCCESS,
                                     code: Codes.httpStatus.OK,
                                     data: fixturesSet,
                                     error: ''
                                 });
-                               return;
+                                return;
                             }
 
                         });
@@ -297,6 +350,8 @@ exports.getFixturesHistory = function (req, res) {
                 });
 
             });
+
+
 
         }
     });
@@ -342,6 +397,7 @@ exports.getFixturesLive = function (req, res) {
         }
 
         var fixturesSet = [];
+        var matchCount = 0;
         if (matches.length > 0) {
             matches.forEach(function (match, index) {
                 Team.findOne({teamId: match.team1Id}, {players: 0}, function (team1Err, team1) {
@@ -394,8 +450,9 @@ exports.getFixturesLive = function (req, res) {
                             // if(match.active){
                             //fixturesSet.push(fixture);
                             // }
+                            matchCount = matchCount + 1;
 
-                            if (fixturesSet.length == matches.length) {
+                            if (matchCount == matches.length) {
                                 res.status(Codes.httpStatus.OK).json({
                                     status: Codes.status.SUCCESS,
                                     code: Codes.httpStatus.OK,

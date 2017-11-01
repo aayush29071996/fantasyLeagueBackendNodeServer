@@ -7,10 +7,14 @@ var request = require('request');
 var CronJob = require('cron').CronJob;
 var Subtract = require('array-subtract');
 var _ = require('underscore');
+async = require("async");
+
+
 
 var Match = require('../../models/Football/Match');
 var Event = require('../../models/Football/Event');
 var MatchCard = require('../../models/Football/MatchCard');
+var EventHistory = require('../../models/Football/EventHistory');
 
 var Codes = require('../../Codes');
 var Validation = require('../../controllers/Validation');
@@ -470,11 +474,11 @@ exports.updateFixturesJob = function() {
                                             match.team2Formation = updatedMatch.formations.visitorteam_formation;
                                             match.startingDateTime = moment.utc(updatedMatch.time.starting_at.date_time);
                                             match.minute = updatedMatch.time.minute;
-                                            match.extraMinute = updatedMatch.time.extra_time;
+                                            match.extraMinute = updatedMatch.time.extra_minute; // TO BE CHANGED TO time.extra_minute
                                             match.htScore = updatedMatch.scores.ht_score;
                                             match.ftScore = updatedMatch.scores.ft_score;
                                             match.etScore = updatedMatch.scores.et_score;
-                                            match.injuryTime = updatedMatch.injury_time;
+                                            match.injuryTime = updatedMatch.time.injury_time;   //TO BE CHANGED TO time.injury_time
 
                                              if (updatedMatch.weather == null) {
                                                 match.weather = null;
@@ -650,7 +654,7 @@ exports.updateFixturesJob = function() {
                                                                         playerLP.shotsTotal = lineup.stats.shots.shots_total;
                                                                         playerLP.goalsScored = lineup.stats.goals.scored;
                                                                         playerLP.goalsConceded = lineup.stats.goals.conceded;
-                                                                        playerLP.foulsCommited = lineup.stats.fouls.commited;
+                                                                        playerLP.foulsCommited = lineup.stats.fouls.committed;    //SPELLING WRONG committed
                                                                         playerLP.foulsDrawn = lineup.stats.fouls.drawn;
                                                                         playerLP.redcards = lineup.stats.cards.redcards;
                                                                         playerLP.yellowcards = lineup.stats.cards.yellowcards;
@@ -708,7 +712,7 @@ exports.updateFixturesJob = function() {
                                                                 playerLP.shotsTotal = lineup.stats.shots.shots_total;
                                                                 playerLP.goalsScored = lineup.stats.goals.scored;
                                                                 playerLP.goalsConceded = lineup.stats.goals.conceded;
-                                                                playerLP.foulsCommited = lineup.stats.fouls.commited;
+                                                                playerLP.foulsCommited = lineup.stats.fouls.committed;               //SPELLING WRONG committed
                                                                 playerLP.foulsDrawn = lineup.stats.fouls.drawn;
                                                                 playerLP.redcards = lineup.stats.cards.redcards;
                                                                 playerLP.yellowcards = lineup.stats.cards.yellowcards;
@@ -983,56 +987,68 @@ exports.calculatePointsJob = function() {
                                 computePointsCleanSheet(match);
                             }
 
-                            match.events.forEach(function(event, id){
+                            async.eachSeries(match.events, function(event, callback){
                                 switch(event.type) {
                                     
                                     case "goal":
                                         if("relatedPlayerId" in event){
                                             goalByAssist.push(event);
+
                                         } else {
                                             goal.push(event);
                                         }
+                                        callback();
                                         break;
 
                                     case "penalty":
                                         goalByPenalty.push(event);
+                                        callback();
                                         break;
                                     
                                     case "missed_penalty":
                                         goalByPenaltyMissed.push(event);
+                                        callback();
                                         break;
 
                                     case "own-goal":
                                         goalOwn.push(event);
+                                        callback();
                                         break;
 
                                     case "yellowcard": 
                                         cardYellow.push(event);
+                                        callback();
                                         break;
 
                                     case "redcard":
                                         cardRed.push(event);
+                                        callback();
                                         break;
 
                                     case "yellowred":
                                         cardYellowRed.push(event);
+                                        callback();
                                         break;
 
                                     case "substitution":
                                         substitution.push(event);
+                                        callback();
                                         break;
                                     
                                     case "pen_shootout_miss":
                                         goalByPenalty.push(event);
+                                        callback();
                                         break;
 
                                     case "pen_shootout_goal":
                                         goalByPenaltyMissed.push(event);
+                                        callback();
                                         break;
 
                                     default:
                                         unrecorded.push(event);
                                         console.log('New Event Recorded ' + event.type);
+                                        callback();
                                         break;
                                 }
 
@@ -1090,6 +1106,7 @@ exports.calculatePointsJob = function() {
                                             var playerX = _.findWhere(match.lineup,{"playerId":_event.playerId}); 
 
                                             if(playerX !== undefined && playerX){
+                                               const playerPoints= _.findWhere(match.lineup,{"playerId":_event.playerId}).points;
 
                                                 Event.update({eventId:_event.eventId},{$set:{computed:true}}).exec(function(eventUptErr, eventUpt){
                                                     if(eventUptErr){
@@ -1128,6 +1145,38 @@ exports.calculatePointsJob = function() {
                                                    
                                                 
                                                 }
+
+
+                                                const currentComputePoints =  _.findWhere(match.lineup,{"playerId":_event.playerId}).points - playerPoints;
+                                                const playerPosition = _.findWhere(match.lineup,{"playerId":_event.playerId}).position;
+                                                var eventHistory = new EventHistory;
+                                                eventHistory.eventId = _event.eventId;
+                                                eventHistory.matchId = _event.matchId;
+                                                eventHistory.playerId = _event.playerId;
+                                                eventHistory.position = playerPosition;
+                                                eventHistory.eventPoints = currentComputePoints;
+                                                eventHistory.playerPoints = playerPoints;
+                                                eventHistory.save(function (saveErr, saveEventHistory){
+                                                    if(saveErr){
+                                                        res.status(httpStatus.BR).json({
+                                                            status: status.FAILURE,
+                                                            code: httpStatus.BR,
+                                                            data: '',
+                                                            error: Validation.validatingErrors(saveErr)
+                                                        });
+                                                        return;
+                                                    }
+                                                    res.status(httpStatus.OK).json({
+                                                        status: status.SUCCESS,
+                                                        code: httpStatus.OK,
+                                                        data: eventHistory,
+                                                        error: ''
+                                                    });
+                                                });
+
+
+
+
                                             } else {                                                
                                                  console.log("Player Id " + _event.playerId + " not found in lineup of event "  + _event.eventId + " of match " + _event.matchId + "\n");
                                             
@@ -1196,7 +1245,13 @@ exports.calculatePointsJob = function() {
                                 });
 
                             });
-                        // } //match.active
+
+
+
+
+
+
+                            // } //match.active
                         // } // index == 0 
 
                     });              
