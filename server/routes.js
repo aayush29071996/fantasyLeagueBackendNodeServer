@@ -130,7 +130,7 @@ module.exports = function(app) {
 	app.get('/seedFixture/:fixtureId', FixturesHandler.populateFixture);
 	app.get('/seedTeams',TeamsHandler.populateTeamsForAllSeasons);
 	app.get('/seedTeams/:seasonId',TeamsHandler.populateTeamsForSeason);
-	app.get('/seedPlayers',PlayersHandler.populatePlayersForAllTeamsPromise);
+	app.get('/seedPlayers',PlayersHandler.populatePlayersForAllTeams);
 
 	app.get('/mergeTeams',TeamsHandler.mergeTeamDuplicates);
 

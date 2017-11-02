@@ -5,7 +5,7 @@ var mongoose = require('mongoose');
 Schema = mongoose.Schema;
 
 var PlayerSchema = new mongoose.Schema({
-	playerId:{type:String, required:true},
+	playerId:{type:String, required:true, unique:true},
 	name:{type:String,default:null},
 	positionId:{type:String,default:0},
 	position:{type:String,default:"None"},

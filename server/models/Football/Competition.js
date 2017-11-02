@@ -6,7 +6,7 @@ var mongoose = require('mongoose');
 Schema = mongoose.Schema;
 
 var CompetitionSchema = new mongoose.Schema({
-	competitionId:{type:String, required:true},
+	competitionId:{type:String, required:true, unique:true},
 	name:{type:String, required:true},
 	active:{type:Boolean},
 	currentSeason:{type:String}

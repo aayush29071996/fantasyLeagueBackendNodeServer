@@ -4,7 +4,7 @@ Schema = mongoose.Schema;
 
 var EventHistorySchema = new mongoose.Schema({
 
-    eventId:{type:String},
+    eventId:{type:String, unique:true},
     matchId:{type:String, required:true},
     playerId:{type:String},
     position:{type:String,default:"None"},

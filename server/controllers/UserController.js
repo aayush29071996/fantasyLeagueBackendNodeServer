@@ -610,7 +610,7 @@ exports.resetPasswordResponse = function(req, res){
 }
 
 exports.resetPassword = function(req, res){
-	User.findOne({resetPasswordToken:req.params.token, resetPasswordExpires:{$gt: moment.utc()}}, function(err, user){
+	User.findOne({resetPasswordToken:req.body.token, resetPasswordExpires:{$gt: moment.utc()}}, function(err, user){
 		if(err){
 			res.status(httpStatus.ISE).json({
 				status: status.FAILURE,

@@ -9,7 +9,7 @@ var mongoose = require('mongoose');
 Schema = mongoose.Schema;
 
 var TeamSchema = new mongoose.Schema({
-	teamId:{type:String, required:true},
+	teamId:{type:String, required:true, unique:true},
 	name:{type:String, required:true},
 	shortName:{type:String, default:null},
 	logo:{type:String},

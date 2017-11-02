@@ -1164,7 +1164,6 @@ exports.calculatePointsJob = function() {
                                                             data: '',
                                                             error: Validation.validatingErrors(saveErr)
                                                         });
-                                                        return;
                                                     }
                                                     // SAVES eventHistory
                                                 });
