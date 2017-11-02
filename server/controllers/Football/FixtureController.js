@@ -126,7 +126,7 @@ exports.getFixturesHistory = function (req, res) {
 
 
                                             //TEAM ACTIVE FILTER
-                                          if(team1.active || team2.active){
+                                          if(team1.active && team2.active){
                                                 fixturesSet.push(fixture);
                                           }
                                             matchCount = matchCount + 1;
@@ -203,7 +203,7 @@ exports.getFixturesHistory = function (req, res) {
 
 
                                     //TEAM ACTIVE FILTER
-                                    if(team1.active || team2.active){
+                                    if(team1.active && team2.active){
                                         fixturesSet.push(fixture);
                                    }
 
@@ -322,7 +322,7 @@ exports.getFixturesHistory = function (req, res) {
 
 
                             //TEAM ACTIVE FILTER
-                        if(team1.active || team2.active){
+                        if(team1.active && team2.active){
                               fixturesSet.push(fixture);
 
                             }

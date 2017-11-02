@@ -19,7 +19,7 @@ var WeatherSchema = new mongoose.Schema({
 });
 
 var LineupSchema = new mongoose.Schema({
-	playerId:{type:String, unique:true},
+	playerId:{type:String},
 	teamId:{type:String},
 	team:{type:String},
     shirtNumber:{type:Number},

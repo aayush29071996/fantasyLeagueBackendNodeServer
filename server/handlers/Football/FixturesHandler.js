@@ -80,87 +80,92 @@ exports.populateCompetitionsAndSeasons = function(req, res) {
             data = data.data;
             //console.log(data)
             data.forEach(function(competiton, index) {
-                Competition.findOne({ competitionId: competiton.id }, function(compErr, comp) {
-                    if (compErr) {
-                        res.status(Codes.httpStatus.ISE).json({
-                            status: Codes.status.FAILURE,
-                            code: Codes.httpStatus.ISE,
-                            data: '',
-                            error: Codes.errorMsg.UNEXP_ERROR
-                        });
-                        return;
-                    }
 
-                    if (comp != null) {
-                        console.log('competiton with id ' + comp.competitionId + ' and name ' + comp.name + ' already exists')
-                        return false;
-                    }
 
-                    if (comp == null) {
-                        console.log('adding new competition')
-                        var newCompetiton = new Competition();
-                        newCompetiton.competitionId = competiton.id;
-                        newCompetiton.name = competiton.name;
-                        newCompetiton.active = true;
-                        newCompetiton.currentSeason = competiton.current_season_id;
-                        newCompetiton.save(function(compSaveErr, savedComp) {
-                            if (compSaveErr) {
-                                console.log('compSaveErr')
-                                res.status(Codes.httpStatus.BR).json({
-                                    status: Codes.status.FAILURE,
-                                    code: Codes.httpStatus.BR,
-                                    data: '',
-                                    error: Validation.validatingErrors(compSaveErr)
-                                });
-                                return;
-                            }
-                            Season.findOne({ seasonId: savedComp.currentSeason }, function(seasErr, seas) {
-                                if (seasErr) {
-                                    res.status(Codes.httpStatus.ISE).json({
-                                        status: Codes.status.FAILURE,
-                                        code: Codes.httpStatus.ISE,
-                                        data: '',
-                                        error: Codes.errorMsg.UNEXP_ERROR
-                                    });
-                                    return;
-                                }
+				//USED ONLY TO SEED EPL SEASON
 
-                                if (seas != null) {
-                                    console.log('season with id ' + seas.seasonId + ' and name ' + seas.name + ' already exists')
-                                    return false;
-                                }
+				if (competiton.id == '8'){
+					Competition.findOne({competitionId: competiton.id}, function (compErr, comp) {
+						if (compErr) {
+							res.status(Codes.httpStatus.ISE).json({
+								status: Codes.status.FAILURE,
+								code: Codes.httpStatus.ISE,
+								data: '',
+								error: Codes.errorMsg.UNEXP_ERROR
+							});
+							return;
+						}
 
-                                if (seas == null) {
-                                    console.log('adding new season')
-                                    var newSeason = new Season();
-                                    newSeason.seasonId = competiton.season.data.id;
-                                    newSeason.competitionId = competiton.id;
-                                    newSeason.name = competiton.season.data.name;
-                                    newSeason.active = true;
-                                    newSeason.competition = savedComp;
+						if (comp != null) {
+							console.log('competiton with id ' + comp.competitionId + ' and name ' + comp.name + ' already exists')
+							return false;
+						}
 
-                                    newSeason.save(function(seasSaveErr, savedSeas) {
-                                        if (seasSaveErr) {
-                                            console.log('seasSaveErr')
-                                            res.status(Codes.httpStatus.BR).json({
-                                                status: Codes.status.FAILURE,
-                                                code: Codes.httpStatus.BR,
-                                                data: '',
-                                                error: Validation.validatingErrors(compSaveErr)
-                                            });
-                                            return;
-                                        }
-                                        console.log(savedSeas + ' saved Season');
-                                    });
-                                    return;
-                                }
-                            });
-                            console.log(savedComp + ' saved Competition');
-                        });
-                    }
-                });
-				
-				if(index == data.length -1 ){
+						if (comp == null) {
+							console.log('adding new competition')
+							var newCompetiton = new Competition();
+							newCompetiton.competitionId = competiton.id;
+							newCompetiton.name = competiton.name;
+							newCompetiton.active = true;
+							newCompetiton.currentSeason = competiton.current_season_id;
+							newCompetiton.save(function (compSaveErr, savedComp) {
+								if (compSaveErr) {
+									console.log('compSaveErr')
+									res.status(Codes.httpStatus.BR).json({
+										status: Codes.status.FAILURE,
+										code: Codes.httpStatus.BR,
+										data: '',
+										error: Validation.validatingErrors(compSaveErr)
+									});
+									return;
+								}
+								Season.findOne({seasonId: savedComp.currentSeason}, function (seasErr, seas) {
+									if (seasErr) {
+										res.status(Codes.httpStatus.ISE).json({
+											status: Codes.status.FAILURE,
+											code: Codes.httpStatus.ISE,
+											data: '',
+											error: Codes.errorMsg.UNEXP_ERROR
+										});
+										return;
+									}
+
+									if (seas != null) {
+										console.log('season with id ' + seas.seasonId + ' and name ' + seas.name + ' already exists')
+										return false;
+									}
+
+									if (seas == null) {
+										console.log('adding new season')
+										var newSeason = new Season();
+										newSeason.seasonId = competiton.season.data.id;
+										newSeason.competitionId = competiton.id;
+										newSeason.name = competiton.season.data.name;
+										newSeason.active = true;
+										newSeason.competition = savedComp;
+
+										newSeason.save(function (seasSaveErr, savedSeas) {
+											if (seasSaveErr) {
+												console.log('seasSaveErr')
+												res.status(Codes.httpStatus.BR).json({
+													status: Codes.status.FAILURE,
+													code: Codes.httpStatus.BR,
+													data: '',
+													error: Validation.validatingErrors(compSaveErr)
+												});
+												return;
+											}
+											console.log(savedSeas + ' saved Season');
+										});
+										return;
+									}
+								});
+								console.log(savedComp + ' saved Competition');
+							});
+						}
+					});
+
+				if (index == data.length - 1) {
 					res.status(Codes.httpStatus.OK).json({
 						status: Codes.status.SUCCESS,
 						code: Codes.httpStatus.OK,
@@ -169,6 +174,7 @@ exports.populateCompetitionsAndSeasons = function(req, res) {
 					});
 					return;
 				}
+			}
 
             });
         } else {
