@@ -1223,7 +1223,50 @@ exports.calculatePointsJob = function() {
                                                 });
 
                                                 matchCard.matchPoints = matchPoints;
-                                                matchCard.save(function(matchCardSaveErr, savedMatchCard){
+
+
+
+                                            //Adding matchcard points to users Database
+
+                                            User.findOne({id:matchCard.user}, function(err, user){
+                                                if(err){
+                                                    res.status(httpStatus.ISE).json({
+                                                        status: status.FAILURE,
+                                                        code: httpStatus.ISE,
+                                                        data: '',
+                                                        error: errorMsg.UNEXP_ERROR
+                                                    });
+                                                    return;
+                                                }
+                                                if(user == null){
+                                                    res.status(httpStatus.BR).json({
+                                                        status: status.FAILURE,
+                                                        code: httpStatus.BR,
+                                                        data: '',
+                                                        error: errorMsg.USER_NOT_FOUND
+                                                    });
+                                                    return;
+                                                }
+
+                                                var prevPoints = user.userPoints;
+                                                user.userPoints = prevPoints + matchCard.matchPoints;
+
+                                                user.save(function(err, savedUser){
+                                                    if (err) {
+                                                        console.log(responseToConsole(Codes.status.FAILURE, Codes.httpStatus.BR, '', Validation.validatingErrors(err)));
+                                                        return;
+                                                    }
+                                                    if(savedUser){
+                                                        console.log(responseToConsole(Codes.status.SUCCESS, Codes.httpStatus.OK, 'User ' + user.username + ' Points Calculated and Saved', ''));
+                                                    }
+
+                                                });
+                                            });
+
+
+
+
+                                            matchCard.save(function(matchCardSaveErr, savedMatchCard){
                                                 if (matchCardSaveErr) {
                                                     console.log(responseToConsole(Codes.status.FAILURE, Codes.httpStatus.BR, '', Validation.validatingErrors(matchCardSaveErr)));                                    
                                                     return;

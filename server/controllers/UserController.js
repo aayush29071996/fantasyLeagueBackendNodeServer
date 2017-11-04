@@ -15,6 +15,8 @@ var nodemailer = require('nodemailer');
 var fs = require('fs');
 var key = 'jallikattu';
 var UserProfile = require('../models/UserProfile')
+var smtpTransport = require('nodemailer-smtp-transport');
+
 // var LocalStrategy    = require('passport-local').Strategy;
 // var FacebookStrategy = require('passport-facebook').Strategy;
 // var TwitterStrategy  = require('passport-twitter').Strategy;
@@ -47,6 +49,13 @@ var httpStatus = {
 	ISE : HttpStatus.INTERNAL_SERVER_ERROR,
 	BR : HttpStatus.BAD_REQUEST
 }
+var transporter = nodemailer.createTransport(smtpTransport({
+	service:'gmail',
+	auth: {
+		user: 'reach.fantumn@gmail.com', // Your email id
+		pass: 'shenbagam-6' // Your password
+	}
+}));
 
 // load all the things we need
 
@@ -338,13 +347,6 @@ var httpStatus = {
 
 
 
-var transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: 'reachinyards@gmail.com', // Your email id
-        pass: 'dev-2017' // Your password
-    }
-});
 
 //Validate username for availability
 exports.validate = function(req, res){
@@ -735,24 +737,24 @@ exports.getAllUsers = function(req, res){
 
 
 exports.getUser = function(req, res){
-	User.findOne({_id:req.body._id}, function(err, user){
+	User.findOne({id:req.body._id}, function(err, user){
 		if(err){
 			res.status(httpStatus.ISE).json({
 				status: status.FAILURE,
 				code: httpStatus.ISE,
 				data: '',
 				error: errorMsg.UNEXP_ERROR
-			})
+			});
 			return;
 		}
-		user.password = null;
+	//	user.password = null;
 		if(user == null){
 			res.status(httpStatus.BR).json({
 				status: status.FAILURE,
 				code: httpStatus.BR,
 				data: '',
 				error: errorMsg.USER_NOT_FOUND
-			})
+			});
 			return;
 		}
 		res.status(httpStatus.OK).json({
@@ -836,6 +838,25 @@ exports.getProfile = function(req, res){
 
 };
 
+//REPORT PROBLEM CONTROLLER
+
+exports.reportSuggestMail = function(req, res){
+
+	var name = req.body.name;
+	var phoneNumber = req.body.phoneNumber;
+	var email =   req.body.email;
+    var subject =  req.body.subject;
+    var content =   req.body.content;
+
+	if(subject== 'report') {
+		sendReportProblemMail(email, subject, content);
+	}
+	else{
+		sendSuggestMail(email, subject, content);
+	}
+
+};
+
 
 function encrypt(key, data){
 	console.log('encrypt called with key ' + key + ' and data :: ' + data);
@@ -865,11 +886,11 @@ function sendWelcomeMail(toAddr){
 			root: __dirname
 		});
     var mailOptions = {
-	    from: 'Inyards Pitch <noreply@inyards.com>',
-	    replyTo: 'support@inyards.com',
-	    sender: 'Inyards Pitch <noreply@inyards.com>',
+	    from: 'Fantumn <reach.fantumn@gmail.com>',
+	    replyTo: 'reach.fantumn@gmail.com',
+	    sender: 'Fantumn <reach.fantumn@gmail.com>',
 	    to: toAddr,
-	    subject: 'You are now a Pitcher!',
+	    subject: 'Welcome to Fantumn!',
 	    html: htmlstream
 	};
 	transporter.sendMail(mailOptions, function(error, info){
@@ -929,4 +950,67 @@ function sendResetPasswordMail(toAddr){
 	       return;
 	    };
 	});
+}
+
+
+// Report a problem mail
+
+function sendReportProblemMail(email,subject, content){
+
+	var mailOptions = {
+		from: email ,
+		replyTo:email,
+		sender: 'reach.fantumn@gmail.com',
+		to: 'reach.fantumn@gmail.com',
+		subject: subject,
+		text: content
+	};
+
+	transporter.sendMail(mailOptions, function(error, problem){
+		if(error){
+			console.log(error);
+			return;
+		}else{
+			console.log('Problem Mail sent: ' + problem.response);
+			res.status(httpStatus.OK).json({
+				status: status.SUCCESS,
+				code: httpStatus.OK,
+				data: problem.response ,
+				error:''
+			});
+			return;
+		};
+	});
+
+}
+
+//SUGGEST MAIL TO BE SENT
+
+function sendSuggestMail(email, subject, content){
+
+	var mailOptions = {
+		from: email ,
+		replyTo:email,
+		sender: 'reach.fantumn@gmail.com',
+		to: 'reach.fantumn@gmail.com',
+		subject: subject,
+		text: content
+	};
+
+	transporter.sendMail(mailOptions, function(error, suggestion){
+		if(error){
+			console.log(error);
+			return;
+		}else{
+			console.log('Suggest Mail sent: ' + suggestion.response);
+			res.status(httpStatus.OK).json({
+				status: status.SUCCESS,
+				code: httpStatus.OK,
+				data: suggestion.response ,
+				error:''
+			});
+			return;
+		};
+	});
+
 }

@@ -216,5 +216,8 @@ module.exports = function(app) {
 	app.post('/updateProfile', UserController.updateProfile);
 	app.get('/getProfile/:_id', UserController.getProfile);
 
+	app.post('/reportSuggest', UserController.reportSuggestMail);
+
+
 
 };

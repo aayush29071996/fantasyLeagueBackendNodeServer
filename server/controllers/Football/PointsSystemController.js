@@ -728,9 +728,11 @@ exports.getPlayerHistory = function(req, res){
 			var theHistory=[];
 			if(cards.length>0){
 			for(var i=0;i<cards.length;i++){
+
 				previousMatches.push(cards[i].match._id);
 				theHistory.push({playedOn:cards[i].match.startingDateTime, points:cards[i].matchPoints, match:cards[i].match});
-				}
+
+			      }
 			}
 			sortBy(theHistory, (s) => -new Date(s.playedOn));
 			User.find().select("-__v -_id -name -email -password -avatar -location -dob -token -status -createdOn").sort([['userPoints', 'descending']]).exec(function(allErr,all){

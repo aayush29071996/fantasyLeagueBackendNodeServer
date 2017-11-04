@@ -26,6 +26,7 @@
     "newrelic": "^1.39.1",
     "node-fs": "^0.1.7",
     "nodemailer": "^2.7.2",
+    "nodemailer-smtp-transport": "^2.7.4",
     "nodemon": "^1.11.0",
     "otp-generator": "^1.1.0",
     "request": "^2.79.0",
