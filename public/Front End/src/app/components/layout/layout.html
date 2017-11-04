@@ -1,0 +1,673 @@
+﻿<div class="row">
+    <div class="col s12 m12 l12 nopadding">
+        <div class="responsive-header col s12 m12 l12 nopadding">
+            <!--<div class="res-logo"><img src="assets/images/logo.png" alt=""></div>-->
+            <div class="header sidenav-header">
+                <div class="left valign-wrapper">
+                    <div ng-show="loginStatus">
+                        <img ng-src="{{userInfo.avatar}}" alt="user">
+                        <span>{{userInfo.username | uppercase}} </span>
+                    </div>
+                </div>
+                <div class="right">
+                    <a href="javascript:void(0)" ng-click="gotoNavigate('home')" class="home"></a>
+                    <a href="javascript:void(0)" class="setting-menu dropdown-button" ng-click="menuOpen()" ng-class="{active:sidemenu}"></a>
+                    <ul class="drop-menu dropdown-content" ng-show="sidemenu">
+                        <li ng-hide="loginStatus"><a href="javascript:void(0)" ng-click="authEnable('login')" class="waves-effect">Login</a></li>
+                        <li ng-hide="loginStatus"><a href="javascript:void(0)" ng-click="authEnable('register')" class="waves-effect">Register</a></li>
+                        <li><a href="javascript:void(0)" ng-click="openSideMenu()" class="waves-effect">Matches</a></li>
+                        <li ng-show="loginStatus"><a href="javascript:void(0)" ng-click="gotoNavigate('profile')" class="waves-effect profile">My Profile</a></li>
+                        <li ng-show="loginStatus"><a href="javascript:void(0)" ng-click="gotoNavigate('store')" class="waves-effect">Gift Store</a></li>
+                        <li><a href="javascript:void(0)" ng-click="gotoNavigate('point')" class="waves-effect">Point System</a></li>
+                        <li><a href="javascript:void(0)" ng-click="gotoNavigate('rules')" class="waves-effect">Terms & Rules</a></li>
+                        <li><a href="javascript:void(0)" ng-click="gotoNavigate('contact')" class="waves-effect">Contact Us</a></li>
+                        <li ng-show="loginStatus"><a href="javascript:void(0)" ng-click="gotoNavigate('setting')" class="waves-effect">Settings</a></li>
+                        <li ng-show="loginStatus"><a href="javascript:void(0)" ng-click="logout()" class="waves-effect">Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="responsive-sidemenutab">
+                <div class="sidenav-content cus-scroll">
+                    <div class="subloader valign-wrapper" ng-show="matchLoader">
+                        <div align="center" class="cssload-fond">
+                            <div class="cssload-container-general">
+                                <div class="cssload-internal">
+                                    <div class="cssload-ballcolor cssload-ball_1"> </div>
+                                </div>
+                                <div class="cssload-internal">
+                                    <div class="cssload-ballcolor cssload-ball_2"> </div>
+                                </div>
+                                <div class="cssload-internal">
+                                    <div class="cssload-ballcolor cssload-ball_3"> </div>
+                                </div>
+                                <div class="cssload-internal">
+                                    <div class="cssload-ballcolor cssload-ball_4"> </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="side-upcoming" ng-show="isActiveTab('upcoming')">
+                        <ul ng-if="upcomingMatch.length>0">
+                            <li ng-repeat="match in upcomingMatch | orderBy:'starts'" class="upcomingmatch waves-effect" ng-class="{ 'matchpicked' : match.picked }" ng-click="gotoPage($index,match,'upcoming',$event)" id="upcoming{{$index}}">
+                                <div>
+                                    <div class="left-container">
+                                        <img ng-src="{{match.homeLogo}}" alt="">
+                                        <p>{{match.home}}</p>
+                                    </div>
+                                    <span class="matchvs">VS</span>
+                                    <div class="right-container">
+                                        <img ng-src="{{match.awayLogo}}" alt="">
+                                        <p>{{match.away}}</p>
+                                    </div>
+                                </div>
+                                <p class="play">Play</p>
+                                <div class="timer">
+                                    <img src="assets/images/stopwatch.svg" alt="">
+                                    <span countdown='' date="{{match.starts}}"> </span>
+                                </div>
+                            </li>
+                        </ul>
+                        <div ng-show="upcomingMatch.length==0" class="no-match">
+                            <img src="assets/images/stadium.svg" alt="">
+                            <p>No Upcoming Matches Available</p>
+                        </div>
+                    </div>
+                    <div class="side-upcoming" ng-show="isActiveTab('live')">
+
+                        <ul ng-if="liveMatch.length>0">
+                            <li ng-repeat="match in liveMatch" class="upcomingmatch waves-effect" ng-click=" gotoPage($index,match,'live',$event) " id="live{{$index}}">
+                                <div>
+                                    <div class="left-container ">
+                                        <img ng-src="{{match.homeLogo}} " alt=" ">
+                                        <p>{{match.home}}</p>
+                                    </div>
+                                    <span class="matchvs">VS</span>
+                                    <div class="right-container ">
+                                        <img ng-src="{{match.awayLogo}} " alt=" ">
+                                        <p>{{match.away}}</p>
+                                    </div>
+                                </div>
+                                <div class="history-timer">
+                                    <span>Live</span>
+                                </div>
+                            </li>
+                        </ul>
+                        <div ng-show="liveMatch.length==0 " class="no-match">
+                            <img src="assets/images/stadium.svg" alt="">
+                            <p>No Live Matches Available</p>
+                        </div>
+                    </div>
+                    <div class="side-upcoming" ng-show="isActiveTab('history')">
+                        <ul ng-if="historyMatch.length>0">
+                            <li ng-repeat="match in historyMatch | orderBy : '-starts' " class="upcomingmatch waves-effect" ng-class="{ 'matchpicked' : match.picked }" ng-click=" gotoPage($index,match,'history',$event) " id="history{{$index}}">
+                                <div>
+                                    <div class="left-container ">
+                                        <img ng-src="{{match.homeLogo}} " alt=" ">
+                                        <p>{{match.home}}</p>
+                                    </div>
+                                    <span class="matchvs">VS</span>
+                                    <div class="right-container ">
+                                        <img ng-src="{{match.awayLogo}} " alt=" ">
+                                        <p>{{match.away}}</p>
+                                    </div>
+                                </div>
+                                <div class="history-timer">
+                                    <span>{{match.starts | date :'dd MMMM,yyyy'}}</span>
+                                </div>
+                            </li>
+                        </ul>
+                        <div ng-show="historyMatch.length==0 " class="no-match">
+                            <img src="assets/images/stadium.svg" alt="">
+                            <p>No Match History Available</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="sidenav-tab ">
+                    <ul>
+                        <li ng-class="{ active: isActiveTab( 'upcoming') } " ng-click="setTab( 'upcoming') " class="waves-effect waves-light ">
+                            <img src="assets/images/calender.svg " alt=" " ng-hide="isActiveTab( 'upcoming') ">
+                            <img src="assets/images/calender-active.svg " alt=" " ng-show="isActiveTab( 'upcoming') ">
+                            <span>Upcoming</span>
+                        </li>
+                        <li ng-class="{ active: isActiveTab( 'live') } " ng-click="setTab( 'live') " class="waves-effect waves-light ">
+                            <img src="assets/images/clock-circular-outline.svg " alt=" " ng-hide="isActiveTab( 'live') ">
+                            <img src="assets/images/clock-active.svg " alt=" " ng-show="isActiveTab( 'live') ">
+                            <span>Live</span>
+                        </li>
+                        <li ng-class="{ active: isActiveTab( 'history') } " ng-click="setTab( 'history') " class="waves-effect waves-light ">
+                            <img src="assets/images/history.svg " alt=" " ng-hide="isActiveTab( 'history') ">
+                            <img src="assets/images/history-active.svg " alt=" " ng-show="isActiveTab( 'history') ">
+                            <span>History</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="backdrop" ng-click="closeSideMenu()"></div>
+            </div>
+        </div>
+        <div class="col s3 m3 l3 side-navigation responsive-sidemenu nopadding">
+            <div class="sidenav-header">
+                <div>
+                    <div class="left valign-wrapper">
+                        <div ng-show="loginStatus">
+                            <img ng-src="{{userInfo.avatar}}" alt="user">
+                            <span>{{userInfo.username}} </span>
+                        </div>
+                    </div>
+                    <div class="right">
+                        <a href="javascript:void(0)" ng-click="gotoNavigate('home')" class="home"></a>
+                        <a href="javascript:void(0)" class="setting-menu dropdown-button" ng-click="menuOpen()" ng-class="{active:sidemenu}"></a>
+                        <ul class="drop-menu dropdown-content" id="menu" ng-show="sidemenu">
+                            <li ng-hide="loginStatus"><a href="javascript:void(0)" ng-click="authEnable('login')" class="waves-effect">Login</a></li>
+                            <li ng-hide="loginStatus"><a href="javascript:void(0)" ng-click="authEnable('register')" class="waves-effect">Register</a></li>
+                            <li ng-show="loginStatus"><a href="javascript:void(0)" ng-click="gotoNavigate('profile')" class="waves-effect profile">My Profile</a></li>
+                            <li ng-show="loginStatus"><a href="javascript:void(0)" ng-click="gotoNavigate('store')" class="waves-effect">Gift Store</a></li>
+                            <li><a href="javascript:void(0)" ng-click="gotoNavigate('point')" class="waves-effect">Point System</a></li>
+                            <li><a href="javascript:void(0)" ng-click="gotoNavigate('rules')" class="waves-effect">Terms & Rules</a></li>
+                            <li><a href="javascript:void(0)" ng-click="gotoNavigate('contact')" class="waves-effect">Contact Us</a></li>
+                            <li ng-show="loginStatus"><a href="javascript:void(0)" ng-click="gotoNavigate('setting')" class="waves-effect">Settings</a></li>
+                            <li ng-show="loginStatus"><a href="javascript:void(0)" ng-click="logout()" class="waves-effect">Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="sidenav-content cus-scroll">
+                <div class="subloader valign-wrapper" ng-show="matchLoader">
+                    <div align="center" class="cssload-fond">
+                        <div class="cssload-container-general">
+                            <div class="cssload-internal">
+                                <div class="cssload-ballcolor cssload-ball_1"> </div>
+                            </div>
+                            <div class="cssload-internal">
+                                <div class="cssload-ballcolor cssload-ball_2"> </div>
+                            </div>
+                            <div class="cssload-internal">
+                                <div class="cssload-ballcolor cssload-ball_3"> </div>
+                            </div>
+                            <div class="cssload-internal">
+                                <div class="cssload-ballcolor cssload-ball_4"> </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="side-upcoming" ng-show="isActiveTab('upcoming')">
+                    <ul ng-if="upcomingMatch.length>0">
+                        <li ng-repeat="match in upcomingMatch | orderBy:'starts'" class="upcomingmatch waves-effect waves-teal" ng-class="{ 'matchpicked' : match.picked }" ng-click="gotoPage($index,match,'upcoming',$event)" id="upcoming{{$index}}">
+                            <div>
+                                <div class="left-container">
+                                    <img ng-src="{{match.homeLogo}}" alt="">
+                                    <p>{{match.home}}</p>
+                                </div>
+                                <span class="matchvs">VS</span>
+                                <div class="right-container">
+                                    <img ng-src="{{match.awayLogo}}" alt="">
+                                    <p>{{match.away}}</p>
+                                </div>
+                            </div>
+                            <p class="play">Play</p>
+                            <div class="timer">
+                                <img src="assets/images/stopwatch.svg" alt="">
+                                <!--<span>{{match.starts | date :'hh:mm:ss'}}</span>-->
+                                <span countdown='' date="{{match.starts}}"> </span>
+                                <!--<span>{{returnIST(match.starts)}}</span>-->
+                            </div>
+                        </li>
+                    </ul>
+                    <div ng-show="upcomingMatch.length==0" class="no-match">
+                        <img src="assets/images/stadium.svg" alt="">
+                        <p>No Upcoming Matches Available</p>
+                    </div>
+                </div>
+                <div class="side-upcoming" ng-show="isActiveTab('live')">
+
+                    <ul ng-if="liveMatch.length>0">
+                        <li ng-repeat="match in liveMatch" class="upcomingmatch waves-effect waves-light" ng-class="{ 'matchpicked' : match.picked }" ng-click=" gotoPage($index,match,'live',$event) " id="live{{$index}}">
+                            <div>
+                                <div class="left-container ">
+                                    <img ng-src="{{match.homeLogo}} " alt=" ">
+                                    <p>{{match.home}}</p>
+                                </div>
+                                <span class="matchvs">VS</span>
+                                <div class="right-container ">
+                                    <img ng-src="{{match.awayLogo}} " alt=" ">
+                                    <p>{{match.away}}</p>
+                                </div>
+                            </div>
+                            <div class="history-timer">
+                                <span>Live</span>
+                            </div>
+                        </li>
+                    </ul>
+                    <div ng-show="liveMatch.length==0 " class="no-match">
+                        <img src="assets/images/stadium.svg" alt="">
+                        <p>No Live Match Available</p>
+                    </div>
+                </div>
+                <div class="side-upcoming" ng-show="isActiveTab('history')">
+                    <ul ng-if="historyMatch.length>0">
+                        <li ng-repeat="match in historyMatch | orderBy:'-starts'" class="upcomingmatch waves-effect waves-light" ng-class="{ 'matchpicked' : match.picked }" ng-click=" gotoPage($index,match,'history',$event) " id="history{{$index}}">
+                            <div>
+                                <div class="left-container ">
+                                    <img ng-src="{{match.homeLogo}} " alt=" ">
+                                    <p>{{match.home}}</p>
+                                </div>
+                                <span class="matchvs">VS</span>
+                                <div class="right-container ">
+                                    <img ng-src="{{match.awayLogo}} " alt=" ">
+                                    <p>{{match.away}}</p>
+                                </div>
+                            </div>
+                            <div class="history-timer">
+                                <span>{{match.starts | date :'dd MMMM,yyyy'}}</span>
+                            </div>
+                        </li>
+                    </ul>
+                    <div ng-show="historyMatch.length==0 " class="no-match">
+                        <img src="assets/images/stadium.svg" alt="">
+                        <p>No Match History Available</p>
+                    </div>
+                </div>
+            </div>
+            <div class="sidenav-tab ">
+                <ul>
+                    <li ng-class="{ active: isActiveTab( 'upcoming') } " ng-click="setTab( 'upcoming') " class="waves-effect waves-light ">
+                        <img src="assets/images/calender.svg " alt=" " ng-hide="isActiveTab( 'upcoming') ">
+                        <img src="assets/images/calender-active.svg " alt=" " ng-show="isActiveTab( 'upcoming') ">
+                        <span>Upcoming</span>
+                    </li>
+                    <li ng-class="{ active: isActiveTab( 'live') } " ng-click="setTab( 'live') " class="waves-effect waves-light ">
+                        <img src="assets/images/clock-circular-outline.svg " alt=" " ng-hide="isActiveTab( 'live') ">
+                        <img src="assets/images/clock-active.svg " alt=" " ng-show="isActiveTab( 'live') ">
+                        <span>Live</span>
+                    </li>
+                    <li ng-class="{ active: isActiveTab( 'history') } " ng-click="setTab( 'history') " class="waves-effect waves-light ">
+                        <img src="assets/images/history.svg " alt=" " ng-hide="isActiveTab( 'history') ">
+                        <img src="assets/images/history-active.svg " alt=" " ng-show="isActiveTab( 'history') ">
+                        <span>History</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col s9 m9 l9 ui-content responsive-uicontent">
+            <ui-view></ui-view>
+            <footer ng-hide="footerHide">
+                <a href="javascript:void(0);"><img src="assets/images/smartphone-call.svg" alt=""><span>We are also available on Google play store</span></a>
+            </footer>
+        </div>
+    </div>
+
+</div>
+
+<div id="auth" class="auth-container">
+    <div class="modal-content center-align">
+        <div class="close waves-effect waves-light" ng-click="closeAuth()"></div>
+        <img src="assets/images/logo.svg" alt="" class="login-logo">
+        <div class="login-container" ng-show="loginEnable">
+            <h5>Sign into your account</h5>
+            <form method="post" name="loginForm" ng-submit="login(loginForm.$valid)" novalidate>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input id="username" name="username" type="text" ng-model="user.username" required>
+                        <label for="username">Username</label>
+                        <span class="error" ng-show="(loginForm.username.$invalid && !loginForm.username.$pristine) || (loginForm.username.$error.required && loginSubmit)">Username is required</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input id="password" name="password" type="password" ng-model="user.password" required>
+                        <label for="password">Password</label>
+                        <span class="error" ng-show="(loginForm.password.$invalid && !loginForm.password.$pristine) || (loginForm.password.$error.required && loginSubmit)">Password is required</span>
+                    </div>
+                </div>
+                <div class="row right-align">
+                    <div class="input-field">
+                        <a href="javascript:void(0);" ng-click="forgotPassword()">Forgot Password?</a>
+                    </div>
+                </div>
+                <p>
+                    <input type="checkbox" class="filled-in" id="filled-in-box" checked="checked" ng-model="agree" ng-change="showTermsOfCondition()" />
+                    <label for="filled-in-box">I agree the Terms of Use</label>
+                </p>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <button type="submit" class="btn waves-effect waves-light login">LOGIN</button>
+                    </div>
+                </div>
+            </form>
+            <p>
+                OR
+            </p>
+            <button type="button" class="btn waves-effect waves-light register" ng-click="authEnable('regiter')">Register</button>
+            <!--<div class="social-login">
+                <button type="button" class="btn waves-effect waves-light fb-login" ng-click="signupWithFacebook()"></button>
+                <button type="button" class="btn waves-effect waves-light google-login" ng-click="signupWithGoogle()"></button>
+            </div>-->
+        </div>
+
+        <div class="register-container login-container" ng-show="registerEnable">
+            <h5>Signup into your account</h5>
+            <form method="post" name="registerForm" ng-submit="register(registerForm.$valid)" novalidate>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input id="email" type="email" name="email" ng-model="userDetail.email" required>
+                        <label for="user">Email</label>
+                        <span class="error" ng-show="(registerForm.email.$invalid && !registerForm.email.$pristine) || (registerForm.email.$error.required && registerSubmit)">Email is required</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input id="user" type="text" name="user" ng-model="userDetail.username" required>
+                        <label for="user">Username</label>
+                        <span class="error" ng-show="(registerForm.user.$invalid && !registerForm.user.$pristine) || (registerForm.user.$error.required && registerSubmit)">Username is required</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <!--<input id="date" type="text" name="date" ng-model="userDetail.dob" required class="datepicker" ng-change="hai()">-->
+                        <!--<input type="text" name="date" id="date" ng-model="userDetail.dob" required>-->
+                        <datepicker date-format="dd-MM-yyyy">
+                            <input type="text" name="date" id="date" ng-model="userDetail.dob" placeholder="Date of Birth" required>
+                        </datepicker>
+                        <!--<label for="date">Date of Birth</label>-->
+                        <span class="error" ng-show="(registerForm.date.$invalid && !registerForm.date.$pristine) || (registerForm.date.$error.required && registerSubmit)">DOB is required</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input id="pass" type="password" name="pass" class="validate" ng-model="userDetail.password" required>
+                        <label for="pass">Password</label>
+                        <span class="error" ng-show="(registerForm.pass.$invalid && !registerForm.pass.$pristine) || (registerForm.pass.$error.required && registerSubmit)">Password is required</span>
+                    </div>
+                </div>
+                <p class="agree">
+                    <input type="checkbox" class="filled-in" id="filled" checked="checked" ng-change="showTermsOfCondition()" ng-model="agreeRegister" />
+                    <label for="filled">I agree the Terms of Use</label>
+                </p>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <button type="submit" class="btn waves-effect waves-light login">Register</button>
+                    </div>
+                </div>
+            </form>
+            <p>
+                OR
+            </p>
+            <div class="social-login">
+                <button type="button" class="btn waves-effect waves-light register" ng-click="authEnable('login')"></button>
+                <!--<button type="button" class="btn waves-effect waves-light fb-login" ng-click="signupWithFacebook()"></button>-->
+                <!--<button type="button" class="btn waves-effect waves-light google-login" ng-click="signupWithGoogle()"></button>-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="auth-padrop" ng-show="backdrop"></div>
+
+<div class="loader-content center-align" ng-show="loader">
+    <div class='loader'>
+        <div class='loader--dot'></div>
+        <div class='loader--dot'></div>
+        <div class='loader--dot'></div>
+        <div class='loader--dot'></div>
+        <div class='loader--dot'></div>
+        <div class='loader--dot'></div>
+        <div class='loader--text'></div>
+    </div>
+</div>
+
+
+<!-- Popup -->
+
+<div class="custom-modalpopup" id="successModal">
+    <div class="custom-modalcontent">
+        <div class="circle-loader">
+            <div class="checkmark draw"></div>
+        </div>
+        <h4>Awesome !</h4>
+        <p>{{message}}</p>
+        <button type="button" class="success-btn waves-effect waves-light" ng-click="sucesssClose()">Continue Play</button>
+    </div>
+    <p></p>
+</div>
+
+
+<div class="custom-modalpopup" id="errorModal">
+    <div class="custom-modalcontent">
+        <div class="f-modal-alert">
+            <div class="f-modal-icon f-modal-error animate">
+                <span class="f-modal-x-mark">
+			<span class="f-modal-line f-modal-left animateXLeft"></span>
+                <span class="f-modal-line f-modal-right animateXRight"></span>
+                </span>
+                <div class="f-modal-placeholder"></div>
+                <div class="f-modal-fix"></div>
+            </div>
+        </div>
+        <h4>Error !</h4>
+        <p>{{message}}</p>
+        <button type="button" class="error-btn waves-effect waves-light" ng-click="errorClose()">Continue Play</button>
+    </div>
+
+</div>
+
+<div class="custom-modalpopup" id="warningModal">
+    <div class="custom-modalcontent">
+        <div class="f-modal-alert">
+            <div class="f-modal-icon f-modal-warning scaleWarning">
+                <span class="f-modal-body pulseWarningIns"></span>
+                <span class="f-modal-dot pulseWarningIns"></span>
+            </div>
+        </div>
+        <h4>Warning !</h4>
+        <p>{{message}}</p>
+        <button type="button" class="warning-btn waves-effect waves-light" ng-click="closeWarning()">Continue Play</button>
+    </div>
+</div>
+
+<div class="custom-backdrop" ng-show="customLoader"></div>
+
+<div class="terms-modalpopup" id="termsCondition">
+    <h4>Terms of Use</h4>
+    <div class="terms-modalcontent cus-scroll">
+        <div class="terms">
+            <h5>Fantumn Terms of Service as of 15th October,2017</h5>
+            <p>References to “us”, “our” or “we” are references to Orange Studios (fantumn.com and fantumn mobile app) , a company registered in India with the office located at PSG STEP, PSG college of technology, Peelamedu, Coimbatore, 641004.
+            </p>
+            <p>Orange studios provides a fantasy sports website located at <a href="fantumn.com" target="_blank">fantumn.com</a> and a related mobile app, available on Android and iOS, which include all of the text, images, audio, code and other material
+                they contain or provide and all of the features, contests and other services they provide.</p>
+            <p>The website <a href="fantumn.com" target="_blank">www.fantumn.com</a>, the mobile app, and any other features, tools, materials, or other services (including co-branded or affiliated services) offered from time to time by Fantumn are referred
+                to here as the “Service.” Please read these “Terms of Service” carefully before using. By using or otherwise accessing the Services, or clicking to accept or agree to these Terms where that option is made available, you (1) accept and
+                agree to these Terms and our additional Rules and Scoring system and (2) consent to the collection, use, disclosure and other handling of information as described in our Privacy Policy and (3) any additional terms, rules and conditions
+                of participation in particular contests issued by Fantumn from time to time. If you do not agree to the Terms, then you may not access or use the website or the mobile app by any means.
+            </p>
+            <p>The Game, the Website and the App make up the services we provide (“Services”). The Game consists of fantasy football that are completely free of charge. You are bound to play within the rules and regulations, and terms and conditions of play
+                as specified.</p>
+            <p>Fantumn’s prediction platform / fantasy football shall be deemed to the judges and Fantumn’s decision in all matters relating to the gameplay shall be Final.</p>
+            <p>Fantumn may issue additional terms, rules and conditions related to use of the App and to participation in particular contests available on the App. You agree to be subject to them if you participate in such contests.
+            </p>
+            <h5>1. Account Creation</h5>
+            <p>To use our Services, you need to register and open an account with us (“Account”). You can open an Account through “Social authentication” or through “Phone number authentication” on our websites or mobile applications. There are no ordinary
+                set-up charges for opening an Account with us. When you open your Account, you will be asked to provide personal information, including (but not limited to) your first and last name, postal address, email address, date of birth and telephone
+                number. You shall ensure that the details provided by you at registration are accurate and kept up to date. You can change some of your details at any time by editing your “Account preferences” in “Settings menu” using the facility provided
+                on our websites. For further information about our collection and use of your personal information, please refer to our Privacy policy.
+            </p>
+            <h5>2. Eligibility</h5>
+            <p>You hereby represent and warrant that you are fully able and competent to enter into the terms, conditions, obligations, affirmations, representations and warranties set forth in these terms and to abide by and comply with these terms.
+            </p>
+            <ul>
+                <li>Age limit: 18 years. Anyone below limit are not allowed to use the Services.
+                </li>
+                <li>Location: Residents of India. Anyone outside of India are prohibited from using the Services</li>
+                <li>Fantumn may, in accordance with the laws prevailing in certain Indian states, bar individuals residing in those states from participating in the Services.
+                </li>
+                <li>Persons who wish to participate must have a valid “email address or phone number”.
+                </li>
+                <li>Only those Participants who have successfully registered on the Fantumn as well as registered prior to each round in accordance with the procedure outlined above shall be eligible to participate in the gameplay and win prizes.
+                </li>
+            </ul>
+            <p>If Fantumn determines that you do not meet the eligibility requirements of this section, then you are not authorized to use the Services. Fantumn may require you to provide proof that you are eligible to participate according to this section
+                prior to receiving a prize. This includes by requesting that you fill out an affidavit of eligibility or other verification information. If Fantumn otherwise determines that you do not meet the eligibility requirements of this section,
+                in addition to any rights that Fantumn may have in law or equity, Fantumn reserves the right to terminate your account, withhold or revoke the awarding of any prizes associated with your account. In such a situation, Fantumn may pay out
+                any withheld or revoked prizes to the other entrants in the relevant contest in a manner consistent with the prize structure of the contest, to be precisely determined by Fantumn in its sole discretion. Fantumn also reserves the right
+                to withhold revoked prizes to use in furtherance of its fraud prevention efforts. Fantumn employees may use the Service for the purpose of testing the user experience, but may not receive prizes. Relatives of Fantumn employees with whom
+                they share a household are not eligible to receive prizes. Fantumn consultants or promoters of the Service may use the App and/or play in contests without such limitation, but only if (i) their arrangement with Fantumn does not permit
+                them to have any access to non-public Service data or any other data not made available to all players on the Service and (ii) they do not receive any other advantages in their play on the Service. Anyone, he/she, who are related to any
+                of the fantasy sports products or the fantasy sports / predict industry are prohibited to use the fantumn and Fantumn related services, this is in concern with the fair play conditions.
+            </p>
+            <h5>3. Communication from Fantumn</h5>
+            <p>As a result of your registration for the Service, you may receive certain commercial communications from Fantumn. You understand and agree that these communications are part of your registration, and that, to the extent required by law, you
+                may opt out of receiving these communications at any time by either using the unsubscribe functionality or sending an email to “help@fantumn.com”. Following such an opt-out, we may still communicate with you via email to the extent permitted
+                by applicable law, including without limitation updates to these Terms of Use. Opting out may cause you to miss announcements regarding the Service, results, prizes and other information.
+            </p>
+            <h5>4. Cancellation and Disqualification</h5>
+            <p>Fantumn also reserves the right to cancel contests, in our sole discretion, without any restrictions.
+            </p>
+            <p>Fantumn, in its sole discretion, may disqualify you from a contest or the entire Service, refuse to award fantasy points or prizes and require the return of any prizes, or suspend, limit, or terminate your account if you engage in conduct
+                Fantumn deems, in its sole discretion, to be improper, unfair, fraudulent or otherwise adverse to the operation of the Services or in any way detrimental to other users. Improper conduct includes, but is not limited to: falsifying personal
+                information required to use the Service or claim a prize; accumulating points or prizes through unauthorized methods such as automated scripts or other automated means; tampering with the administration of the Service or trying to in any
+                way tamper with the computer programs associated with the Service; obtaining other entrants’ information and spamming other entrants; abusing the Service in any way; or otherwise violating these Terms of Service. You acknowledge that the
+                forfeiture and/or return of any prize shall in no way prevent Fantumn from informing the relevant authorities, and/or pursuing criminal or civil proceedings in connection with such conduct.
+            </p>
+            <p>If for any reason the Service is not running as originally planned (e.g., if the Service becomes corrupted or does not allow the proper usage and processing of entries in accordance with the rules, or if infection by a computer virus, bugs,
+                tampering, unauthorized intervention, actions by entrants, fraud, technical failures, or any other causes of any kind, in the sole opinion of Fantumn corrupts or affects the administration, security, fairness, integrity or proper conduct
+                of the Service), Fantumn reserves the right, in its sole discretion, to disqualify any individual implicated in or relating to the cause and/or to cancel, terminate, extend, modify or suspend the Service, and select the winner(s) from
+                all eligible entries received. If such cancellation, termination, modification or suspension occurs, notification may be posted on the Service or Site.</p>
+            <p>The failure of Fantumn to comply with any provision of these Terms due to an act of God, hurricane, war, fire, riot, earthquake, terrorism, act of public enemies, actions of governmental authorities outside of the control of Fantumn (excepting
+                compliance with applicable codes and regulations) or other force event will not be considered a breach of these Terms.
+            </p>
+            <h5>5. Marketing use</h5>
+            <p>Entrants agree that Fantumn may announce any winner’s name on-air or on any of its websites or any other location at any time in connection with the marketing and promotion of Fantumn or other contests or games operated by Fantumn. You agree
+                that participation in and (where applicable) the winning of a prize in connection with a contest constitute complete compensation for your obligations under this paragraph, and you agree not to seek to charge a fee or impose other conditions
+                on the fulfillment of these obligations. The rules specific to certain contests may contain additional publicity obligations or may require a written signature on a separate publicity waiver.
+            </p>
+            <h5>6. Prizes / Gifts</h5>
+            <p>After each contest ends, the tentative winners are announced (generally by the following day) but remain subject to final verification. The players in each contest who accumulate the most points and comply with eligibility requirements and
+                applicable rules will win prizes as set out in the posted contest details. In the event of a tie, the prize is divided evenly between the tied players, or similar prizes of equal value are provided to the tied players, unless otherwise
+                specified.
+            </p>
+            <p>Prize calculations are based on the results as of the time when final scoring is tabulated by Fantumn. Once winners are initially announced by Fantumn, the scoring results will not be changed in light of official adjustments made by the professional
+                leagues, though we reserve the right to make adjustments based on errors or irregularities in the transmission of information to us from our stats provider or in our calculation of results. We also may make adjustments in the event of
+                noncompliance with the Terms. Fantumn has no obligation to delay the awarding of a prize in anticipation of any adjustment.
+            </p>
+            <p>No substitution or transfer of a prize is permitted. All taxes associated with the receipt or use of any prize are the sole responsibility of the winner. In the event that the awarding of any prizes to winners of the Contest is challenged
+                by any legal authority, Fantumn reserves the right in its sole discretion to determine whether or not to award or adjust such prizes. In all disputes arising out of the determination of the winner of Fantumn contests, Fantumn actions are
+                final and binding.</p>
+            <p>Once winners are initially announced by Fantumn, the scoring results will not be changed in light of official adjustments made by the professional leagues, though we reserve the right to make adjustments based on errors or irregularities in
+                the transmission of information to us from our stats provider or in our calculation of results.
+            </p>
+            <p>Winners are generally posted on the official Fantumn’s Facebook page after the conclusion of each contest. Winners may also be notified by email. Winners may be requested to return via email or regular mail an affidavit of eligibility, a publicity
+                agreement and appropriate tax forms by a specified deadline. Failure to comply with this requirement can result in disqualification. Any prize notification returned as undeliverable may result in disqualification and selection of an alternate
+                winner. In addition, a list of winners names and winner’s name for each competition period may be obtained by writing to: “admin@Fantumn.com”
+            </p>
+            <h5>7. Use of Services</h5>
+            <p> We reserve the right to suspend, modify, remove and/or add a product to the Services in our sole discretion with immediate effect and without notice.
+            </p>
+            <p>You must not misuse our websites by knowingly introducing viruses, trojans, worms, logic bombs or other material which is malicious or technologically harmful. You must not attempt to gain unauthorised access to: our websites; the servers
+                on which our websites are stored; or, any server, computer or database connected to our websites, or mobile applications. We will report any such breach to the relevant law enforcement authorities and we will co-operate with those authorities
+                by disclosing your identity to them.
+            </p>
+            <p>You agree that you will not use the Services in any way that may lead to the encouragement, procurement or carrying out of any criminal or unlawful activity, or cause distress, harm or inconvenience to any other person.
+            </p>
+            <p>You agree that you will not use the Services in any way other than for your personal use and for your own benefit. You agree not to abuse, harass, impersonate, intimidate or threaten other Fantumn users.
+            </p>
+            <p>You agree not to post or transmit, or cause to be posted or transmitted, any Content that are infringing, libelous, defamatory, abusive, offensive, obscene, pornographic or otherwise violates any law or right of any third party.
+            </p>
+            <p>You agree not to use the Service for any unauthorized purpose, or in violation of any applicable law, including intellectual property laws.
+            </p>
+            <p>You agree not to post or transmit, or cause to be posted or transmitted, any communication or solicitation designed or intended to obtain password, account, or private information from any Fantumn user. You agree not to create or submit unwanted
+                email (“Spam”) to any other Fantumn users.
+            </p>
+            <p>You agree not to infringe upon the intellectual property rights of Fantumn, its users, or any third party; submit comments linking to affiliate programs, multi-level marketing schemes, sites repurposing existing stories or off-topic content.
+            </p>
+            <p>You agree not to give any indication that you have any commercial relationship with us or that you are our agent.
+            </p>
+            <p>The information which we or third parties provide (including results, statistics, fixture lists, odds and betting figures) on our websites and Services is for your personal use only and the distribution or commercial exploitation of such information
+                by you is strictly prohibited. We do not give any commitment in relation to the uninterrupted provision of such information, its accuracy or the results obtained through its use. No information which we or third parties provide on our
+                websites and Services is intended to amount to advice or recommendations and is provided for information purposes only.
+            </p>
+            <p>We do not guarantee which products will be available on our Services. The Services are provided on an ‘as is’ and ‘as available’ basis. We cannot promise that the Services will be free from errors or omissions nor that they will be available
+                uninterrupted and in a fully operating condition.
+            </p>
+            <p>We will provide the Services with the reasonable skill and care as described in these Terms and Conditions. We do not make any other promises about how the Services will be provided.</p>
+            <p>We receive commentaries, news feeds, scores and other content from a number of third parties, which may carry terms and conditions governing their use. We do not accept any liability in respect of such content. Where the Services link to third
+                party websites, content and resources this does not constitute an endorsement by us of that third party’s website or their products or services and we do not accept any liability in respect of your use of such sites.
+            </p>
+            <p>We will make all reasonable efforts to ensure the accuracy of the Game information on the Website and App and to update such information on a regular basis, but we cannot guarantee that such information will be accurate or up-to-date at all
+                times.
+            </p>
+            <p>You agree not to use artificial means, including creating multiple user accounts, to inflate your position and standing with the Fantumn leader boards and community.
+            </p>
+            <p>You agree not to advertise to, or solicit, any user to buy or sell any products or service, or use any information obtained from the Service in order to contact, advertise to, solicit, or sell to users without their prior explicit consent.
+            </p>
+            <p>You agree not to sell or otherwise transfer your profile. You agree not to Violation of our rules may result in the removal of your Content from the Service and/or the cancelling of your account. You acknowledge and agree that Fantumn may
+                remove any User Content (as defined below) and terminate any Fantumn account at any time for any reason (including, but not limited to, upon receipt of claims or allegations from third parties or authorities relating to such User Content).
+                To report Terms of Use violations, please contact us.</p>
+            <h5>8. Indemnity</h5>
+            <p>You agree to release and to indemnify, defend and hold harmless Fantumn and its parents, subsidiaries, affiliates and agencies, as well as the officers, directors, employees, shareholders and representatives of any of the foregoing entities,
+                from and against any and all losses, liabilities, expenses, damages, costs (including attorneys’ fees and court costs) claims or actions of any kind whatsoever arising or resulting from your use of the Service, your violation of these
+                Terms of Use, your receipt, ownership, use or misuse of any prize, and any of your acts or omissions that implicate publicity rights, defamation or invasion of privacy. Fantumn reserves the right, at its own expense, to assume exclusive
+                defence and control of any matter otherwise subject to indemnification by you and, in such case, you agree to cooperate with Fantumn in the defence of such matter.
+            </p>
+            <h5>9. Fraud and Cheating</h5>
+            <p>We will not tolerate fraudulent activity or cheating. If, we consider that you have used the Services in an unfair manner or have deliberately taken unfair advantage of us, any game on our website (including the exploitation of a fault, loophole
+                or error in our or any third party’s software used in connection with the Services or any game on our website), attempted to defraud us, any other customer or any person in any way, including (but not limited to) payment fraud, forgery,
+                collusion, cheating and the provision of false registration data or any other fraudulent activity or prohibited transaction (including but not limited to money laundering), we reserve the right to suspend and/or close your Account, withhold
+                any or all winnings and share information (together with your identity) with the police and other appropriate authorities.
+            </p>
+            <h5>10. Intellectual Property
+            </h5>
+            <p>All intellectual property rights in our website, and mobile applications and all material and/or content made available on the Services (including but not limited to rights in the products and services offered, all code, software, animations,
+                graphics, music, sound, photographs, video content or text, and the selection and arrangement thereof) or otherwise by us shall remain at all times our property or the property of our third party licensors.
+            </p>
+            <p>The names, images and logos identifying us, our partners or third parties and our/their products and services contained in our websites, interactive TV service and mobile applications are proprietary marks and may not be reproduced or otherwise
+                used without express permission.
+            </p>
+            <p>Nothing contained in these Terms and Conditions shall be construed as conferring by implication any licence or right to use any trade mark, patent, design right or copyright that belongs to us or any third party.</p>
+            <p>No information may be reproduced in any format from our Services without prior written consent from Fantumn. Informative and explanatory copy, including the scoring system and rules, forms a part of the terms and conditions of the Game.
+            </p>
+            <h5>11. Live Scoring</h5>
+            <p>During all eligible matches, Managers can view the progress of their Fantasy Football Team and view live update commentary on the Game Website and App. Team scores will automatically update in accordance with the Game’s scoring parameters
+                as an event occurs in real-life games. Live score updates should be regarded as indicative only and classified score updates will be applied to all teams later in the day following completion of a day’s eligible matches and these may vary
+                from scores indicated in the live score updates. Live scores are powered by the live data feed and assessment from SPORTMONKS . Classified scores are verified by Fantumn following assessment from a range of data sources. In all instances,
+                the classified scores will be the scores that will apply to the Game and leader boards. Where the live scores vary from the classified scores, the decision of Fantumn Fantasy will be final and no correspondence will be entered into.
+            </p>
+            <h5>12. Limited Liability</h5>
+            <p>You acknowledge and agree that you assume full responsibility for your use of the site and service. You acknowledge and agree that any information you send or receive during your use of the site and service may not be secure and may be intercepted
+                or later acquired by unauthorised parties. You acknowledge and agree that your use of the site and service is at your own risk. Recognising such, you understand and agree that, to the fullest extent permitted by applicable law, neither
+                Fantumn nor its suppliers or licensors will be liable to you for any direct, indirect, incidental, special, consequential, punitive, exemplary or other damages of any kind, including without limitation damages for loss of profits, goodwill,
+                use, data or other tangible or intangible losses or any other damages based on contract, tort, strict liability or any other theory (even if Fantumn had been advised of the possibility of such damages), resulting from the site or service;
+                the use or the inability to use the site or service; unauthorised access to or alteration of your transmissions or data; statements or conduct of any third party on the site or service; any actions we take or fail to take as a result of
+                communications you send to us; any incorrect, illegible, misdirected, stolen, invalid or inaccurate entry information; human errors; technical malfunctions; failures, including public utility or telephone outages; omissions, interruptions,
+                latency, deletions or defects of any device or network, providers, or software (including, but not limited to, those that do not permit an entrant to participate in the service); any injury or damage to computer equipment; inability to
+                fully access the site or service or any other website; theft, tampering, destruction, or unauthorised access to, or alteration of, entries, images or other content of any kind; data that is processed late or incorrectly or is incomplete
+                or lost; typographical, printing or other errors, or any combination thereof; or any other matter relating to the site or service. notwithstanding anything to the contrary contained herein, Fantumn’s liability to you for any cause whatsoever
+                and regardless of the form of the action, will at all times be limited to the lesser of (a) the amount paid, if any, by you to Fantumn for general use of the site or service during the term of your registration for the site, or (b) INR
+                50,000.
+            </p>
+            <h5>13. External Links</h5>
+            <p>The Service provides, or third parties may provide, links to other World Wide Web sites, applications or resources. Because Fantumn has no control over such sites, applications and resources, you acknowledge and agree that Fantumn is not responsible
+                for the availability of such external sites, applications or resources, and does not endorse and is not responsible or liable for any content, advertising, products or other materials on or available from such sites or resources. You further
+                acknowledge and agree that Fantumn shall not be responsible or liable, directly or indirectly, for any damage or loss caused or alleged to be caused by or in connection with use of or reliance on any such content, goods or services available
+                on or through any such site or resource.
+            </p>
+            <h5>14. License to Services</h5>
+            <p>Subject to your compliance with these Terms, Fantumn grants you a limited non-exclusive, non-transferable license to download and install a copy of the app on a device that you exclusively control and to run such copy of the app solely for
+                your own personal use. Fantumn reserves all rights in and to the app not expressly granted to you under these Terms. You will not run any version of the app on a jailbroken device.
+            </p>
+            <p>If you have downloaded our app, you agree to promptly download and install any new version that we make available through the Apple App Store and Google Play store, as applicable. Some new versions may contain updated Terms. Some new versions
+                may contain security fixes and service improvements, whether or not we disclose that they do; accordingly, failure to promptly update your version of the App may in some cases expose you to increased security risks or Service malfunctions.
+            </p>
+            <h5>15. No Gambling or Betting</h5>
+            <p>Fantumn, not in any way is directly or indirectly linked to betting or gambling. Users, if found guilty, using the Services for private betting or gambling will be removed immediately with or without prior notice.
+            </p>
+            <p>Fantumn is purely a Game of Skill. Users predict the outcomes for future events.
+            </p>
+            <h5>16. Indian Law</h5>
+            <p>This Service and the Terms and Conditions shall be governed in all respects by the laws of India and the courts in India shall have exclusive jurisdiction in respect of any dispute arising under these Terms and Conditions. Each entrant is
+                fully responsible for ensuring that his/her participation in the Service is lawful in accordance with the laws of India. None of the Specified Companies, their servants or agents make any representations, express or implied, in relation
+                to any entrant’s participation in a Service.</p>
+            <h5>17. Modifications</h5>
+            <p>Fantumn may revise these terms of service for its Services at any time without notice. By using this website you are agreeing to be bound by the then current version of these terms of service. </p>
+        </div>
+        <button type="button" class="warning-btn waves-effect waves-light" ng-click="closeTermsOfCondition()">Close</button>
+    </div>
+</div>

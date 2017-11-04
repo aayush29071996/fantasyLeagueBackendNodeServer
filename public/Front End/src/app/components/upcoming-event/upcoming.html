@@ -1,0 +1,226 @@
+<div class="col s12 m12 l12">
+    <div class="col s9 m9 l9 clear-float responsive-width">
+        <div class="upcoming-schedule">
+            <div class="upcoming-fixture">
+                4-3-3
+            </div>
+            <div class="clear-float">
+                <div class="left-container">
+                    <img ng-src="{{matchDetails.homeLogo}}" alt="">
+                    <p>{{matchDetails.home}}</p>
+                </div>
+                <span class="upcoming-match">VS</span>
+                <div class="right-container">
+                    <p>{{matchDetails.away}}</p>
+                    <img ng-src="{{matchDetails.awayLogo}}" alt="">
+                </div>
+                <div class="upcoming-event">
+                    <img src="assets/images/stopwatch.svg" alt="">
+                    <span countdown='countdown' date="{{countdown}}"> </span>
+                </div>
+
+            </div>
+        </div>
+        <div class="upcoming-scheduleEvent">
+            <div class="upcoming-tab">
+                <div class="prev-slide" ng-click="slider('prev')">
+                    <img src="assets/images/left-arrow.svg" alt="">
+                </div>
+                <ul class="upComingPadding">
+                    <li><a href="javascript:void(0);" ng-click="navigateTab('all')" ng-class="{ active : navigateActiveTab( 'all') }">All</a></li>
+                    <li><a href="javascript:void(0);" ng-click="navigateTab('def')" ng-class="{ active : navigateActiveTab( 'def') }">Defender</a></li>
+                    <li><a href="javascript:void(0);" ng-click="navigateTab('mid')" ng-class="{ active : navigateActiveTab( 'mid') }">Midfielder</a></li>
+                    <li><a href="javascript:void(0);" ng-click="navigateTab('fk')" ng-class="{ active : navigateActiveTab( 'fk') }">Forward</a></li>
+                    <li><a href="javascript:void(0);" ng-click="navigateTab('gk')" ng-class="{ active : navigateActiveTab( 'gk') }">GK</a></li>
+                </ul>
+                <div class="next-slide" ng-click="slider('next')">
+                    <img src="assets/images/right-arrow.svg" alt="">
+                </div>
+            </div>
+            <div class="upcoming-section">
+                <div class="match-header matchfix-padding" ng-hide="navigateActiveTab( 'all') ">
+                    <ul>
+                        <li>Team</li>
+                        <li>Player Name</li>
+                        <li>Previous Match Points</li>
+                    </ul>
+                </div>
+                <div class="match-header match-headerAll matchfix-padding" ng-show="navigateActiveTab('all')">
+                    <ul>
+                        <li>Team</li>
+                        <li>Player Name</li>
+                        <li>Previous Match Points</li>
+                        <li>Player Position</li>
+                    </ul>
+                </div>
+                <div class="match-section allplay" ng-show="navigateActiveTab('all')">
+
+                    <ul>
+                        <li ng-repeat="player in allPlayers" class="matchfix-padding" ng-class="{active: player.status}" ng-click="addPlayer(player,$index,'all')">
+                            <div>
+                                <span ng-if="player.teamId == home.id">{{home.name}}</span>
+                                <span ng-if="player.teamId == away.id">{{away.name}}</span>
+                            </div>
+                            <div>{{player.name}}</div>
+                            <div><span class="matchfixpoint">{{player.points.totalPoints}} </span></div>
+                            <div>{{player.positionPlay}}</div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="match-section defplay cusscroll" ng-show="navigateActiveTab('def')" ng-class="{cusscroll :defendPlayers.length<9 }">
+                    <ul>
+                        <li ng-repeat="player in allPlayers | filter : 'DEF' " class="matchfix-padding" ng-class="{active: player.status}" ng-click="addPlayer(player,$index,'def')">
+                            <div>
+                                <span ng-if="player.teamId == home.id">{{home.name}}</span>
+                                <span ng-if="player.teamId == away.id">{{away.name}}</span>
+                            </div>
+                            <div>{{player.name}}</div>
+                            <div><span class="matchfixpoint">{{player.points.totalPoints}}</span></div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="match-section midplay cusscroll" ng-show="navigateActiveTab('mid')" ng-class="{cusscroll :midPlayers.length<9 }">
+                    <ul>
+                        <li ng-repeat="player in allPlayers | filter : 'MID' " class="matchfix-padding" ng-class="{active: player.status}" ng-click="addPlayer(player,$index,'mid')">
+                            <div>
+                                <span ng-if="player.teamId == home.id">{{home.name}}</span>
+                                <span ng-if="player.teamId == away.id">{{away.name}}</span>
+                            </div>
+                            <div>{{player.name}}</div>
+                            <div><span class="matchfixpoint">{{player.points.totalPoints}}</span></div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="match-section fkplay cusscroll" ng-show="navigateActiveTab('fk')" ng-class="{cusscroll :9>forwardPlayers.length }">
+                    <ul>
+                        <li ng-repeat="player in allPlayers | filter : 'FW' " class="matchfix-padding" ng-class="{active: player.status}" ng-click="addPlayer(player,$index,'fk')">
+                            <div>
+                                <span ng-if="player.teamId == home.id">{{home.name}}</span>
+                                <span ng-if="player.teamId == away.id">{{away.name}}</span>
+                            </div>
+                            <div>{{player.name}}</div>
+                            <div><span class="matchfixpoint">{{player.points.totalPoints}}</span></div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="match-section gkplay cusscroll" ng-show="navigateActiveTab('gk')" ng-class="{cusscroll :9>goalKeeperPlayers.length }">
+                    <ul>
+                        <li ng-repeat="player in allPlayers | filter : 'GK' " class="matchfix-padding" ng-class="{active: player.status}" ng-click="addPlayer(player,$index,'gk')">
+                            <div>
+                                <span ng-if="player.teamId == home.id">{{home.name}}</span>
+                                <span ng-if="player.teamId == away.id">{{away.name}}</span>
+                            </div>
+                            <div>{{player.name}}</div>
+                            <div><span class="matchfixpoint">{{player.points.totalPoints}} </span></div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <ul class="match-custom-btn">
+                <li class="btn waves-effect waves-light" ng-click="reviewTeam()">Review</li>
+                <li ng-hide="matchStatus" class="btn waves-effect waves-light addteam" ng-click="addTeam()"><span>Submit</span></li>
+                <li ng-show="matchStatus" class="btn waves-effect waves-light addteam" ng-click="addTeam()"><span>Update</span></li>
+                <li>{{playerList.length}}/11</li>
+            </ul>
+        </div>
+    </div>
+    <p class="upcoming-logic">Logic: Select 2 players from one team and another player from other team.</p>
+
+    <div class="footer">
+        <a href="javascript:void(0);"><img src="assets/images/smartphone-call.svg" alt=""><span>We are also available on Google play store</span></a>
+    </div>
+    <div class="review-section" ng-show="review">
+        <button type="button" class="close" ng-click="reviewClose()"></button>
+        <div class="social-share">
+            <!--<button type="button" class="fb-share" ng-click="socialShare('facebook')"></button>-->
+            <!--<button type="button" class="twitter-share" ng-click="socialShare('twitter')"></button>-->
+            <!--<button type="button" class="insta-share" ng-click="socialShare('insta')"></button>-->
+            <button type="button" class="download-share" ng-click="socialShare('download')"></button>
+        </div>
+        <img src="assets/images/football-ground.svg" alt="" class="floor">
+        <div class="review-content">
+            <div class="review-slider">
+                <div class="review-gk">
+                    <div class="review-gk-content" ng-repeat="player in gkReview">
+                        <img ng-src="{{player.image}}">
+                        <p>{{player.name}}</p>
+                    </div>
+                </div>
+                <div class="review-def">
+                    <ul>
+                        <li ng-repeat="player in defReview" id="defPlayer{{$index}}" ng-class="{ defSingle: defReview.length == 1 }">
+                            <img ng-src="{{player.image}}">
+                            <p>{{player.name}}</p>
+                        </li>
+                    </ul>
+                </div>
+                <div class="review-mid">
+                    <ul>
+                        <li ng-repeat="player in midReview" id="midplayer{{$index}}" ng-class="{ midSingle : midReview.length == 1}">
+                            <img ng-src="{{player.image}}">
+                            <p>{{player.name}}</p>
+                        </li>
+                    </ul>
+                </div>
+                <div class="review-fw">
+                    <ul>
+                        <li ng-repeat="player in fwReview" id="fwdplayer{{$index}}" ng-class="{ fwdSingle : fwReview.length== 1}">
+                            <img ng-src="{{player.image}}">
+                            <p>{{player.name}}</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="snapshot" style="display:none">
+    <section>
+        <div class="snap" id="snap">
+            <img src="assets/images/ground_template.png" alt="">
+            <div class="snapshot-content">
+                <div class="snapshot-slide">
+                    <div class="snapshot-gf">
+                        <div ng-repeat="player in gkReview">
+                            <img ng-src="{{player.image}}">
+                            <p>{{player.name}}</p>
+                        </div>
+                    </div>
+                    <div class="snapshot-def">
+                        <ul>
+                            <li ng-repeat="player in defReview" id="snapDef{{$index}}" ng-class="{ defSingle: defReview.length == 1 }">
+                                <img ng-src="{{player.image}}">
+                                <p>{{player.name}}</p>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="snapshot-mid">
+                        <ul>
+                            <li ng-repeat="player in midReview" id="snapMid{{$index}}" ng-class="{ midSingle : midReview.length == 1}">
+                                <img ng-src="{{player.image}}">
+                                <p>{{player.name}}</p>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="snapshot-fw">
+                        <ul>
+                            <li ng-repeat="player in fwReview" id="snapFwd{{$index}}" ng-class="{ fwdSingle : fwReview.length== 1}">
+                                <img ng-src="{{player.image}}">
+                                <p>{{player.name}}</p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<div id="img-out" style="display:none"></div>
+<a download="pitch.png" style="display: none" id="downloadPitch">download</a>
+<a href="#" style="display: none;" id="twitterShare" socialshare socialshare-provider="twitter" socialshare-hashtags="fantumn, football, League" socialshare-url="http://720kb.net">
+Share me
+</a>
+
+<a href="#" id="fbShare" socialshare socialshare-provider="facebook" socialshare-caption="Fantumn"> </a>

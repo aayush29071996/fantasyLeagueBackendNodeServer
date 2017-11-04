@@ -1,0 +1,53 @@
+<div class="col s12 m12 l12">
+    <div class="col s9 m9 l9 clear-float responsive-width">
+        <div class="live-matchSchedule">
+            <div class="leaderboard">leaderboard</div>
+            <div class="live-leftSection history-event">
+                <img ng-src="{{matchDetails.homeLogo}}" alt="">
+                <p>{{matchDetails.home}}<span class="match-result">{{matchDetails.homeScore}}</span></p>
+            </div>
+            <span class="live-match">VS</span>
+            <div class="live-rightSection right-align history-event">
+                <p> <span class="match-result">{{matchDetails.awayScore}}</span>{{matchDetails.away}}</p>
+                <img ng-src="{{matchDetails.awayLogo}}" alt="">
+            </div>
+            <span class="history-time">Full Time</span>
+        </div>
+        <div class="live-play">
+            <ul ng-repeat="play in historyScore | orderBy :'-matchPoints' " ng-show="userData.username == play.user.username">
+                <li>
+                    <p>{{$index+1}}</p>
+                </li>
+                <li>
+                    <p>{{play.user.username}}</p>
+                </li>
+                <li>
+                    <p>{{play.matchPoints}}</p>
+                </li>
+            </ul>
+            <p ng-if="userScore.length == 0" class="nodata">Sorry, you did not play this match</p>
+            <p ng-if="noScore" class="nodata">Sorry, you did not play this match</p>
+        </div>
+        <div class="live-result">
+            <div class="live-header">
+                <ul>
+                    <li>Rank</li>
+                    <li>Player Name</li>
+                    <li>Points Scored</li>
+                </ul>
+            </div>
+            <div class="liveMatch-section" ng-class="{cusscroll: historyScore.length>8}">
+                <ul ng-if="historyScore.length>0">
+                    <li ng-repeat="play in historyScore | orderBy :'-matchPoints'">
+                        <div>{{$index+1}}</div>
+                        <div>{{play.user.username}}</div>
+                        <div>{{play.matchPoints}}</div>
+                    </li>
+                </ul>
+                <div ng-if="historyScore.length==0" class="no-record">
+                    <img src="assets/images/noPlayer.svg" alt="">
+                    <p>No User Play this Match</p>
+                </div>
+            </div>
+        </div>
+    </div>

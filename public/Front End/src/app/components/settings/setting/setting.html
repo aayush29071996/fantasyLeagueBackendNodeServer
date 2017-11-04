@@ -1,0 +1,128 @@
+<div class="col s12 m12 l12">
+    <div class="col s9 m9 l9 clear-float responsive-width">
+        <h4 class="contact-title">Settings</h4>
+        <div class="col s12 m12 l12 nopadding">
+            <div class="col s12 m6 l6">
+                <div class="setting-bar right-align">
+                    <span class="label">Notifications</span>
+                    <label class="switch">
+                        <input type="checkbox" ng-model="profileInfo.notification">
+                        <span class="switch-slider round"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="col s12 m6 l6 ">
+                <div class="setting-bar">
+                    <a href="javascript:void(0);" ng-click="changePasswordOpen()">Change Password <img src="assets/images/password.svg" alt=""></a>
+                </div>
+            </div>
+            <div class="col s12">
+                <div class="setting-edit">
+                    <button type="button" class="edit-setting" ng-click="enableProfile()" ng-class="{active : profileEdit}"></button>
+
+                    <div class="col s12">
+                        <input style="display: none;" type="file" ng-model="profileInfo.avatar" name="avatar" id="avatar" base-sixty-four-input required onload="onLoad" maxsize="500" accept="image/*">
+                        <div class="setting-profile edit" ng-click="addProfile()" ng-style="{'background':'url({{profileInfo.avatar}})'}">
+
+                        </div>
+                    </div>
+                    <form method="post" name="profileForm" ng-submit="updateProfile(profileForm.$valid)" novalidate>
+                        <h4 class="setting-heading">Personal Info</h4>
+                        <div class="row">
+                            <div class="input-field col s6">
+                                <span ng-hide="profileEdit" class="label">Name</span>
+                                <input id="name" type="text" name="name" ng-model="profileInfo.name" placeholder="Name" required ng-disabled="!profileEdit">
+                                <span class="error" ng-show="(profileForm.name.$invalid && !profileForm.name.$pristine) || (profileForm.name.$error.required && submitForm)">Name is required</span>
+                            </div>
+                            <div class="input-field col s6">
+                                <span ng-hide="profileEdit" class="label">Mobile No</span>
+                                <input id="mobileNo" type="text" name="mobileNo" placeholder="Mobile No" ng-model="profileInfo.mobile" number-input maxlength="10" required ng-maxlength="10" ng-minlength="10" ng-disabled="!profileEdit">
+                                <span class="error" ng-show="(profileForm.mobileNo.$invalid && !profileForm.mobileNo.$pristine) || (profileForm.mobileNo.$error.required && submitForm)">Mobile is required</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col s6 gender-field">
+                                <label for="genter_select">Gender </label>
+                                <p>
+                                    <input name="cgender" type="radio" id="gender_male" value="MALE" class="with-gap" ng-model="profileInfo.gender" ng-disabled="!profileEdit">
+                                    <label for="gender_male">Male</label>
+                                </p>
+                                <p>
+                                    <input name="cgender" type="radio" id="gender_female" value="FEMALE" class="with-gap" ng-model="profileInfo.gender" ng-disabled="!profileEdit">
+                                    <label for="gender_female">Female</label>
+                                </p>
+                                <span class="error" ng-show="genderError">Gender is required</span>
+                            </div>
+                            <div class="input-field col s6">
+                                <span ng-hide="profileEdit">Email</span>
+                                <input type="email" id="email" name="email" ng-mode="profileInfo.email" placeholder="Email" required ng-disabled="!profileEdit">
+                                <span class="error" ng-show="(profileForm.email.$invalid && !profileForm.email.$pristine) || (profileForm.email.$error.required && submitForm)">Email is required</span>
+                            </div>
+                        </div>
+                        <h4 class="setting-heading">Location Details</h4>
+                        <div class="row">
+                            <div class="input-field col s6">
+                                <span ng-hide="profileEdit" class="label">Address</span>
+                                <input id="address" type="text" name="address" ng-model="profileInfo.address" placeholder="Address" required ng-disabled="!profileEdit">
+                                <span class="error" ng-show="(profileForm.address.$invalid && !profileForm.address.$pristine) || (profileForm.address.$error.required && submitForm)">Address is required</span>
+                            </div>
+                            <div class="input-field col s6">
+                                <span ng-hide="profileEdit" class="label">City</span>
+                                <input id="city" type="text" name="city" ng-model="profileInfo.city" placeholder="City" required ng-disabled="!profileEdit">
+                                <span class="error" ng-show="(profileForm.city.$invalid && !profileForm.city.$pristine) || (profileForm.city.$error.required && submitForm)">City is required</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s6">
+                                <span ng-hide="profileEdit" class="label">Pincode</span>
+                                <input id="pincode" type="text" name="pincode" ng-model="profileInfo.pincode" number-input maxlength="6" placeholder="Pincode" required ng-maxlength="6" ng-minlength="6" ng-disabled="!profileEdit">
+                                <span class="error" ng-show="(profileForm.pincode.$invalid && !profileForm.pincode.$pristine) || (profileForm.pincode.$error.required && submitForm)">Pincode is required</span>
+                            </div>
+                            <div class="input-field col s6">
+                                <span ng-hide="profileEdit" class="label">State</span>
+                                <input id="state" type="text" name="state" ng-model="profileInfo.state" placeholder="State" required ng-disabled="!profileEdit">
+                                <span class="error" ng-show="(profileForm.state.$invalid && !profileForm.state.$pristine) || (profileForm.state.$error.required && submitForm)">State is required</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s6 last-field">
+                                <span ng-hide="profileEdit" class="label">Country</span>
+                                <input id="country" type="text" name="country" ng-model="profileInfo.country" placeholder="Country" required ng-disabled="!profileEdit">
+                                <span class="error" ng-show="(profileForm.country.$invalid && !profileForm.country.$pristine) || (profileForm.country.$error.required && submitForm)">Country is required</span>
+                            </div>
+                        </div>
+                        <div class="row center-align" ng-show="profileEdit">
+                            <button type="button" class="btn waves-effect" ng-click="enableProfile()">Cancel</button>
+                            <button type="submit" class="btn waves-effect">Update Profile</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <a href="javascript:void(0);"><img src="assets/images/smartphone-call.svg" alt=""><span>We are also available on Google play store</span></a>
+        </div>
+    </div>
+
+    <div class="setting-modal">
+        <div class="content">
+            <h4>Change Password</h4>
+            <form method="post" name="passwordForm" ng-submit="changePassword(passwordForm.$valid)" novalidate>
+                <div class="input-field s12">
+                    <input type="password" id="old" name="old" ng-model="changePass.oldPass" required>
+                    <label for="old">Old Password</label>
+                    <span class="error" ng-show="(passwordForm.old.$invalid && !passwordForm.old.$pristine) || (passwordForm.old.$error.required && passwordChange)">Old Password is required</span>
+                </div>
+                <div class="input-field s12">
+                    <input type="password" id="new" name="new" ng-model="changePass.newPass" required>
+                    <label for="new">New Password</label>
+                    <span class="error" ng-show="(passwordForm.new.$invalid && !passwordForm.new.$pristine) || (passwordForm.new.$error.required && passwordChange)">New Password is required</span>
+                </div>
+                <div class="input-field s12 center-align">
+                    <button type="button" class="btn waves-effect" ng-click="changePasswordClose()">Cancel</button>
+                    <button type="submit" class="btn waves-effect">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="setting-backdrop" ng-show="settingDrop"></div>

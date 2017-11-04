@@ -1,0 +1,90 @@
+<div class="col s12 m12 l12">
+    <div class="col s9 m9 l9 clear-float responsive-width">
+        <h4 class="contact-title">Get to know us </h4>
+        <div class="contact-social">
+            <div class=" col s12 m12 l12 row">
+                <div class="col s3 m4 l4">
+                    <a href="https://www.facebook.com/fantumn" target="_blank" class="waves-effect">
+                        <img src="assets/images/facebook.svg" alt="">
+                    </a>
+                </div>
+                <div class="col s3 m4 l4">
+                    <a href="https://www.instagram.com/fantumnofficial/" target="_blank" class="waves-effect">
+                        <img src="assets/images/instagram.svg" alt="">
+                    </a>
+                </div>
+                <div class="col s3 m4 l4">
+                    <a href="https://twitter.com/FantumnOfficial" target="_blank" class="waves-effect">
+                        <img src="assets/images/twitter.svg" alt="">
+                    </a>
+                </div>
+            </div>
+            <div class="col s12 m12 l12">
+                <div class="col s3 m4 l4">
+                    <a href="https://www.linkedin.com/company/13394850/" target="_blank" class="waves-effect">
+                        <img src="assets/images/linkedin.svg" alt="">
+                    </a>
+                </div>
+                <div class="col s3 m4 l4">
+                    <a href="https://www.quora.com/profile/Fantumn" target="_blank" class="waves-effect">
+                        <img src="assets/images/quora.jpg" alt="">
+                    </a>
+                </div>
+                <div class="col s3 m4 l4">
+                    <a href="https://medium.com/@Fantumn" target="_blank" class="waves-effect">
+                        <img src="assets/images/medium.png" alt="">
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="contact-support valign-wrapper">
+            <div class="col s6 m6 l6 center-align">
+                <img src="assets/images/email.svg" alt="">
+                <span>support@fantumn.com</span>
+            </div>
+            <div class="col s6 m6 l6 center-align">
+                <img src="assets/images/contact-mobile.svg" alt="">
+                <span>+91 9944858116</span>
+            </div>
+        </div>
+
+        <div class="contact-report valign-wrapper">
+            <div class="col s6 m6 l6"><a href="javascript:void(0)" ng-click="openReport('suggest')">Suggest a feature</a></div>
+            <div class="col s6 m6 l6 right-align"><a href="javascript:void(0)" ng-click="openReport('report')">Report a Problem</a></div>
+        </div>
+    </div>
+</div>
+
+<!--<div class="">
+    <h4>Suggest a feature</h4>
+
+</div>
+<div class="custom-backdrop"></div>-->
+
+<div class="contact-popup">
+    <div class="contact-content">
+        <h4>{{title}}</h4>
+        <form method="post" name="reportForm" ng-submit="suggestReport(reportForm.$valid)" novalidate>
+            <div class="input-field">
+                <input type="text" id="name" name="name" ng-model="report.name" required>
+                <label for="name">Name</label>
+                <span class="error" ng-show="(reportForm.name.$invalid && !reportForm.name.$pristine) || (reportForm.name.$error.required && suggestSubmit)">Name is required</span>
+            </div>
+            <div class="input-field">
+                <input type="email" id="email" name="email" ng-model="report.email" required>
+                <label for="email">Email</label>
+                <span class="error" ng-show="(reportForm.email.$invalid && !reportForm.email.$pristine) || (reportForm.email.$error.required && suggestSubmit)">Email is required</span>
+            </div>
+            <div class="input-field">
+                <textarea id="content" name="content" class="materialize-textarea" ng-model="report.content" required></textarea>
+                <label for="textarea1">Content</label>
+                <span class="error" ng-show="(reportForm.content.$invalid && !reportForm.content.$pristine) || (reportForm.content.$error.required && suggestSubmit)">Content is required</span>
+            </div>
+            <div class="input-field">
+                <button type="button" class="btn cancel-btn" ng-click="closeReport()">Cancel</button>
+                <button type="submit" class="btn send-btn">Send</button>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="custom-backdrop" ng-show="reportDrop"></div>
