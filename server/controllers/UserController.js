@@ -850,9 +850,21 @@ exports.reportSuggestMail = function(req, res){
 
 	if(subject== 'report') {
 		sendReportProblemMail(email, subject, content);
+		res.status(httpStatus.OK).json({
+			status: status.SUCCESS,
+			code: httpStatus.OK,
+			data: 'Report mail sent to'+email ,
+			error:''
+		});
 	}
 	else{
 		sendSuggestMail(email, subject, content);
+		res.status(httpStatus.OK).json({
+			status: status.SUCCESS,
+			code: httpStatus.OK,
+			data: 'Suggestion mail sent to'+ email ,
+			error:''
+		});
 	}
 
 };
@@ -900,7 +912,7 @@ function sendWelcomeMail(toAddr){
 	    }else{
 	        console.log('Welcome Mail sent: ' + info.response);
 	       return;
-	    };
+	    }
 	});
 }
 
@@ -924,7 +936,7 @@ function sendResetPasswordRequestMail(toAddr, token){
 	    }else{
 	        console.log('Reset Password Mail sent: ' + info.response);
 	       return;
-	    };
+	    }
 	});
 }
 
@@ -948,7 +960,7 @@ function sendResetPasswordMail(toAddr){
 	    }else{
 	        console.log('Reset Password Mail sent: ' + info.response);
 	       return;
-	    };
+	    }
 	});
 }
 
@@ -972,14 +984,9 @@ function sendReportProblemMail(email,subject, content){
 			return;
 		}else{
 			console.log('Problem Mail sent: ' + problem.response);
-			res.status(httpStatus.OK).json({
-				status: status.SUCCESS,
-				code: httpStatus.OK,
-				data: problem.response ,
-				error:''
-			});
+
 			return;
-		};
+		}
 	});
 
 }
@@ -1003,14 +1010,9 @@ function sendSuggestMail(email, subject, content){
 			return;
 		}else{
 			console.log('Suggest Mail sent: ' + suggestion.response);
-			res.status(httpStatus.OK).json({
-				status: status.SUCCESS,
-				code: httpStatus.OK,
-				data: suggestion.response ,
-				error:''
-			});
+
 			return;
-		};
+		}
 	});
 
 }
