@@ -8,6 +8,8 @@ var CronJob = require('cron').CronJob;
 var Subtract = require('array-subtract');
 var _ = require('underscore');
 async = require("async");
+var User = require('../../models/User');
+
 
 
 
@@ -28,6 +30,20 @@ var fireUrl = function(params, include) {
     console.log('firing url : ' + baseUrl + params + "?api_token=" + API_TOKEN + "&include=" + include);
     return baseUrl + params + "?api_token=" + API_TOKEN + "&include=" + include;
 };
+var errorMsg = {
+    UNEXP_ERROR : 'unexpected error in accessing data',
+    USER_NOT_FOUND : 'user not found',
+    EMAIL_IN_USE : 'email already in use',
+    USERNAME_IN_USE : 'username already in use',
+    MOBILE_IN_USE : 'mobile number in use',
+    INVALID_TOKEN : 'invalid reset password token',
+    OLD_PASS_DOESNT_MATCH: 'Old Password does not match',
+    NO_USERS_FOUND : 'no users found',
+    INVALID_PASS_U: 'username and password does not match',
+    INVALID_PASS_E: 'email and password does not match',
+    FACEBOOK_IN_USE:'facebook account already in use',
+    GOOGLE_IN_USE:'facebook account already in use',
+}
 
 var responseToConsole = function(_status, _code, _data, _error) {
 
@@ -1227,24 +1243,15 @@ exports.calculatePointsJob = function() {
 
 
                                             //Adding matchcard points to users Database
+                                            console.log(matchCard.user);
 
-                                            User.findOne({id:matchCard.user}, function(err, user){
+                                            User.findById({_id:matchCard.user}, function(err, user){
                                                 if(err){
-                                                    res.status(httpStatus.ISE).json({
-                                                        status: status.FAILURE,
-                                                        code: httpStatus.ISE,
-                                                        data: '',
-                                                        error: errorMsg.UNEXP_ERROR
-                                                    });
+                                                    console.log(responseToConsole(Codes.status.FAILURE, Codes.httpStatus.ISE, 'Unexpected error', Validation.validatingErrors(errorMsg.UNEXP_ERROR)));
                                                     return;
                                                 }
                                                 if(user == null){
-                                                    res.status(httpStatus.BR).json({
-                                                        status: status.FAILURE,
-                                                        code: httpStatus.BR,
-                                                        data: '',
-                                                        error: errorMsg.USER_NOT_FOUND
-                                                    });
+                                                    console.log(responseToConsole(Codes.status.FAILURE, Codes.httpStatus.BR, 'User Not Found', Validation.validatingErrors(errorMsg.USER_NOT_FOUND)));
                                                     return;
                                                 }
 

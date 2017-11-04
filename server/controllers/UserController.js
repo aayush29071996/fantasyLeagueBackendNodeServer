@@ -66,7 +66,8 @@ var transporter = nodemailer.createTransport(smtpTransport({
 
 
 //facebook
-/*passport.use(new FacebookStrategy({
+/*
+passport.use(new FacebookStrategy({
 
         clientID        : configAuth.facebookAuth.clientID,
         clientSecret    : configAuth.facebookAuth.clientSecret,
@@ -196,7 +197,8 @@ var transporter = nodemailer.createTransport(smtpTransport({
 				//
             }
         });
-	}));*/
+	}));
+*/
 
 
 	//google
