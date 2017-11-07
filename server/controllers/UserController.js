@@ -36,7 +36,7 @@ var errorMsg = {
 	INVALID_PASS_U: 'username and password does not match',
 	INVALID_PASS_E: 'email and password does not match',
 	FACEBOOK_IN_USE:'facebook account already in use',
-	GOOGLE_IN_USE:'facebook account already in use',
+	GOOGLE_IN_USE:'facebook account already in use'
 }
 
 var status = {
@@ -384,6 +384,8 @@ exports.validate = function(req, res){
 //Saves User
 exports.save = function(req, res){
 	console.log(req.body);
+
+
 	User.findOne({'email' : new RegExp('^' + req.body.email + '$', 'i')}, function(err, user){
 		if(err){
 			res.status(httpStatus.ISE).json({
@@ -393,6 +395,42 @@ exports.save = function(req, res){
 				error: errorMsg.UNEXP_ERROR
 			});
 			return;
+		}
+
+		//ONLY FOR SOCIAL AUTH
+
+		if(user !=null){
+			if(user.social_auth == true){
+				var social_auth ;
+				if(user.facebook.auth_token != null){
+					social_auth =user.facebook.auth_token;
+					res.status(httpStatus.OK)
+						.json({
+							status: status.SUCCESS,
+							code: httpStatus.OK,
+							data: social_auth,
+							error: ''
+
+						});
+					return;
+				}
+				else{
+					social_auth = user.google.accessToken;
+					res.status(httpStatus.OK)
+						.json({
+							status: status.SUCCESS,
+							code: httpStatus.OK,
+							data: social_auth,
+							error: ''
+
+						});
+					 return;
+				}
+
+
+			}
+
+
 		}
 		if(user == null){
 			var user = new User;
@@ -416,6 +454,15 @@ exports.save = function(req, res){
 			user.token = uuid.v4();
 			user.status = 'ACTIVE';
 			user.createdOn = moment.utc();
+			user.digitalSignature = req.body.digitalSignature;
+			user.social_auth = req.body.social_auth;
+			user.facebook.social_id = req.body.facebook.social_id;
+			user.facebook.auth_token = req.body.facebook.auth_token;
+			user.facebook.profile = req.body.facebook.profile;
+			user.google.accessToken = req.body.google.accessToken;
+			user.google.idToken = req.body.google.idToken;
+			user.google.imgUrl = req.body.google.imgUrl;
+
 			user.save(function (saveErr, saveUser){
 				if(saveErr){
 					res.status(httpStatus.BR).json({
@@ -470,7 +517,7 @@ exports.save = function(req, res){
 
 };
 
-//Saves User
+//Updates User
 exports.update = function(req, res){
 	console.log(req.body);
 	User.findOne({'email' : new RegExp('^' + req.body.email + '$', 'i')}, function(err, user){
@@ -896,7 +943,7 @@ function trimmed(data){
 }
 
 function sendWelcomeMail(toAddr){
-    var htmlstream = fs.createReadStream('public/pitch/welcome_mail.html', {
+    var htmlstream = fs.createReadStream('public/welcomeMail/Fantumn.html', {
 			root: __dirname
 		});
     var mailOptions = {

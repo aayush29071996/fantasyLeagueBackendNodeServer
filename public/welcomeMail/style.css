@@ -1,0 +1,166 @@
+			#main-body{
+				 position:fixed;
+				 width:auto;
+				 overflow:auto;
+				 height:100%;
+				 top:0;
+				 left:0;
+			 }
+			 	 .head-class{
+			    position:relative;
+				left:15px;
+				color:#F2F2F2;
+				font-size:5vw;
+				font-family: 'Oleo Script', cursive;
+				display:inline;
+				width:auto;
+				top:1vw;
+			 }
+			  .welcome{
+				  position:relative;
+				  height:35vw;
+				  width:auto;
+				  background-image:url("http://svgshare.com/i/3k0.svg");
+				  background-repeat: no-repeat;
+				  background-size:100%;
+				  overflow:hidden;
+			  }
+			  .content{
+				  position:relative;
+				  height:65vw;
+				  width:100%;
+  				  overflow:hidden;
+				  }
+				#head{
+					max-width:100%;
+					max-height:100%;
+					position:relative;
+					margin-bottom:-4vw;
+				}  
+				  
+		     .content-text{
+				 width:auto;
+				 height:auto;
+				 position:relative;
+				 float:center;
+			 }
+			 #welcomeText{
+				 color:#F2F2F2;
+				 font-family:Yu Gothic Light;
+				 font-size:2.2vw;
+				 left:30vw;
+			}
+			p.footer-text{
+				display:inline;
+    			position:relative;
+			}
+			.footer{
+				position:relative;
+				top:3vw;
+			}
+		
+			 hr{
+				 margin:0 auto;
+				 border-color:#F2F2F2;
+				 display:inline;
+				 position:relative;
+				 margin-top:-6vw;
+			 }
+			 .welcome-style{
+				 position:relative;
+				 float:center;
+				 margin:0 auto;
+				 display:block;
+				 top:1vw;
+			 }
+			 #play-button{
+				 width:11vw;
+				 height:11vw;
+				 top:1vw;
+				 display:inline-block;
+			 }
+			 a{
+				 width:3vw;
+				 height:3vw;
+				 right:4vw;
+			 }
+			 #logo{
+				 width:14vw;
+				 height:14vw;
+				 top:3.5vw;
+			 }
+			 #IntuitionSymbolid{
+				 width:3vw;
+				 height:3vw;
+				 left:56vw;
+				 }
+			 #borderID{
+			    width: 0vw; 
+				background-color: white; 
+				display: inline-block;
+				left:56vw;
+			    border-left: 1px solid white; 
+     			height:4.1vw;
+			 }
+			 #footerID1{
+			    width: 0vw; 
+				background-color: #F2F2F2; 
+				display: inline-block;
+			    border-left: 2px solid #A0A0A0; 
+     			height:5vw;
+			 }
+			#footerID2{
+				width: 0vw;
+				background-color: #F2F2F2;
+				display: inline-block;
+				border-left: 2px solid #A0A0A0;
+				height:5vw;
+			}
+			 #Intution-text{
+				 font-size:1.5vw;
+				 left:55vw;
+				 width:30%;
+				 font-family: 'Roboto', sans-serif;
+    			 font-weight: 300;
+			 }
+			 ul{
+				 display:inline-block;
+				 height:1vw;
+				 width:0;
+			 }
+			 li{top:-5vw;}
+			 
+			 #play-button:hover{
+				font-color:blue;
+				opacity:0.6;
+			 }
+			 #Steps{
+				margin-left:25vw;
+				margin-right:15vw;
+				width:50vw;
+				height:20vw;
+			 }
+			 p{
+				 font-family:sans-serif;
+				 font-size:1.5vw;
+				 display:block;
+				 width:100vw;
+				 color:#A0A0A0;
+				 float:center;
+				 margin-top:3vw;
+				 margin-bottom:1vw;
+				 margin-left:10vw;
+				 margin-right:10vw;				 
+			 }
+			 
+			 #PickID{
+				 font-size:1.5vw;
+				 font-family: 'Josefin Sans', sans-serif;
+				 left:87vw;
+				 display:block;
+				 position:relative;
+				 width:3vw;
+			 }
+			 #FantumID{
+				font-weight:100;
+			 }f

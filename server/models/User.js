@@ -33,11 +33,18 @@ var UserSchema = new mongoose.Schema({
 	status:{type:String, enum:['ACTIVE', 'INACTIVE' ,'BLOCKED'], default:'ACTIVE'},
 	createdOn:{type:Date, required: true},
 	userPoints:{type:Number, default:0},
+	social_auth:{type: Boolean, default: false, required: true},
+	facebook:{
+		social_id:{type:String, unique:true},
+		auth_token:{type:String, default:null},
+		profile:{type:String}
+	},
 	google:{
-		accessToken:{type:String},
-		idToken:{type:String},
+		accessToken:{type:String, default:null},
+		idToken:{type:String, unique:true},
 		imgUrl:{type:String}
-	}
+	},
+	digitalSignature:{type: Boolean, required:true}
 });
 
 var User = mongoose.model('User', UserSchema);

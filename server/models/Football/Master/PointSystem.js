@@ -15,7 +15,8 @@ var PostionPointSchema = new mongoose.Schema({
 	cardYellow:{type:Number, default:0},
 	cardYellowRed:{type:Number, default:0},
 	cardRed:{type:Number, default:0},
-	cleanSheet:{type:Number, default:0}
+	cleanSheet:{type:Number, default:0},
+//	saves:{type:Number, default:0}
 });
 
 var PointSystemSchema = new mongoose.Schema({

@@ -25,6 +25,8 @@ var Validation = require('../Validation');
 exports.getFixturesHistory = function (req, res) {
 
     var twoHoursBefore = moment().utcOffset(330).subtract('2', 'h').format("YYYY-MM-DD HH:mm:ss");
+  //  var now = moment.utc().subtract('2', 'h').format("YYYY-MM-DD HH:mm:ss");
+ //   console.log(now);
     var sevenDaysBefore = moment().utcOffset(330).subtract('7', 'd').format("YYYY-MM-DD HH:mm:ss");
     var fourteenDaysBefore = moment().utcOffset(330).subtract('14', 'd').format("YYYY-MM-DD HH:mm:ss");
     var twentyoneDaysBefore = moment().utcOffset(330).subtract('21', 'd').format("YYYY-MM-DD HH:mm:ss");

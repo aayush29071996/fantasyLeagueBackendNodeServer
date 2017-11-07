@@ -3,7 +3,7 @@
 
 var dashServices = angular.module('dashServices', ['ngResource','dashControllers']);
 // var baseURI = "http://192.168.0.5:9000";
- var baseURI = "http://localhost:9000";
+ var baseURI = "http://localhost:9000";    //https://fantumn-server.herokuapp.com/
 //var baseURI = "https://inyards.com";
 
 dashServices.factory('LeaderboardApi', function($http){
