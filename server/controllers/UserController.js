@@ -401,26 +401,26 @@ exports.save = function(req, res){
 
 		if(user !=null){
 			if(user.social_auth == true){
-				var social_auth ;
+		//		var social_auth;
 				if(user.facebook.auth_token != null){
-					social_auth =user.facebook.auth_token;
+				//	social_auth =user.facebook.auth_token;
 					res.status(httpStatus.OK)
 						.json({
 							status: status.SUCCESS,
 							code: httpStatus.OK,
-							data: social_auth,
+							data: user,
 							error: ''
 
 						});
 					return;
 				}
 				else{
-					social_auth = user.google.accessToken;
+		//			social_auth = user.google.accessToken;
 					res.status(httpStatus.OK)
 						.json({
 							status: status.SUCCESS,
 							code: httpStatus.OK,
-							data: social_auth,
+							data: user,
 							error: ''
 
 						});
@@ -430,8 +430,8 @@ exports.save = function(req, res){
 
 			}
 
-
 		}
+
 		if(user == null){
 			var user = new User;
 			var hash = encrypt(key, trimmed(req.body.password));
