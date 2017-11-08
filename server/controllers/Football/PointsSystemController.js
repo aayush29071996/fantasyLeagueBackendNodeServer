@@ -899,5 +899,10 @@ exports.resetPointsFixture = function(req, res){
 
 
 
+exports.manualSystem1 = function(req, res){
 
+
+
+
+};
 

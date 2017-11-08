@@ -35,13 +35,13 @@ var UserSchema = new mongoose.Schema({
 	userPoints:{type:Number, default:0},
 	social_auth:{type: Boolean, default: false, required: true},
 	facebook:{
-		social_id:{type:String, unique:true},
+		social_id:{type:String, default:null},
 		auth_token:{type:String, default:null},
 		profile:{type:String}
 	},
 	google:{
 		accessToken:{type:String, default:null},
-		idToken:{type:String, unique:true},
+		idToken:{type:String, default:null},
 		imgUrl:{type:String}
 	},
 	digitalSignature:{type: Boolean, required:true}
