@@ -943,6 +943,19 @@ exports.manualSystem1 = function(req, res){
 		//	newEvent.relatedPlayerId = req.body.relatedPlayerId;
      	//	newEvent.relatedPlayerName = event.related_player_name;
 
+		newEvent.save(function (saveErr, saveEvent){
+			if(saveErr){
+				res.status(httpStatus.BR).json({
+					status: status.FAILURE,
+					code: httpStatus.BR,
+					data: '',
+					error: Validation.validatingErrors(saveErr)
+				});
+			}
+			// SAVES event
+		});
+
+
 		const playerPoints= _.findWhere(match.lineup,{"playerId":req.body.playerId}).points;
 		const eventPoints = req.body.eventPoints;
 		const playerPosition = _.findWhere(match.lineup,{"playerId":req.body.playerId}).position;
@@ -978,6 +991,9 @@ exports.manualSystem1 = function(req, res){
 		var wholeMatchPoints = wholeMatchPreviousPoints + req.body.eventPoints;
 		_.findWhere(match.lineup,{"playerId":req.body.playerId}).points = playerNewPoints;
 		match.points = wholeMatchPoints;
+
+		//PUSH THE EVENT IN MATCHES SCHEMA FOR THAT MATCH
+		match.events.push(newEvent);
 
 
 		match.save(function(matchSaveErr, savedMatch){
