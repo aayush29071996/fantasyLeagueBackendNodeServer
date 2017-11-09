@@ -35,10 +35,10 @@ var httpStatus = {
 
 var transporter = nodemailer.createTransport({
     service: 'gmail',
-    auth: {
-        user: 'reachinyards@gmail.com', // Your email id
-        pass: 'dev-2017' // Your password
-    }
+	auth: {
+		user: 'reach.fantumn@gmail.com', // Your email id
+		pass: 'shenbagam-6' // Your password
+	}
 });
 
 exports.resetPasswordRequest = function(req, res){
@@ -233,11 +233,11 @@ function trimmed(data){
 function sendResetPasswordRequestMail(toAddr, token, username){
 
     var mailOptions = {
-	    from: 'InYards <noreply@inyards.com>',
-	    sender: 'InYards <noreply@inyards.com>',
+	    from: 'Fantumn <reach.fantumn@gmail.com>',
+	    sender: 'Fantumn <reach.fantumn@gmail.com>',
 	    to: toAddr,
-	    subject: 'InYards - Reset Password',
-	    html:'<br><p>Hello '+ username +',<br><br><img src="https://inyards.herokuapp.com/logo.png"/><br><br>Someone (hopefully you) has requested a password reset for your InYards account.<br><br><b>Please use this code to reset your password for your account: ' + token +'</b><br><br>If you don\'t wish to reset your password, disregard this email and no action will be taken.</p><br><br><p>Regards,<br>Admin Team<br>InYards</p><br><br><hr><br><p><center><i>Please do not reply to this email; this address is not monitored. Please use our contact page.</i></center></p>'
+	    subject: 'FANTUMN - Reset Password',
+	    html:'<br><p>Hello '+ username +',<br><br><img src="https://inyards.herokuapp.com/logo.png"/><br><br>Someone (hopefully you) has requested a password reset for your Fantumn account.<br><br><b>Please use this code to reset your password for your account: ' + token +'</b><br><br>If you don\'t wish to reset your password, disregard this email and no action will be taken.</p><br><br><p>Regards,<br>Admin Team<br>Fantumn</p><br><br><hr><br><p><center><i>Please do not reply to this email; this address is not monitored. Please use our contact page.</i></center></p>'
 	};
 	transporter.sendMail(mailOptions, function(error, info){
 	    if(error){
@@ -246,6 +246,6 @@ function sendResetPasswordRequestMail(toAddr, token, username){
 	    }else{
 	        console.log('Reset Password Mail sent: ' + info.response);
 	       return;
-	    };
+	    }
 	});
 }

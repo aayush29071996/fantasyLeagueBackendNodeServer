@@ -970,11 +970,11 @@ function sendResetPasswordRequestMail(toAddr, token){
 		// 	root: __dirname
 		// });
     var mailOptions = {
-	    from: 'Inyards Pitch <noreply@inyards.com>',
-	    replyTo: 'support@inyards.com',
-	    sender: 'Inyards Pitch <noreply@inyards.com>',
+	    from: 'Fantumn <reach.fantumn@gmail.com>',
+	    replyTo: 'reach.fantumn@gmail.com',
+	    sender: 'Fantumn <reach.fantumn@gmail.com>',
 	    to: toAddr,
-	    subject: 'Inyards - Reset Password',
+	    subject: 'Fantumn - Reset Password',
 	    text:'https://inyards.com/reset/' + token
 	    // html: htmlstream
 	};
@@ -994,11 +994,11 @@ function sendResetPasswordMail(toAddr){
 		// 	root: __dirname
 		// });
     var mailOptions = {
-	    from: 'Inyards Pitch <noreply@inyards.com>',
-	    replyTo: 'support@inyards.com',
-	    sender: 'Inyards Pitch <noreply@inyards.com>',
+	    from: 'Fantumn <reach.fantumn@gmail.com>',
+	    replyTo: 'reach.fantumn@gmail.com',
+	    sender: 'Fantumn <reach.fantumn@gmail.com>',
 	    to: toAddr,
-	    subject: 'Inyards - Password Reset Successful',
+	    subject: 'Fantumn - Password Reset Successful',
 	    text:'Password has been reset'
 	    // html: htmlstream
 	};

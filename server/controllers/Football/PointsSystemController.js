@@ -15,6 +15,9 @@
 
  var Codes = require('../../Codes');
  var Validation = require('../Validation');
+var EventHistory = require('../../models/Football/EventHistory');
+
+
 
 var HistoryCount = require('../../modules/getHistoryCount');
 
@@ -898,11 +901,187 @@ exports.resetPointsFixture = function(req, res){
 };
 
 
+//MANUAL SYSTEM FOR POINT CALCULATION
 
 exports.manualSystem1 = function(req, res){
 
+	Match.findOne({matchId:req.body.matchId}).exec(function(matchErr, match){
+
+		if(matchErr){
+			res.status(Codes.httpStatus.ISE).json({
+				status: Codes.status.FAILURE,
+				code: Codes.httpStatus.ISE,
+				data: '',
+				error: Codes.errorMsg.UNEXP_ERROR
+			});
+			return;
+		}
+		if(match == null){
+			res.status(Codes.httpStatus.BR).json({
+				status: Codes.status.FAILURE,
+				code: Codes.httpStatus.BR,
+				data: '',
+				error: Codes.errorMsg.F_INV_MID
+			});
+			return;
+		}
 
 
+		//UPDATE THE EVENT SCHEMA
+		var newEvent = new Event;
+		newEvent.eventId = req.body.eventId;
+		newEvent.matchId = req.body.matchId;
+		newEvent.teamId = null;
+		newEvent.type = req.body.eventName;
+		newEvent.minute = req.body.minute;
+		newEvent.extraMinute = null;
+		newEvent.reason = null;
+		newEvent.injuried = null;
+		newEvent.playerId = req.body.playerId;
+		newEvent.playerName = req.body.playerName;
+		newEvent.computed = true;
+		//	newEvent.relatedPlayerId = req.body.relatedPlayerId;
+     	//	newEvent.relatedPlayerName = event.related_player_name;
+
+		const playerPoints= _.findWhere(match.lineup,{"playerId":req.body.playerId}).points;
+		const eventPoints = req.body.eventPoints;
+		const playerPosition = _.findWhere(match.lineup,{"playerId":req.body.playerId}).position;
+
+		//UPDATE THE EVENT HISTORY SCHEMA
+		var eventHistory = new EventHistory;
+
+		eventHistory.eventId = req.body.eventId;
+		eventHistory.matchId = req.body.matchId;
+		eventHistory.playerId = req.body.playerId;
+		eventHistory.position = playerPosition;
+		eventHistory.eventPoints = eventPoints;
+		eventHistory.playerPoints = playerPoints;
+
+		eventHistory.save(function (saveErr, saveEventHistory){
+			if(saveErr){
+				res.status(httpStatus.BR).json({
+					status: status.FAILURE,
+					code: httpStatus.BR,
+					data: '',
+					error: Validation.validatingErrors(saveErr)
+				});
+			}
+			// SAVES eventHistory
+		});
+
+
+        // MATCH POINTS AND LINE UP CHANGES
+		var wholeMatchPreviousPoints = _.findWhere(match.points);
+		var playerPreviousPoints = _.findWhere(match.lineup,{"playerId":req.body.playerId}).points;
+
+		var playerNewPoints = playerPreviousPoints + req.body.eventPoints;
+		var wholeMatchPoints = wholeMatchPreviousPoints + req.body.eventPoints;
+		_.findWhere(match.lineup,{"playerId":req.body.playerId}).points = playerNewPoints;
+		match.points = wholeMatchPoints;
+
+
+		match.save(function(matchSaveErr, savedMatch){
+
+			if (matchSaveErr) {
+				console.log(responseToConsole(Codes.status.FAILURE, Codes.httpStatus.BR, '', Validation.validatingErrors(matchSaveErr)));
+				return;
+			}
+
+
+			//MATCHCARD POINTS AND LINEUP CHANGES
+
+			MatchCard.find({match:savedMatch._id}).populate('match players').exec(function(matchCardsErr, matchCards){
+				if(matchCardsErr){
+					console.log(responseToConsole(Codes.status.FAILURE, Codes.httpStatus.ISE, matchCardErr, Codes.errorMsg.UNEXP_ERROR));
+					return;
+				}
+				console.log('Update matchCards');
+
+				if(matchCards.length == 0){
+					console.log(responseToConsole(Codes.status.SUCCESS, Codes.httpStatus.OK, '', Codes.errorMsg.F_NO_MC_M));
+					return;
+				}
+
+				_.each(matchCards, function(matchCard, index, matchCards){
+					var lineupInMatch = {};
+					var matchPoints = 0;
+					lineupInMatch = savedMatch.lineup;
+
+					//LOOK FOR EACH PLAYER IN LINEUP AND COMPARE WITH MATCHCARD PLAYERS
+
+					_.each(lineupInMatch, function(lineup, index, lineups){
+						// console.log('MATCHCARD PLAYERS');
+						// console.log(matchCard);
+						var player = _.findWhere(matchCard.players,{"playerId":lineup.playerId});
+						if(player !== undefined && player){
+							_.findWhere(matchCard.players,{"playerId":lineup.playerId}).points = lineup.points;
+							matchPoints = matchPoints + _.findWhere(matchCard.players,{"playerId":lineup.playerId}).points;
+						}
+
+					});
+
+					matchCard.matchPoints = matchPoints;
+					console.log(matchCard.user);
+
+
+					//SAVE THE MATCHCARD
+
+					matchCard.save(function(matchCardSaveErr, savedMatchCard){
+						if (matchCardSaveErr) {
+							console.log(responseToConsole(Codes.status.FAILURE, Codes.httpStatus.BR, '', Validation.validatingErrors(matchCardSaveErr)));
+							return;
+						}
+						if(savedMatchCard){
+							console.log(responseToConsole(Codes.status.SUCCESS, Codes.httpStatus.OK, 'Match ' + match.matchId + ' Points Calculated', ''));
+							return;
+						}
+					});
+
+
+
+
+					//UPDATE THE MATCHCARD USER SIMULTANEOUSLY
+
+					                                             //LOGIC TO BE IMPLEMENTED FOR UPDATING USER POINTS FOR THAT PARTICULAR PLAYER AND EVENT ONLY AND FIND IF THE PLAYER EXISTS IN USER PLAYERS LIST
+
+					User.findById({_id:matchCard.user}, function(err, user){
+						if(err){
+							console.log(responseToConsole(Codes.status.FAILURE, Codes.httpStatus.ISE, 'Unexpected error', Validation.validatingErrors(errorMsg.UNEXP_ERROR)));
+							return;
+						}
+						if(user == null){
+							console.log(responseToConsole(Codes.status.FAILURE, Codes.httpStatus.BR, 'User Not Found', Validation.validatingErrors(errorMsg.USER_NOT_FOUND)));
+							return;
+						}
+
+						var prevPoints = user.userPoints;
+						var diff = matchCard.matchPoints - prevPoints;
+						user.userPoints = prevPoints + diff;
+
+						user.save(function(err, savedUser){
+							if (err) {
+								console.log(responseToConsole(Codes.status.FAILURE, Codes.httpStatus.BR, '', Validation.validatingErrors(err)));
+								return;
+							}
+							if(savedUser){
+								console.log(responseToConsole(Codes.status.SUCCESS, Codes.httpStatus.OK, 'User ' + user.username + ' Points Calculated and Saved', ''));
+							}
+
+						});
+					});
+
+
+
+
+				});
+
+
+				});
+
+			});
+
+
+		});
 
 };
 

@@ -1256,7 +1256,8 @@ exports.calculatePointsJob = function() {
                                                 }
 
                                                 var prevPoints = user.userPoints;
-                                                user.userPoints = prevPoints + matchCard.matchPoints;
+                                                var diff = matchCard.matchPoints - prevPoints;
+                                                user.userPoints = prevPoints + diff;
 
                                                 user.save(function(err, savedUser){
                                                     if (err) {
@@ -1289,8 +1290,6 @@ exports.calculatePointsJob = function() {
                                 });
 
                             });
-
-
 
 
 

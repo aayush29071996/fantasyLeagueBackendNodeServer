@@ -107,7 +107,7 @@ module.exports = function(app) {
 	// app.post('/changePassword', UserController.changePassword);
 	app.post('/reset', ResetController.resetPasswordRequest)
 	app.get('/reset/:token', ResetController.resetPasswordResponse);
-	app.post('/reset/:token', UserController.resetPassword);
+	app.post('/resetPassword', UserController.resetPassword);
 	app.post('/changePassword', UserController.changePassword);
 
 	app.post('/feedback', ContactController.sendFeedback);
@@ -185,6 +185,9 @@ module.exports = function(app) {
 
 	app.get('/leaderboard/:matchId', PointsSystemController.getMatchLeaderboard);
 	app.get('/resetPointsFixture/:matchId', PointsSystemController.resetPointsFixture);
+
+
+	app.post('/manualSystem1', PointsSystemController.manualSystem1);
 	//app.post('/getm', PointsSystemController.getm);
 
 
