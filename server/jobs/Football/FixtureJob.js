@@ -795,11 +795,12 @@ exports.updateFixturesJob = function() {
 //calculate points every 1 minute
 exports.calculatePointsJob = function() {
     console.log(moment().format('MMMM Do YYYY, h:mm:ss a'));
-    console.log('calculatePointsJob inside')
+    console.log('calculatePointsJob inside');
     var calculatePointsJob = new CronJob({
 
         cronTime: '*/30 * * * * *',
         onTick: function() {
+
 
                 var twoHoursBefore = moment().utcOffset(330).subtract('2','h').format("YYYY-MM-DD HH:mm:ss");
                 var thirtyMinsAfter = moment().utcOffset(330).add('30','m').format("YYYY-MM-DD HH:mm:ss");
@@ -1306,6 +1307,10 @@ exports.calculatePointsJob = function() {
     });
     calculatePointsJob.start();
 }
+
+
+
+
 
 
 /*

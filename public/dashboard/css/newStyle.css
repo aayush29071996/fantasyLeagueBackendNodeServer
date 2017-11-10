@@ -15,8 +15,6 @@
     font-weight: 600;
 }
 
-.event-content .event-tab {}
-
 .event-content .event-tab ul li {
     list-style: none;
     background: #f2f2f2;
@@ -25,6 +23,11 @@
     font-size: 17px;
     border-radius: 20px 20px 0px 0px;
     color: #2a2a2a;
+}
+
+.event-content .event-tab ul li.active {
+    background: #808080;
+    color: #fff;
 }
 
 .event-content .event-tab ul {

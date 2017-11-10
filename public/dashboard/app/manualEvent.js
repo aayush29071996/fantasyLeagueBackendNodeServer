@@ -1,11 +1,12 @@
-
 dashBoard.controller('eventCtrl', function($scope, $q, Football, $filter) {
 
     $scope.initFunction = function() {
         $scope.showFootEvent = true;
         $scope.eventTab = [{
-            "tab": "New Tab"
+            "tab": "New Tab",
+            "value": 1
         }];
+        $scope.tabs = $scope.eventTab[0].value;
         $scope.squence = "100";
 
         $scope.eventSchedule = [{
@@ -17,7 +18,8 @@ dashBoard.controller('eventCtrl', function($scope, $q, Football, $filter) {
             "points": "",
             "last_event": true,
             "submitted": false,
-            "highScore": false
+            "highScore": false,
+            "indent": 1
         }];
 
         $scope.events = [{
@@ -136,7 +138,8 @@ dashBoard.controller('eventCtrl', function($scope, $q, Football, $filter) {
                 "event_time": "",
                 "points": "",
                 "last_event": true,
-                "submitted": false
+                "submitted": false,
+                "indent": $scope.eventSchedule[$scope.eventSchedule.length - 1].indent + 1
             });
             $scope.squence++;
         } else {
@@ -321,9 +324,39 @@ dashBoard.controller('eventCtrl', function($scope, $q, Football, $filter) {
 
     $scope.createTab = function() {
         $scope.eventTab.push({
-            "tab": "New Tab"
+            "tab": "New Tab",
+            value: $scope.eventTab[$scope.eventTab.length - 1].value + 1
         });
+        $scope.tabs = $scope.eventTab[$scope.eventTab.length - 1].value;
     };
-    $scope.initFunction();
 
+    $scope.switchTab = function(tabName) {
+        $scope.tabs = tabName;
+    };
+
+    $scope.navigateTab = function(tab) {
+        return $scope.tabs == tab;
+    };
+
+    // Dynamic Functions
+
+    $scope.dynamicInitFunction = function() {
+        $scope.dynamicIndent = $scope.eventTab[$scope.eventTab.length - 1].value;
+        var dynamicScope = "eventSchedule" + $scope.dynamicIndent;
+        $scope[dynamicScope] = [{
+            "event_id": "",
+            "event_name": "",
+            "player_id": "",
+            "player_name": "",
+            "event_time": "",
+            "points": "",
+            "last_event": true,
+            "submitted": false,
+            "highScore": false,
+            "indent": 1
+        }];
+        var htmlContent = '';
+    };
+
+    $scope.initFunction();
 });

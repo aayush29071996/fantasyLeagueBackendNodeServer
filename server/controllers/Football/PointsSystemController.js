@@ -996,17 +996,22 @@ exports.manualSystem1 = function(req, res){
 
 
         // MATCH POINTS AND LINE UP CHANGES
-		var wholeMatchPreviousPoints = _.findWhere(match.points);
+		var wholeMatchPreviousPoints = _.findWhere({match}).points;
+	//	console.log(wholeMatchPreviousPoints);
 		var playerPreviousPoints = _.findWhere(match.lineup,{"playerId":req.body.playerId}).points;
-
+	//	console.log(playerPreviousPoints);
 		var playerNewPoints = playerPreviousPoints + req.body.eventPoints;
+	//	console.log(playerNewPoints);
 		var wholeMatchPoints = wholeMatchPreviousPoints + req.body.eventPoints;
+	//	console.log(wholeMatchPoints);
 		_.findWhere(match.lineup,{"playerId":req.body.playerId}).points = playerNewPoints;
 		match.points = wholeMatchPoints;
+	//	console.log(match.points);
 
 		//PUSH THE EVENT IN MATCHES SCHEMA FOR THAT MATCH
-		match.events.push(newEvent);
 
+
+		match.events.push(newEvent);
 
 		match.save(function(matchSaveErr, savedMatch){
 
