@@ -1,3 +1,4 @@
+
 dashBoard.controller('eventCtrl', function($scope, $q, Football, $filter) {
 
     $scope.initFunction = function() {
@@ -324,4 +325,5 @@ dashBoard.controller('eventCtrl', function($scope, $q, Football, $filter) {
         });
     };
     $scope.initFunction();
+
 });
