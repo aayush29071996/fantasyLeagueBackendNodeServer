@@ -20,6 +20,17 @@ var EventHistory = require('../../models/Football/EventHistory');
 
 
 var HistoryCount = require('../../modules/getHistoryCount');
+var responseToConsole = function(_status, _code, _data, _error) {
+
+	var responseJSON = {
+		status: _status,
+		code: _code,
+		data: _data,
+		error: _error
+	}
+	return responseJSON;
+}
+
 
 
 exports.createPointSystem = function(req, res) {
