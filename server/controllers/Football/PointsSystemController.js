@@ -956,9 +956,9 @@ exports.manualSystem1 = function(req, res){
 
 		newEvent.save(function (saveErr, saveEvent){
 			if(saveErr){
-				res.status(httpStatus.BR).json({
-					status: status.FAILURE,
-					code: httpStatus.BR,
+				res.status(Codes.httpStatus.BR).json({
+					status:Codes.status.FAILURE,
+					code: Codes.httpStatus.BR,
 					data: '',
 					error: Validation.validatingErrors(saveErr)
 				});
@@ -983,9 +983,9 @@ exports.manualSystem1 = function(req, res){
 
 		eventHistory.save(function (saveErr, saveEventHistory){
 			if(saveErr){
-				res.status(httpStatus.BR).json({
+				res.status(Codes.httpStatus.BR).json({
 					status: status.FAILURE,
-					code: httpStatus.BR,
+					code: Codes.httpStatus.BR,
 					data: '',
 					error: Validation.validatingErrors(saveErr)
 				});
