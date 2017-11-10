@@ -1292,8 +1292,6 @@ exports.calculatePointsJob = function() {
                             });
 
 
-
-
                             // } //match.active
                         // } // index == 0 
 
@@ -1308,3 +1306,71 @@ exports.calculatePointsJob = function() {
     });
     calculatePointsJob.start();
 }
+
+
+/*
+exports.calculateBonusPointsJob = function() {
+
+    console.log(moment().format('MMMM Do YYYY, h:mm:ss a'));
+    console.log('calculateBonusPointsJob inside');
+
+    var calculateBonusPointsJob = new CronJob({
+
+        cronTime: '*!/2 * * *',
+
+
+        onTick: function() {
+
+            Match.find({matchCompleted:true ,bonusPointsCalculated:false}).exec( function(matchesErr, matches){
+                    console.log(' ******** MATCHES TO BE CALCULATED  :: ' + matches.length + '  ********');
+                    if(matchesErr){
+                        console.log(responseToConsole(Codes.status.FAILURE, Codes.httpStatus.ISE, matchesErr, Codes.errorMsg.UNEXP_ERROR));
+                    }
+
+                //CALCULATING FOR A SINGLE MATCH
+
+                matches.forEach(function(match, index) {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                });
+
+
+
+            });
+
+
+
+        },
+        onComplete: function() {
+            console.log('Calculate Bonus Points Job Stopped');
+        },
+        start: true
+
+
+        });
+    calculateBonusPointsJob.start();
+
+
+}
+*/

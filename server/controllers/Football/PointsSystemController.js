@@ -1094,10 +1094,20 @@ exports.manualSystem1 = function(req, res){
 
 				});
 
+			res.status(Codes.httpStatus.OK).json({
+				status: Codes.status.SUCCESS,
+				code: Codes.httpStatus.OK,
+				data: req.body.eventId +'Has been updated in the database and the points have been calculated sucessfully',
+				error: ''
+			});
+
+
 			});
 
 
 		});
 
 };
+
+
 

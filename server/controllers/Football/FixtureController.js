@@ -88,6 +88,20 @@ exports.getFixturesHistory = function (req, res) {
                         if (matches.length > 0) {
                             matches.forEach(function (match, index) {
 
+                                match.matchCompleted = true;
+                                match.save(function (saveErr, savedMatch){
+                                    if(saveErr){
+                                        res.status(httpStatus.BR).json({
+                                            status: status.FAILURE,
+                                            code: httpStatus.BR,
+                                            data: '',
+                                            error: Validation.validatingErrors(saveErr)
+                                        });
+                                    }
+                                    console.log('Match with id'+match.matchId+'updated successfully');
+                                    // SAVES eventHistory
+                                });
+
                                 Team.findOne({teamId: match.team1Id}, {players: 0}, function (team1Err, team1) {
                                     if (team1Err) {
                                         res.status(Codes.httpStatus.ISE).json({
@@ -164,6 +178,19 @@ exports.getFixturesHistory = function (req, res) {
                 var  matchCount = 0;
                 if (matches.length > 0) {
                     matches.forEach(function (match, index) {
+                        match.matchCompleted = true;
+                        match.save(function (saveErr, savedMatch){
+                            if(saveErr){
+                                res.status(httpStatus.BR).json({
+                                    status: status.FAILURE,
+                                    code: httpStatus.BR,
+                                    data: '',
+                                    error: Validation.validatingErrors(saveErr)
+                                });
+                            }
+                            console.log('Match with id'+match.matchId+'updated successfully');
+                            // SAVES eventHistory
+                        });
 
                         Team.findOne({teamId: match.team1Id}, {players: 0}, function (team1Err, team1) {
                             if (team1Err) {
@@ -282,6 +309,20 @@ exports.getFixturesHistory = function (req, res) {
         var matchCount = 0;
         if (matches.length > 0) {
             matches.forEach(function (match, index) {
+
+                match.matchCompleted = true;
+                match.save(function (saveErr, savedMatch){
+                    if(saveErr){
+                        res.status(httpStatus.BR).json({
+                            status: status.FAILURE,
+                            code: httpStatus.BR,
+                            data: '',
+                            error: Validation.validatingErrors(saveErr)
+                        });
+                    }
+                    console.log('Match with id'+match.matchId+'updated successfully');
+                    // SAVES eventHistory
+                });
 
                 Team.findOne({teamId: match.team1Id}, {players: 0}, function (team1Err, team1) {
                     if (team1Err) {
@@ -817,6 +858,22 @@ exports.getFixturesHistoryAdmin = function (req, res) {
         var fixturesSet = [];
         if (matches.length > 0) {
             matches.forEach(function (match, index) {
+
+                match.matchCompleted = true;
+                match.save(function (saveErr, savedMatch){
+                    if(saveErr){
+                        res.status(httpStatus.BR).json({
+                            status: status.FAILURE,
+                            code: httpStatus.BR,
+                            data: '',
+                            error: Validation.validatingErrors(saveErr)
+                        });
+                    }
+                    console.log('Match with id'+match.matchId+'updated successfully');
+                    // SAVES eventHistory
+                });
+
+
                 Team.findOne({teamId: match.team1Id}, {players: 0}, function (team1Err, team1) {
                     if (team1Err) {
                         res.status(Codes.httpStatus.ISE).json({
