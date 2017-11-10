@@ -984,10 +984,11 @@ exports.manualSystem1 = function(req, res){
 		eventHistory.save(function (saveErr, saveEventHistory){
 			if(saveErr){
 				res.status(Codes.httpStatus.BR).json({
-					status: status.FAILURE,
+					status:Codes.status.FAILURE,
 					code: Codes.httpStatus.BR,
 					data: '',
 					error: Validation.validatingErrors(saveErr)
+
 				});
 			}
 			// SAVES eventHistory
@@ -1105,12 +1106,7 @@ exports.manualSystem1 = function(req, res){
 
 				});
 
-			res.status(Codes.httpStatus.OK).json({
-				status: Codes.status.SUCCESS,
-				code: Codes.httpStatus.OK,
-				data: req.body.eventId +'Has been updated in the database and the points have been calculated sucessfully',
-				error: ''
-			});
+
 
 
 			});
