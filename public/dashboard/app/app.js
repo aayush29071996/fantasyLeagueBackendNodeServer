@@ -15,152 +15,161 @@ var dashBoard = angular.module('dashBoard', [
     'cgBusy',
     'angularMoment'
 ]);
-dashBoard.run(function($rootScope){
-  $rootScope._ = _;
+dashBoard.run(function($rootScope) {
+    $rootScope._ = _;
 });
 dashBoard.config(function($stateProvider, $locationProvider, $urlRouterProvider) {
-        $stateProvider
+    $stateProvider
         .state('login', {
             cache: false,
-            url:'/login',
+            url: '/login',
             templateUrl: 'dashboard/views/login.html',
             controller: 'Login'
-         })
-         .state('admin', {
+        })
+        .state('admin', {
             url: '/home',
             abstract: true,
             templateUrl: 'dashboard/views/admin.html',
             controller: 'Admin'
-          })
+        })
 
-          .state('admin.dashboard', {
+    .state('admin.dashboard', {
             url: '/dashboard',
             views: {
-              'admin-dashboard': {
-                templateUrl: 'dashboard/views/admin-dashboard.html',
-                controller: 'Dashboard'
-              }
+                'admin-dashboard': {
+                    templateUrl: 'dashboard/views/admin-dashboard.html',
+                    controller: 'Dashboard'
+                }
             }
-          })
-          // .state('admin.users', {
-          //   url: '/users',
-          //   views: {
-          //     'admin-users': {
-          //       templateUrl: 'dashboard/views/admin-users.html',
-          //       controller: 'Users'
-          //     }
-          //   }
-          // })
-          .state('admin.points', {
+        })
+        // .state('admin.users', {
+        //   url: '/users',
+        //   views: {
+        //     'admin-users': {
+        //       templateUrl: 'dashboard/views/admin-users.html',
+        //       controller: 'Users'
+        //     }
+        //   }
+        // })
+        .state('admin.points', {
             url: '/points',
             views: {
-              'admin-points': {
-                templateUrl: 'dashboard/views/admin-points.html',
-                controller: 'Points'
-              }
+                'admin-points': {
+                    templateUrl: 'dashboard/views/admin-points.html',
+                    controller: 'Points'
+                }
             }
-          })
-          .state('admin.usercust', {
-              url:'/users/customers',
-              views: {
+        })
+        .state('admin.usercust', {
+            url: '/users/customers',
+            views: {
                 'admin-users-customers': {
-                  templateUrl: 'dashboard/views/users/customers.html',
-                  controller:'UserCust'
+                    templateUrl: 'dashboard/views/users/customers.html',
+                    controller: 'UserCust'
                 }
-              }
-            })
-          .state('admin.useremp', {
-             url:'/users/employees',
-             views: {
-              'admin-users-employees': {
-                templateUrl: 'dashboard/views/users/employees.html',
-                controller:'UserEmp'
-              }
             }
-          })
-          .state('admin.uservendors', {
-              url:'/users/vendors',
-              views: {
-                'admin-users-vendors': {
-                  templateUrl: 'dashboard/views/users/vendors.html',
-                  controller:'UsersVendors'
+        })
+        .state('admin.useremp', {
+            url: '/users/employees',
+            views: {
+                'admin-users-employees': {
+                    templateUrl: 'dashboard/views/users/employees.html',
+                    controller: 'UserEmp'
                 }
-              }
-            })
-          .state('admin.footteams', {
+            }
+        })
+        .state('admin.uservendors', {
+            url: '/users/vendors',
+            views: {
+                'admin-users-vendors': {
+                    templateUrl: 'dashboard/views/users/vendors.html',
+                    controller: 'UsersVendors'
+                }
+            }
+        })
+        .state('admin.footteams', {
             url: '/football/teams',
             views: {
-              'admin-football-teams': {
-                templateUrl: 'dashboard/views/football/teams.html',
-                controller: 'FootTeams'
-              }
+                'admin-football-teams': {
+                    templateUrl: 'dashboard/views/football/teams.html',
+                    controller: 'FootTeams'
+                }
             }
-          })
-          .state('admin.footplayers', {
+        })
+        .state('admin.footplayers', {
             url: '/football/players',
             views: {
-              'admin-football-players': {
-                templateUrl: 'dashboard/views/football/players.html',
-                controller: 'FootPlayers'
-              }
+                'admin-football-players': {
+                    templateUrl: 'dashboard/views/football/players.html',
+                    controller: 'FootPlayers'
+                }
             }
-          })
-          .state('admin.footfixtures', {
+        })
+        .state('admin.footfixtures', {
             url: '/football/fixtures',
             views: {
-              'admin-football-fixtures': {
-                templateUrl: 'dashboard/views/football/fixtures.html',
-                controller: 'FootFixtures'
-              }
+                'admin-football-fixtures': {
+                    templateUrl: 'dashboard/views/football/fixtures.html',
+                    controller: 'FootFixtures'
+                }
             }
-          })
-          .state('admin.footapis', {
+        })
+        .state('admin.footapis', {
             url: '/football/apis',
             views: {
-              'admin-football-apis': {
-                templateUrl: 'dashboard/views/football/apis.html',
-                controller: 'FootApis'
-              }
+                'admin-football-apis': {
+                    templateUrl: 'dashboard/views/football/apis.html',
+                    controller: 'FootApis'
+                }
             }
-          })
-          .state('admin.cricteams', {
+        })
+        .state('admin.cricteams', {
             url: '/cricket/teams',
             views: {
-              'admin-cricket-teams': {
-                templateUrl: 'dashboard/views/cricket/teams.html',
-                controller: 'CricTeams'
-              }
+                'admin-cricket-teams': {
+                    templateUrl: 'dashboard/views/cricket/teams.html',
+                    controller: 'CricTeams'
+                }
             }
-          })
-          .state('admin.cricplayers', {
+        })
+        .state('admin.cricplayers', {
             url: '/cricket/players',
             views: {
-              'admin-cricket-players': {
-                templateUrl: 'dashboard/views/cricket/players.html',
-                controller: 'CricPlayers'
-              }
+                'admin-cricket-players': {
+                    templateUrl: 'dashboard/views/cricket/players.html',
+                    controller: 'CricPlayers'
+                }
             }
-          })
-          .state('admin.cricfixtures', {
+        })
+        .state('admin.cricfixtures', {
             url: '/cricket/fixtures',
             views: {
-              'admin-cricket-fixtures': {
-                templateUrl: 'dashboard/views/cricket/fixtures.html',
-                controller: 'CricFixtures'
-              }
+                'admin-cricket-fixtures': {
+                    templateUrl: 'dashboard/views/cricket/fixtures.html',
+                    controller: 'CricFixtures'
+                }
             }
-          })
-          .state('admin.cricapis', {
+        })
+        .state('admin.cricapis', {
             url: '/cricket/apis',
             views: {
-              'admin-cricket-apis': {
-                templateUrl: 'dashboard/views/cricket/apis.html',
-                controller: 'CricApis'
-              }
+                'admin-cricket-apis': {
+                    templateUrl: 'dashboard/views/cricket/apis.html',
+                    controller: 'CricApis'
+                }
             }
-          })
+        })
+        .state('admin.footballManual', {
+            url: '/football/event',
+            views: {
+                'admin-football-event': {
+                    templateUrl: 'dashboard/views/football/event.manual.html',
+                    controller: 'eventCtrl'
+                }
+            }
+        });
 
-        $urlRouterProvider.otherwise('/login');
+    $urlRouterProvider.otherwise('/login');
 
-        $locationProvider.hashPrefix('');
-    });
+    $locationProvider.hashPrefix('');
+});
