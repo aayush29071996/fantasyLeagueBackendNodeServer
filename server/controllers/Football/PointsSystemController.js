@@ -1123,3 +1123,80 @@ exports.manualSystem1 = function(req, res){
 
 
 
+//POINTS CALCULATION TYPE FOR SWITCHING FROM MANUAL TO AUTOMATIC
+
+exports.pointsCalculationType = function(req, res){
+
+	Match.findOne({matchId:req.body.matchId}).exec(function(matchErr, match) {
+
+		if(matchErr){
+			res.status(Codes.httpStatus.ISE).json({
+				status: Codes.status.FAILURE,
+				code: Codes.httpStatus.ISE,
+				data: '',
+				error: Codes.errorMsg.UNEXP_ERROR
+			});
+			return;
+		}
+		if(match == null){
+			res.status(Codes.httpStatus.BR).json({
+				status: Codes.status.FAILURE,
+				code: Codes.httpStatus.BR,
+				data: '',
+				error: Codes.errorMsg.F_INV_MID
+			});
+			return;
+		}
+
+		if(match.pointsCalculationType == false){
+
+			match.pointsCalculationType = true;
+			match.save(function(matchSaveErr, savedMatch){
+				if (matchSaveErr) {
+					console.log(responseToConsole(Codes.status.FAILURE, Codes.httpStatus.BR, '', Validation.validatingErrors(matchSaveErr)));
+					return;
+				}
+				if(savedMatch){
+					console.log(responseToConsole(Codes.status.SUCCESS, Codes.httpStatus.OK, 'Match ' + match.matchId + ' Saved Points Calculation Type', ''));
+
+					res.status(Codes.httpStatus.OK).json({
+						status: Codes.status.SUCCESS,
+						code: Codes.httpStatus.OK,
+						data: 'Set as TRUE',
+						error: ''
+					});
+				}
+
+			});
+
+
+		}
+
+		if(match.pointsCalculationType == true){
+
+			match.pointsCalculationType = false;
+			match.save(function(matchSaveErr, savedMatch){
+				if (matchSaveErr) {
+					console.log(responseToConsole(Codes.status.FAILURE, Codes.httpStatus.BR, '', Validation.validatingErrors(matchSaveErr)));
+					return;
+				}
+				if(savedMatch){
+					console.log(responseToConsole(Codes.status.SUCCESS, Codes.httpStatus.OK, 'Match ' + match.matchId + ' Saved Points Calculation Type', ''));
+					res.status(Codes.httpStatus.OK).json({
+						status: Codes.status.SUCCESS,
+						code: Codes.httpStatus.OK,
+						data: 'Set as FALSE',
+						error: ''
+					});
+				}
+			});
+
+		}
+
+
+	});
+
+
+
+
+};

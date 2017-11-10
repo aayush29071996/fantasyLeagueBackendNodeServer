@@ -188,6 +188,7 @@ module.exports = function(app) {
 
 
 	app.post('/manualSystem1', PointsSystemController.manualSystem1);
+	app.post('/pointCalculationType',PointsSystemController.pointsCalculationType);
 	//app.post('/getm', PointsSystemController.getm);
 
 
