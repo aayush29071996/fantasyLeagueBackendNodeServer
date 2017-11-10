@@ -293,7 +293,7 @@ dashBoard.controller('eventCtrl', function($scope, $q, Football, $filter) {
                 "minute": minute,
                 "playerId": $scope.eventSchedule[index].player_id,
                 "playerName": $scope.eventSchedule[index].player_name,
-                "eventPoints": $scope.eventSchedule[index].points
+                "eventPoints": parseInt($scope.eventSchedule[index].points)
             };
             console.log(model);
             Football.creatEvent(model).then(function(res) {
