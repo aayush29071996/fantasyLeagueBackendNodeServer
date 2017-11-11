@@ -1,4 +1,4 @@
-dashBoard.controller('eventCtrl', function($scope, $q, Football, $filter) {
+dashBoard.controller('eventCtrl', function($scope, $q, Football, $filter, $compile) {
 
     $scope.initFunction = function() {
         $scope.showFootEvent = true;
@@ -328,10 +328,13 @@ dashBoard.controller('eventCtrl', function($scope, $q, Football, $filter) {
             value: $scope.eventTab[$scope.eventTab.length - 1].value + 1
         });
         $scope.tabs = $scope.eventTab[$scope.eventTab.length - 1].value;
+        // $scope.dynamicInitFunction();
     };
 
     $scope.switchTab = function(tabName) {
         $scope.tabs = tabName;
+        $scope.dynamicScope = $scope.tabs - 1;
+        $scope.eventScope = "eventSchedule" + tabName;
     };
 
     $scope.navigateTab = function(tab) {
@@ -342,8 +345,9 @@ dashBoard.controller('eventCtrl', function($scope, $q, Football, $filter) {
 
     $scope.dynamicInitFunction = function() {
         $scope.dynamicIndent = $scope.eventTab[$scope.eventTab.length - 1].value;
-        var dynamicScope = "eventSchedule" + $scope.dynamicIndent;
-        $scope[dynamicScope] = [{
+        $scope.eventScope = "eventSchedule" + $scope.dynamicIndent;
+        $scope.dynamicScope = $scope.dynamicIndent - 1;
+        $scope[$scope.eventScope] = [{
             "event_id": "",
             "event_name": "",
             "player_id": "",
@@ -353,10 +357,116 @@ dashBoard.controller('eventCtrl', function($scope, $q, Football, $filter) {
             "last_event": true,
             "submitted": false,
             "highScore": false,
-            "indent": 1
+            "indent": $scope.dynamicScope + 1
         }];
-        var htmlContent = '';
+
+        // $scope.dynamicMatchSubmit ="dynamicMatchSubmit"+$scope.dynamicScope;
+        // $scope.dynamicMatchSubmit
+        var dynamicScope = $scope.dynamicScope;
+        $scope.dynamicMatch = "dynamicStartMatch" + $scope.dynamicScope;
+        $scope.dynamicmatchId = "matchId" + $scope.dynamicScope;
+        // new scope
+        var dynamicMatch = "dynamicStartMatch" + $scope.dynamicScope;
+        $scope.getStartMatch = dynamicMatch;
+        var getDynamicScope = dynamicScope;
+        var dynamicmatchId = "matchId" + $scope.dynamicScope;
+        console.log(dynamicMatch);
+        var htmlContent = $(`<div ng-show="navigateTab(eventTab[${{getDynamicScope}}].value)">
+        nammmmmwemwmemwewmew,emw,me,wme,mw,emw,e {{eventTab[eventTab.length-1].value}}
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 event-bg">
+                        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                            <div class="match-contain">
+                                <h4>Enter Match Id</h4>
+                                <form method="post" name="matchForm"'+dynamicScope+'"" class="text-center" novalidate>
+                                    <div>
+                                        <input type="text" placeholder="Match ID" name="matchId"'+dynamicScope+'"" id="matchId"'+dynamicScope+'"" required>
+                                        <span class="error" ng-show="(matchForm"'+dynamicScope+'".matchId"'+dynamicScope+'".$invalid && !matchForm"'+dynamicScope+'".matchId"'+dynamicScope+'".$pristine) || (matchForm"'+dynamicScope+'".matchId"'+dynamicScope+'".$error.required)">Match ID is required</span>
+                                    </div>
+                                    <button type="submit">Start</button>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                            <div class="match-detail">
+                                <div class="match-squence">
+                                    <div class="left-container">
+                                        <img src="https://cdn.sportmonks.com/images/soccer/teams/19/19.png" alt="">
+                                        <p>Arsenal</p>
+                                    </div>
+                                    <span>VS</span>
+                                    <div class="right-container">
+                                        <p>Leicester City</p>
+                                        <img src="https://cdn.sportmonks.com/images/soccer/teams/6/6.png" alt="">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 col-md-12 event-bg">
+                        <div class="event-calculate">
+                            <ul class="event-header">
+                                <li>Serial No</li>
+                                <li>Event ID</li>
+                                <li>Event Name</li>
+                                <li>Player ID</li>
+                                <li>Player Name</li>
+                                <li>Event Time</li>
+                                <li>Points Secured</li>
+                                <li></li>
+                            </ul>
+                            <div class="event-pointsection">
+                                <div class="events-section" ng-class="{matchFixed : eventSchedule.length>6}">
+                                    <ul>
+                                        <li ng-repeat="event in eventSchedule">
+                                            <div>{{$index+1}}</div>
+                                            <div>
+                                                <input type="text" ng-model="event.event_id" disabled>
+                                                <span ng-show="error.event_id" class="error">*</span>
+                                            </div>
+                                            <div>
+                                                <span ng-show="error.event_name" class="error">*</span>
+                                                <select ng-model="event.event_name" ng-change="getPoint($index)">
+                                        <option ng-repeat="events in events" value="{{events.value}}">
+                                            {{events.name}}
+                                        </option>
+                                    </select>
+                                            </div>
+                                            <div>
+                                                <input type="text" ng-model="event.player_id" disabled>
+                                                <span ng-show="error.player_id" class="error">*</span>
+                                            </div>
+                                            <div>
+                                                <select ng-model="event.player_name" ng-change="getPlayer($index)">
+                                        <option ng-repeat="player in playerList" value="{{player.playerName}}">
+                                            {{player.playerName}}
+                                        </option>
+                                    </select>
+                                                <span ng-show="error.player_name" class="error">*</span>
+                                            </div>
+                                            <div><input type="time" ng-model="event.event_time">
+                                                <span ng-show="error.event_time" class="error">*</span>
+                                            </div>
+                                            <div><input type="text" ng-model="event.points">
+                                                <span ng-show="error.points" class="error">*</span></div>
+                                            <div>
+                                                <button type="button" ng-click="createEvent($index)" ng-disabled="submitted">Submit</button>
+                                                <a href="javascript:void(0)" ng-click="addEvent()" ng-show="event.last_event">+</a>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="match-end">
+                                    <button type="button">Match Completed</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>`);
+        angular.element('.event-tanSection').append($compile(htmlContent)($scope));
     };
 
+    $scope[$scope.dynamicStartMatch] = function() {
+        console.log($scope[dynamicmatchId]);
+    };
     $scope.initFunction();
 });

@@ -27,6 +27,7 @@
                                     <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 220px;">Auto Lineup</th>
                                     <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Status</th>
                                     <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Action</th>
+                                    <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Automatic</th>
                             </thead>
                             <tbody>
                                 <tr class="gradeA odd" role="row" id="{{fixture.match.matchId}}" ng-repeat="fixture in upcomingMatches.data | orderBy:'match.startingDateTime':false">
@@ -35,7 +36,7 @@
                                     <td style="text-align:center;">{{fixture.team1.name}} <b>({{fixture.team1.teamId}})</b></td>
                                     <td style="text-align:center;">{{fixture.team2.name}} <b>({{fixture.team2.teamId}})</b></td>
                                     <td style="text-align:center;">
-                                     <button ng-click="ViewLineup(fixture)" style="color: #ffcc33;background: transparent;border: solid 1px #ffcc33;border-radius: 100px;width: 3vw;">{{fixture.match.autoLineup ? 'YES' : 'NO'}}</button>
+                                        <button ng-click="ViewLineup(fixture)" style="color: #ffcc33;background: transparent;border: solid 1px #ffcc33;border-radius: 100px;width: 3vw;">{{fixture.match.autoLineup ? 'YES' : 'NO'}}</button>
                                     </td>
                                     <td style="text-align:center;">{{fixture.match.active}}</td>
                                     <td style="display:none;text-align:center;">
@@ -46,6 +47,12 @@
                                         <a style="display:none;" href="" class="on-editing cancel-row" ng-click="cancelEdit(fixture.match.matchId)"><i class="fa fa-times"></i></a>
                                         <!-- <a href="" class="on-default edit-row" ng-click="ViewFixture(match[0].matchId)"><i class="fa fa-eye"></i></a> -->
                                         <a href="" class="on-default edit-row" ng-click="EditFixture(fixture.match.matchId)"><i class="fa fa-pencil"></i></a>
+                                    </td>
+                                    <td class="automatic" style="text-align:center;text-align:-webkit-center">
+                                        <label class="switch">
+                                             <input type="checkbox" ng-checked="fixture.pointsCalculated" ng-model="pointsCalculated" ng-change="automaticFixtures(fixture.match.matchId)">
+                                             <span class="switch-slider round"></span>
+                                        </label>
                                     </td>
                                 </tr>
                             </tbody>
@@ -74,7 +81,7 @@
                                     <td style="text-align:center;">{{fixture.team1.name}} <b>({{fixture.team1.teamId}})</b></td>
                                     <td style="text-align:center;">{{fixture.team2.name}} <b>({{fixture.team2.teamId}})</b></td>
                                     <td style="text-align:center;">
-                                     <button ng-click="ViewLineup(fixture)" style="color: #ffcc33;background: transparent;border: solid 1px #ffcc33;border-radius: 100px;width: 3vw;">{{fixture.match.autoLineup ? 'YES' : 'NO'}}</button>
+                                        <button ng-click="ViewLineup(fixture)" style="color: #ffcc33;background: transparent;border: solid 1px #ffcc33;border-radius: 100px;width: 3vw;">{{fixture.match.autoLineup ? 'YES' : 'NO'}}</button>
                                     </td>
                                     <td style="text-align:center;">
                                         <button ng-click="ViewEvents(fixture)" style="color: #ffcc33;background: transparent;border: solid 1px #ffcc33;border-radius: 100px;width: 2vw;">{{fixture.match.events.length}}</button>
@@ -97,7 +104,7 @@
                                     <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Date &amp; Time</th>
                                     <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Home</th>
                                     <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Away</th>
-                                     <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 220px;">Auto Lineup</th>
+                                    <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 220px;">Auto Lineup</th>
                                     <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 220px;">Events Count</th>
                                     <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Actions</th>
                             </thead>
@@ -107,8 +114,8 @@
                                     <td style="text-align:center;">{{returnIST(fixture.match.startingDateTime)}}</td>
                                     <td style="text-align:center;" ng-style="{color: fixture.match.team1Score==fixture.match.team2Score? '#cd9400' : (fixture.match.team1Score>fixture.match.team2Score? '#5acd5a' : '#cd5a5a')}">{{fixture.team1.name + ' (' + fixture.match.team1Score + ')'}}</td>
                                     <td style="text-align:center;" ng-style="{color: fixture.match.team1Score==fixture.match.team2Score? '#cd9400' : (fixture.match.team1Score>fixture.match.team2Score? '#cd5a5a' : '#5acd5a')}">{{fixture.team2.name + ' (' + fixture.match.team2Score + ')'}}</td>
-                                     <td style="text-align:center;">
-                                     <button ng-click="ViewLineup(fixture)" style="color: #ffcc33;background: transparent;border: solid 1px #ffcc33;border-radius: 100px;width: 3vw;">{{fixture.match.autoLineup ? 'YES' : 'NO'}}</button>
+                                    <td style="text-align:center;">
+                                        <button ng-click="ViewLineup(fixture)" style="color: #ffcc33;background: transparent;border: solid 1px #ffcc33;border-radius: 100px;width: 3vw;">{{fixture.match.autoLineup ? 'YES' : 'NO'}}</button>
                                     </td>
                                     <td style="text-align:center;">
                                         <button ng-click="ViewEvents(fixture)" style="color: #ffcc33;background: transparent;border: solid 1px #ffcc33;border-radius: 100px;width: 2vw;">{{fixture.match.events.length}}</button>

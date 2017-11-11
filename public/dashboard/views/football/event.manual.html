@@ -4,7 +4,7 @@
         <div class="event-content">
             <div class="event-tab">
                 <ul>
-                    <li ng-repeat="tab in eventTab" ng-click="switchTab(tab.value)" ng-class="{active:navigateTab(tab.value)}">{{tab.tab}}</li>
+                    <li ng-repeat="tab in eventTab" ng-click="switchTab(tab.value)" ng-class="{active:navigateTab(tab.value)}">{{tab.tab}} {{tab.value}}</li>
                 </ul>
                 <a href="javascript:void(0);" ng-click="createTab()">+</a>
             </div>

@@ -158,6 +158,10 @@ dashServices.factory('Football', function($http) {
         return $http.post(baseURI + '/manualSystem1', data);
     }
 
+    user.automaticFixture = function(data) {
+        return $http.post(baseURI + '/pointCalculationType', data);
+    }
+
 
     return user;
 });
