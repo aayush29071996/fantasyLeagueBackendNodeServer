@@ -1157,14 +1157,9 @@ exports.pointsCalculationType = function(req, res){
 					return;
 				}
 				if(savedMatch){
-					console.log(responseToConsole(Codes.status.SUCCESS, Codes.httpStatus.OK, 'Match ' + match.matchId + ' Saved Points Calculation Type', ''));
+					console.log(responseToConsole(Codes.status.SUCCESS, Codes.httpStatus.OK, 'Match ' + match.matchId + ' Saved Points Calculation Type As True', ''));
+                     return;
 
-					res.status(Codes.httpStatus.OK).json({
-						status: Codes.status.SUCCESS,
-						code: Codes.httpStatus.OK,
-						data: 'Set as TRUE',
-						error: ''
-					});
 				}
 
 			});
@@ -1172,7 +1167,7 @@ exports.pointsCalculationType = function(req, res){
 
 		}
 
-		if(match.pointsCalculationType == true){
+		else{
 
 			match.pointsCalculationType = false;
 			match.save(function(matchSaveErr, savedMatch){
@@ -1181,13 +1176,9 @@ exports.pointsCalculationType = function(req, res){
 					return;
 				}
 				if(savedMatch){
-					console.log(responseToConsole(Codes.status.SUCCESS, Codes.httpStatus.OK, 'Match ' + match.matchId + ' Saved Points Calculation Type', ''));
-					res.status(Codes.httpStatus.OK).json({
-						status: Codes.status.SUCCESS,
-						code: Codes.httpStatus.OK,
-						data: 'Set as FALSE',
-						error: ''
-					});
+					console.log(responseToConsole(Codes.status.SUCCESS, Codes.httpStatus.OK, 'Match ' + match.matchId + ' Saved Points Calculation Type As False', ''));
+
+					return;
 				}
 			});
 

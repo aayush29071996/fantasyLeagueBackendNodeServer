@@ -793,6 +793,8 @@ exports.updateFixturesJob = function() {
 
 
 //calculate points every 1 minute
+
+
 exports.calculatePointsJob = function() {
     console.log(moment().format('MMMM Do YYYY, h:mm:ss a'));
     console.log('calculatePointsJob inside');
