@@ -24,12 +24,12 @@ var Validation = require('../Validation');
 
 exports.getFixturesHistory = function (req, res) {
 
-    var twoHoursBefore = moment().utcOffset(330).subtract('2', 'h').format("YYYY-MM-DD HH:mm:ss");
+    var twoHoursBefore = moment.utc().subtract('2', 'h').format("YYYY-MM-DD HH:mm:ss");
   //  var now = moment.utc().subtract('2', 'h').format("YYYY-MM-DD HH:mm:ss");
  //   console.log(now);
-    var sevenDaysBefore = moment().utcOffset(330).subtract('7', 'd').format("YYYY-MM-DD HH:mm:ss");
-    var fourteenDaysBefore = moment().utcOffset(330).subtract('14', 'd').format("YYYY-MM-DD HH:mm:ss");
-    var twentyoneDaysBefore = moment().utcOffset(330).subtract('21', 'd').format("YYYY-MM-DD HH:mm:ss");
+    var sevenDaysBefore = moment.utc().subtract('7', 'd').format("YYYY-MM-DD HH:mm:ss");
+    var fourteenDaysBefore = moment.utc().subtract('14', 'd').format("YYYY-MM-DD HH:mm:ss");
+    var twentyoneDaysBefore = moment.utc().subtract('21', 'd').format("YYYY-MM-DD HH:mm:ss");
 
 
 
@@ -402,9 +402,9 @@ exports.getFixturesHistory = function (req, res) {
 
 exports.getFixturesLive = function (req, res) {
 
-    var twoHoursBefore = moment().utcOffset(330).subtract('2', 'h').format("YYYY-MM-DD HH:mm:ss");
+    var twoHoursBefore = moment.utc().subtract('2', 'h').format("YYYY-MM-DD HH:mm:ss");
 
-    var oneMinuteAfter = moment().utcOffset(330).add('1', 'm').format("YYYY-MM-DD HH:mm:ss");
+    var oneMinuteAfter = moment.utc().add('1', 'm').format("YYYY-MM-DD HH:mm:ss");
 
 
 
@@ -522,10 +522,10 @@ exports.getFixturesLive = function (req, res) {
 
 exports.getFixturesUpcoming = function (req, res) {
 
-    var oneMinuteAfter = moment().utcOffset(330).add('1', 'm').format("YYYY-MM-DD HH:mm:ss");
-    var sevenDaysAfter = moment().utcOffset(330).add('7', 'd').format("YYYY-MM-DD HH:mm:ss");
-    var fourteenDaysAfter = moment().utcOffset(330).add('14', 'd').format("YYYY-MM-DD HH:mm:ss");
-    var twentyoneDaysAfter = moment().utcOffset(330).add('21', 'd').format("YYYY-MM-DD HH:mm:ss");
+    var oneMinuteAfter = moment.utc().add('1', 'm').format("YYYY-MM-DD HH:mm:ss");
+    var sevenDaysAfter = moment.utc().add('7', 'd').format("YYYY-MM-DD HH:mm:ss");
+    var fourteenDaysAfter = moment.utc().add('14', 'd').format("YYYY-MM-DD HH:mm:ss");
+    var twentyoneDaysAfter = moment.utc().add('21', 'd').format("YYYY-MM-DD HH:mm:ss");
 
 
 
@@ -820,8 +820,8 @@ exports.getFixturesUpcoming = function (req, res) {
 
 exports.getFixturesHistoryAdmin = function (req, res) {
 
-    var twoHoursBefore = moment().utcOffset(330).subtract('2', 'h').format("YYYY-MM-DD HH:mm:ss");
-    var fifteenDaysBefore = moment().utcOffset(330).subtract('15', 'd').format("YYYY-MM-DD HH:mm:ss");
+    var twoHoursBefore = moment.utc().subtract('2', 'h').format("YYYY-MM-DD HH:mm:ss");
+    var fifteenDaysBefore = moment.utc().subtract('15', 'd').format("YYYY-MM-DD HH:mm:ss");
 
 
     // var twoHoursBefore= moment.utc().subtract('2','h').format("YYYY-MM-DD HH:mm:ss");
@@ -948,8 +948,8 @@ exports.getFixturesHistoryAdmin = function (req, res) {
 
 exports.getFixturesLiveAdmin = function (req, res) {
 
-    var twoHoursBefore = moment().utcOffset(330).subtract('2', 'h').format("YYYY-MM-DD HH:mm:ss");
-    var oneMinuteAfter = moment().utcOffset(330).add('1', 'm').format("YYYY-MM-DD HH:mm:ss");
+    var twoHoursBefore = moment.utc().subtract('2', 'h').format("YYYY-MM-DD HH:mm:ss");
+    var oneMinuteAfter = moment.utc().add('1', 'm').format("YYYY-MM-DD HH:mm:ss");
 
 
 
@@ -1059,8 +1059,8 @@ exports.getFixturesLiveAdmin = function (req, res) {
 
 exports.getFixturesUpcomingAdmin = function (req, res) {
 
-    var oneMinuteAfter = moment().utcOffset(330).add('1', 'm').format("YYYY-MM-DD HH:mm:ss");
-    var fifteenDaysAfter = moment().utcOffset(330).add('15', 'd').format("YYYY-MM-DD HH:mm:ss");
+    var oneMinuteAfter = moment.utc().add('1', 'm').format("YYYY-MM-DD HH:mm:ss");
+    var fifteenDaysAfter = moment.utc().add('15', 'd').format("YYYY-MM-DD HH:mm:ss");
 
     // var now = moment.utc().format("YYYY-MM-DD HH:mm:ss");
     // var sevenDaysAfter = moment.utc().add('15','d').format("YYYY-MM-DD HH:mm:ss");

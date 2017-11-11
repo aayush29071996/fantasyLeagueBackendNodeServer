@@ -804,8 +804,8 @@ exports.calculatePointsJob = function() {
         onTick: function() {
 
 
-                var twoHoursBefore = moment().utcOffset(330).subtract('2','h').format("YYYY-MM-DD HH:mm:ss");
-                var thirtyMinsAfter = moment().utcOffset(330).add('30','m').format("YYYY-MM-DD HH:mm:ss");
+                var twoHoursBefore = moment.utc().subtract('2','h').format("YYYY-MM-DD HH:mm:ss");
+                var thirtyMinsAfter = moment.utc().add('30','m').format("YYYY-MM-DD HH:mm:ss");
                 // var twoHoursBefore = moment(moment().subtract('6','d').format("YYYY-MM-DD HH:mm:ss")).toISOString();
                 // var thirtyMinsAfter = moment(moment().subtract('2','d').format("YYYY-MM-DD HH:mm:ss")).toISOString();
                 console.log('From ' + twoHoursBefore + ' To ' + thirtyMinsAfter);
