@@ -74,6 +74,7 @@
                                     <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 220px;">Auto Lineup</th>
                                     <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 220px;">Events Count</th>
                                     <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 220px;">Score</th>
+                                    <th style="text-align:center;" tabindex="0" rowspan="1" colspan="1" style="width: 259px;">Automatic</th>
                             </thead>
                             <tbody ng-show="liveMatches.data!=''">
                                 <tr class="gradeA odd" role="row" id="{{fixture.match.matchId}}" ng-repeat="fixture in liveMatches.data | orderBy: 'match.startingDateTime':false">
@@ -88,6 +89,9 @@
                                         <button ng-click="ViewEvents(fixture)" style="color: #ffcc33;background: transparent;border: solid 1px #ffcc33;border-radius: 100px;width: 2vw;">{{fixture.match.events.length}}</button>
                                     </td>
                                     <td style="text-align:center;"><b>{{fixture.match.team1Score + ' - ' + fixture.match.team2Score}}</b></td>
+                                     <td class="automatic" style="text-align:center;text-align:-webkit-center">
+                                        <a ui-sref="admin.footballManual({id: fixture.match.matchId})" target="_blank">Pick</a>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>

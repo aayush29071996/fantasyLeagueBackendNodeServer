@@ -1037,6 +1037,7 @@ exports.manualSystem1 = function(req, res){
 
 				_.each(matchCards, function(matchCard, index, matchCards){
 					var lineupInMatch = {};
+					var prevMatchPoints = _.findWhere({matchCard}).matchPoints;
 					var matchPoints = 0;
 					lineupInMatch = savedMatch.lineup;
 
@@ -1054,6 +1055,7 @@ exports.manualSystem1 = function(req, res){
 					});
 
 					matchCard.matchPoints = matchPoints;
+					var diff = matchCard.matchPoints - prevMatchPoints;
 					console.log(matchCard.user);
 
 
@@ -1088,7 +1090,7 @@ exports.manualSystem1 = function(req, res){
 						}
 
 						var prevPoints = user.userPoints;
-						var diff = matchCard.matchPoints - prevPoints;
+
 						user.userPoints = prevPoints + diff;
 
 						user.save(function(err, savedUser){
