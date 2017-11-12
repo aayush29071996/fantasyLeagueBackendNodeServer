@@ -115,17 +115,18 @@
 }
 
 .event-tanSection .match-detail .left-container>img {
-    display: inline-block;
+    float: left;
     width: 80px;
     height: 80px;
 }
 
 .event-tanSection .match-detail .left-container>p {
-    display: inline-block;
-    font-size: 18px;
+    font-size: 15px;
     color: #101010;
     width: 100px;
     text-align: left;
+    float: left;
+    margin-top: 20px;
 }
 
 .event-tanSection .match-detail span {
@@ -150,7 +151,7 @@
 
 .event-tanSection .match-detail .right-container>p {
     float: left;
-    font-size: 18px;
+    font-size: 15px;
     color: #101010;
     width: 100px;
     text-align: right;
@@ -200,7 +201,9 @@ ul.event-header li {
     color: #333;
 }
 
-.event-pointsection ul li {}
+.event-pointsection ul li {
+    height: 40px;
+}
 
 .event-pointsection ul li div {
     float: left;
@@ -358,4 +361,20 @@ input:checked+.switch-slider:before {
     position: absolute;
     left: 20px;
     top: 20px;
+}
+
+.hider {
+    position: relative;
+}
+
+.hider:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    z-index: 999;
+    width: 100%;
+    background: rgba(36, 36, 36, 0.03);
+    left: 0;
+    right: 0;
 }

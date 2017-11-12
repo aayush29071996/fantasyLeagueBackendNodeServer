@@ -53,6 +53,7 @@
                                              <input type="checkbox" ng-checked="fixture.pointsCalculated" ng-model="pointsCalculated" ng-change="automaticFixtures(fixture.match.matchId)">
                                              <span class="switch-slider round"></span>
                                         </label>
+                                        <a ui-sref="admin.footballManual({id: fixture.match.matchId})" target="_blank">Pick</a>
                                     </td>
                                 </tr>
                             </tbody>

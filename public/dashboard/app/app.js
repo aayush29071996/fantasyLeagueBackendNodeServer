@@ -160,7 +160,7 @@ dashBoard.config(function($stateProvider, $locationProvider, $urlRouterProvider)
             }
         })
         .state('admin.footballManual', {
-            url: '/football/event',
+            url: '/football/event/:id',
             views: {
                 'admin-football-event': {
                     templateUrl: 'dashboard/views/football/event.manual.html',
@@ -172,4 +172,71 @@ dashBoard.config(function($stateProvider, $locationProvider, $urlRouterProvider)
     $urlRouterProvider.otherwise('/login');
 
     $locationProvider.hashPrefix('');
-});
+}).directive('countdown', [
+    'Util',
+    '$interval',
+    function(Util, $interval) {
+        return {
+            restrict: 'A',
+            scope: { date: '@' },
+            link: function(scope, element) {
+                var future;
+                future = new Date(scope.date);
+                var timericon = "<i class=\"icon ion-ios-stopwatch-outline\"><\/i>&nbsp;"
+                $interval(function() {
+                    var diff;
+                    diff = Math.floor((future.getTime() - new Date().getTime()) / 1000);
+                    return element.html(timericon + Util.dhms(diff));
+                }, 1000);
+            }
+        };
+    }
+]).factory('Util', [function() {
+    return {
+        dhms: function(t) {
+            var days, hours, minutes, seconds;
+            days = Math.floor(t / 86400);
+            t -= days * 86400;
+            hours = Math.floor(t / 3600) % 24;
+            t -= hours * 3600;
+            minutes = Math.floor(t / 60) % 60;
+            t -= minutes * 60;
+            seconds = t % 60;
+            if (hours < 10)
+                hours = "0" + hours;
+
+            if (minutes < 10)
+                minutes = "0" + minutes;
+
+            if (seconds < 10)
+                seconds = "0" + seconds;
+            if (days == 0) {
+                if (hours == 0) {
+                    if (minutes == 0) {
+                        return [
+                            seconds + ''
+                        ].join('');
+                    } else {
+                        return [
+                            minutes + ':',
+                            seconds + ''
+                        ].join('');
+                    }
+                } else {
+                    return [
+                        hours + ':',
+                        minutes + ':',
+                        seconds + ''
+                    ].join('');
+                }
+            } else {
+                return [
+                    days + 'D:',
+                    hours + ':',
+                    minutes + ':',
+                    seconds + ''
+                ].join('');
+            }
+        }
+    };
+}]);

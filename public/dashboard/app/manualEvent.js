@@ -1,6 +1,8 @@
-dashBoard.controller('eventCtrl', function($scope, $q, Football, $filter, $compile) {
+dashBoard.controller('eventCtrl', function($scope, $q, Football, $filter, $compile, $stateParams) {
 
     $scope.initFunction = function() {
+        $scope.matchId = $stateParams.id;
+        console.log($scope.matchId);
         $scope.showFootEvent = true;
         $scope.eventTab = [{
             "tab": "New Tab",
@@ -79,6 +81,8 @@ dashBoard.controller('eventCtrl', function($scope, $q, Football, $filter, $compi
             "points": false
         };
         $scope.matchSubmit = false;
+        $scope.getUpcomingMatch();
+        $scope.startMatch(true);
     };
 
     var validation = function(index) {
@@ -127,6 +131,18 @@ dashBoard.controller('eventCtrl', function($scope, $q, Football, $filter, $compi
         }
         return returnValue;
     };
+
+    $scope.getUpcomingMatch = function() {
+        $scope.UpcomingMatchPromise = Football.getUpcomingMatches().then(function(resp) {
+            $scope.upcomingMatches = [];
+            for (var i = 0; i < resp.data.data.length; i++) {
+                if ($scope.matchId == resp.data.data[i].match.matchId) {
+                    $scope.upcomingMatches.push(resp.data.data[i]);
+                }
+            }
+            console.log($scope.upcomingMatches);
+        });
+    };
     $scope.addEvent = function() {
         if ($scope.matchId != "") {
             $scope.eventSchedule[$scope.eventSchedule.length - 1].last_event = false;
@@ -160,6 +176,7 @@ dashBoard.controller('eventCtrl', function($scope, $q, Football, $filter, $compi
             ]).then(function() {
                 playerPromise.then(function(res) {
                     $scope.playerList = res.data.data;
+                    $scope.disableMatch = true;
                 });
             });
         }
@@ -232,6 +249,15 @@ dashBoard.controller('eventCtrl', function($scope, $q, Football, $filter, $compi
                     } else if ($scope.playerList[goalSave].playerPositionId == "2") {
                         alert("Please enter value in manual");
                         $scope.eventSchedule[index].points = "";
+                        $scope.eventSchedule[index].player_id = "";
+                    } else if ($scope.playerList[goalSave].playerPositionId == "3") {
+                        alert("Please select defender or goalkeeper");
+                        $scope.eventSchedule[index].player_name = "";
+                        $scope.eventSchedule[index].player_id = "";
+                    } else {
+                        alert("Please select defender or goalkeeper");
+                        $scope.eventSchedule[index].player_name = "";
+                        $scope.eventSchedule[index].player_id = "";
                     }
                 }
             }
@@ -240,6 +266,18 @@ dashBoard.controller('eventCtrl', function($scope, $q, Football, $filter, $compi
                 if ($scope.playerList[pSaves].playerId == $scope.eventSchedule[index].player_id) {
                     if ($scope.playerList[pSaves].playerPositionId == "1") {
                         $scope.eventSchedule[index].points = "4";
+                    } else if ($scope.playerList[pSaves].playerPositionId == "2") {
+                        alert("Please select goalkeeper");
+                        $scope.eventSchedule[index].player_id = "";
+                        $scope.eventSchedule[index].player_name = "";
+                    } else if ($scope.playerList[pSaves].playerPositionId == "2") {
+                        alert("Please select goalkeeper");
+                        $scope.eventSchedule[index].player_id = "";
+                        $scope.eventSchedule[index].player_name = "";
+                    } else {
+                        alert("Please select goalkeeper");
+                        $scope.eventSchedule[index].player_id = "";
+                        $scope.eventSchedule[index].player_name = "";
                     }
                 }
             }
@@ -288,7 +326,6 @@ dashBoard.controller('eventCtrl', function($scope, $q, Football, $filter, $compi
 
     $scope.createEvent = function(index) {
         if (validation(index)) {
-
             var minute = timeToMinutes($scope.eventSchedule[index].event_time);
             var model = {
                 "eventId": $scope.eventSchedule[index].event_id,
@@ -323,11 +360,11 @@ dashBoard.controller('eventCtrl', function($scope, $q, Football, $filter, $compi
     }
 
     $scope.createTab = function() {
-        $scope.eventTab.push({
-            "tab": "New Tab",
-            value: $scope.eventTab[$scope.eventTab.length - 1].value + 1
-        });
-        $scope.tabs = $scope.eventTab[$scope.eventTab.length - 1].value;
+        // $scope.eventTab.push({
+        //     "tab": "New Tab",
+        //     value: $scope.eventTab[$scope.eventTab.length - 1].value + 1
+        // });
+        // $scope.tabs = $scope.eventTab[$scope.eventTab.length - 1].value;
         // $scope.dynamicInitFunction();
     };
 
@@ -360,27 +397,18 @@ dashBoard.controller('eventCtrl', function($scope, $q, Football, $filter, $compi
             "indent": $scope.dynamicScope + 1
         }];
 
-        // $scope.dynamicMatchSubmit ="dynamicMatchSubmit"+$scope.dynamicScope;
-        // $scope.dynamicMatchSubmit
-        var dynamicScope = $scope.dynamicScope;
-        $scope.dynamicMatch = "dynamicStartMatch" + $scope.dynamicScope;
-        $scope.dynamicmatchId = "matchId" + $scope.dynamicScope;
-        // new scope
-        var dynamicMatch = "dynamicStartMatch" + $scope.dynamicScope;
-        $scope.getStartMatch = dynamicMatch;
-        var getDynamicScope = dynamicScope;
-        var dynamicmatchId = "matchId" + $scope.dynamicScope;
-        console.log(dynamicMatch);
-        var htmlContent = $(`<div ng-show="navigateTab(eventTab[${{getDynamicScope}}].value)">
+        //once Scope
+        var getDynamicScope = $scope.dynamicScope;
+        var htmlContent = $(`<div class="eventTab" ng-show="eventTab[${{getDynamicScope}}].value">
         nammmmmwemwmemwewmew,emw,me,wme,mw,emw,e {{eventTab[eventTab.length-1].value}}
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 event-bg">
                         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                             <div class="match-contain">
                                 <h4>Enter Match Id</h4>
-                                <form method="post" name="matchForm"'+dynamicScope+'"" class="text-center" novalidate>
+                                <form method="post" name="matchForm" class="text-center" novalidate>
                                     <div>
-                                        <input type="text" placeholder="Match ID" name="matchId"'+dynamicScope+'"" id="matchId"'+dynamicScope+'"" required>
-                                        <span class="error" ng-show="(matchForm"'+dynamicScope+'".matchId"'+dynamicScope+'".$invalid && !matchForm"'+dynamicScope+'".matchId"'+dynamicScope+'".$pristine) || (matchForm"'+dynamicScope+'".matchId"'+dynamicScope+'".$error.required)">Match ID is required</span>
+                                        <input type="text" placeholder="Match ID" name="matchId{{dynamicScope}}" id="matchId{{dynamicScope}}" required>
+                                        <span class="error" ng-show="(matchForm{{dynamicScope}}.matchId{{dynamicScope}}.$invalid && !matchForm{{dynamicScope}}.matchId{{dynamicScope}}.$pristine) || (matchForm{{dynamicScope}}.matchId{{dynamicScope}}.$error.required)">Match ID is required</span>
                                     </div>
                                     <button type="submit">Start</button>
                                 </form>
@@ -463,6 +491,7 @@ dashBoard.controller('eventCtrl', function($scope, $q, Football, $filter, $compi
                     </div>
                 </div>`);
         angular.element('.event-tanSection').append($compile(htmlContent)($scope));
+        $(".eventTab").addClass(dynamicScope);
     };
 
     $scope[$scope.dynamicStartMatch] = function() {

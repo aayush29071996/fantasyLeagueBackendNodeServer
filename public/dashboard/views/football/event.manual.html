@@ -4,7 +4,7 @@
         <div class="event-content">
             <div class="event-tab">
                 <ul>
-                    <li ng-repeat="tab in eventTab" ng-click="switchTab(tab.value)" ng-class="{active:navigateTab(tab.value)}">{{tab.tab}} {{tab.value}}</li>
+                    <li ng-repeat="tab in eventTab" ng-click="switchTab(tab.value)" ng-class="{active:navigateTab(tab.value)}">{{tab.tab}}</li>
                 </ul>
                 <a href="javascript:void(0);" ng-click="createTab()">+</a>
             </div>
@@ -16,10 +16,10 @@
                                 <h4>Enter Match Id</h4>
                                 <form method="post" name="matchForm" ng-submit="startMatch(matchForm.$valid)" class="text-center" novalidate>
                                     <div>
-                                        <input type="text" placeholder="Match ID" ng-model="matchId" name="matchId" id="matchId" required>
+                                        <input type="text" placeholder="Match ID" ng-model="matchId" name="matchId" id="matchId" required ng-disabled="disableMatch">
                                         <span class="error" ng-show="(matchForm.matchId.$invalid && !matchForm.matchId.$pristine) || (matchForm.matchId.$error.required && matchSubmit)">Match ID is required</span>
                                     </div>
-                                    <button type="submit">Start</button>
+                                    <button type="submit" ng-disabled="disableMatch">Start</button>
                                 </form>
                             </div>
                         </div>
@@ -27,15 +27,18 @@
                             <div class="match-detail">
                                 <div class="match-squence">
                                     <div class="left-container">
-                                        <img src="https://cdn.sportmonks.com/images/soccer/teams/19/19.png" alt="">
-                                        <p>Arsenal</p>
+                                        <img ng-src="{{upcomingMatches[0].team1.logo}}" alt="">
+                                        <p>{{upcomingMatches[0].team1.name}}</p>
                                     </div>
                                     <span>VS</span>
                                     <div class="right-container">
-                                        <p>Leicester City</p>
-                                        <img src="https://cdn.sportmonks.com/images/soccer/teams/6/6.png" alt="">
+                                        <p>{{upcomingMatches[0].team2.name}}</p>
+                                        <img ng-src="{{upcomingMatches[0].team2.logo}}" alt="">
                                     </div>
                                 </div>
+                                <!--<div class="coutntown">
+                                    <img src="images/stopwatch.svg" alt=""> <span countdown='' date="{{upcomingMatches[0].match.startingDateTime}}"> </span>
+                                </div>-->
                             </div>
                         </div>
                     </div>
@@ -54,7 +57,7 @@
                             <div class="event-pointsection">
                                 <div class="events-section" ng-class="{matchFixed : eventSchedule.length>6}">
                                     <ul>
-                                        <li ng-repeat="event in eventSchedule">
+                                        <li ng-repeat="event in eventSchedule" ng-class="{ hider : event.submitted}">
                                             <div>{{$index+1}}</div>
                                             <div>
                                                 <input type="text" ng-model="event.event_id" disabled>
@@ -86,7 +89,7 @@
                                             <div><input type="text" ng-model="event.points">
                                                 <span ng-show="error.points" class="error">*</span></div>
                                             <div>
-                                                <button type="button" ng-click="createEvent($index)" ng-disabled="submitted">Submit</button>
+                                                <button type="button" ng-click="createEvent($index)" ng-disabled="event.submitted">Submit</button>
                                                 <a href="javascript:void(0)" ng-click="addEvent()" ng-show="event.last_event">+</a>
                                             </div>
                                         </li>

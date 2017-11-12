@@ -21,6 +21,8 @@ var TeamController = require('./controllers/Football/TeamController');
 var PlayerController = require('./controllers/Football/PlayerController');
 var PointsSystemController = require('./controllers/Football/PointsSystemController');
 var PitchController = require('./controllers/PitchController');
+var uploadController = require('./controllers/Football/uploadController');
+
 
 module.exports = function(app) {
 
@@ -221,6 +223,10 @@ module.exports = function(app) {
 	app.get('/getProfile/:_id', UserController.getProfile);
 
 	app.post('/reportSuggest', UserController.reportSuggestMail);
+
+	//app.post('/upload',uploadController.multerUpload,uploadController.uploadProfile);
+
+
 
 
 
