@@ -1228,6 +1228,7 @@ exports.calculatePointsJob = function() {
 
                                         _.each(matchCards, function(matchCard, index, matchCards){
                                                 var lineupInMatch = {};
+                                                var prevMatchPoints = _.findWhere({matchCard}).matchPoints;
                                                 var matchPoints = 0;
                                                 lineupInMatch = savedMatch.lineup;
                                                 _.each(lineupInMatch, function(lineup, index, lineups){
@@ -1241,12 +1242,13 @@ exports.calculatePointsJob = function() {
                                                     
                                                 });
 
-                                                matchCard.matchPoints = matchPoints;
+                                            matchCard.matchPoints = matchPoints;
+                                            var diff = matchCard.matchPoints - prevMatchPoints;
+                                            console.log(matchCard.user);
 
 
 
                                             //Adding matchcard points to users Database
-                                            console.log(matchCard.user);
 
                                             User.findById({_id:matchCard.user}, function(err, user){
                                                 if(err){
@@ -1259,7 +1261,7 @@ exports.calculatePointsJob = function() {
                                                 }
 
                                                 var prevPoints = user.userPoints;
-                                                var diff = matchCard.matchPoints - prevPoints;
+
                                                 user.userPoints = prevPoints + diff;
 
                                                 user.save(function(err, savedUser){
