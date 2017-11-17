@@ -31,7 +31,7 @@ var upload = multer({
     storage: multerS3({
 
         s3:s0,
-        bucket:'fantumn-football',
+        bucket:'profilepicturefantumn',
         acl:'public-read',
 
         metadata: function(req,file,cb){
