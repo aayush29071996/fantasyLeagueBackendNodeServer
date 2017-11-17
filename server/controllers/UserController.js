@@ -16,6 +16,7 @@ var fs = require('fs');
 var key = 'jallikattu';
 var UserProfile = require('../models/UserProfile')
 var smtpTransport = require('nodemailer-smtp-transport');
+var profilePicture = require('../models/Football/Master/profilePicture');
 
 // var LocalStrategy    = require('passport-local').Strategy;
 // var FacebookStrategy = require('passport-facebook').Strategy;
@@ -877,12 +878,35 @@ exports.getProfile = function(req, res){
 			return;
 		}
 
-		res.status(httpStatus.OK).json({
-			status: status.SUCCESS,
-			code: httpStatus.OK,
-			data: userProfile ,
-			error:''
+		var username = userProfile.username;
+
+		profilePicture.findOne({username: username},function(err, pic){
+
+
+			if(err){
+				res.status(httpStatus.ISE).json({
+					status: status.FAILURE,
+					code: httpStatus.ISE,
+					data: '',
+					error: errorMsg.UNEXP_ERROR
+				})
+				return;
+			}
+
+			var url = pic.url;
+			res.status(httpStatus.OK).json({
+				status: status.SUCCESS,
+				code: httpStatus.OK,
+				data: userProfile , url,
+				error:''
+			});
+
+
+
 		});
+
+
+
 	});
 
 };

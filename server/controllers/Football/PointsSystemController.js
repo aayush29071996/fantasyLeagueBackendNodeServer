@@ -1119,6 +1119,14 @@ exports.manualSystem1 = function(req, res){
 			});
 
 
+		res.status(Codes.httpStatus.OK).json({
+			status:Codes.status.SUCCESS,
+			code:Codes.httpStatus.OK,
+			data: "Match Id with MatchID " +match+" and Event with EventID "+req.body.eventId+" Updated successfully",
+			error: ''
+		});
+
+
 		});
 
 };

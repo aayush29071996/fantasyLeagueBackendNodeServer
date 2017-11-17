@@ -1,6 +1,8 @@
-/*
+
 var mongoose = require('mongoose');
-var AttachmentSchema = new mongoose.Schema({
+var profilePictureSchema = new mongoose.Schema({
+
+    username:{type:String, required:true },
     type: {
         type: String,
         enum: ['image', 'audio', 'video', 'file'],
@@ -17,5 +19,5 @@ var AttachmentSchema = new mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model('Attachment', AttachmentSchema);
-*/
+module.exports = mongoose.model('profilePicture', profilePictureSchema);
+

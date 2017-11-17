@@ -52,7 +52,8 @@
                                 <li>Player Name</li>
                                 <li>Event Time</li>
                                 <li>Points Secured</li>
-                                <li></li>
+
+                                <li><button style="border-radius: 100% !important;border: 1px solid blue;"><a href="javascript:void(0)" ng-click="addEvent()" style="color: blue" >+</a></button></li>
                             </ul>
                             <div class="event-pointsection">
                                 <div class="events-section" ng-class="{matchFixed : eventSchedule.length>6}">
@@ -66,10 +67,10 @@
                                             <div>
                                                 <span ng-show="error.event_name" class="error">*</span>
                                                 <select ng-model="event.event_name" ng-change="getPoint($index)">
-                                        <option ng-repeat="events in events" value="{{events.value}}">
-                                            {{events.name}}
-                                        </option>
-                                    </select>
+                                                    <option ng-repeat="events in events" value="{{events.value}}">
+                                                        {{events.name}}
+                                                    </option>
+                                                </select>
                                             </div>
                                             <div>
                                                 <input type="text" ng-model="event.player_id" disabled>
@@ -77,10 +78,10 @@
                                             </div>
                                             <div>
                                                 <select ng-model="event.player_name" ng-change="getPlayer($index)">
-                                        <option ng-repeat="player in playerList" value="{{player.playerName}}">
-                                            {{player.playerName}}
-                                        </option>
-                                    </select>
+                                                    <option ng-repeat="player in playerList" value="{{player.playerName}}">
+                                                        {{player.playerName}}
+                                                    </option>
+                                                </select>
                                                 <span ng-show="error.player_name" class="error">*</span>
                                             </div>
                                             <div><input type="time" ng-model="event.event_time">
@@ -89,8 +90,8 @@
                                             <div><input type="text" ng-model="event.points">
                                                 <span ng-show="error.points" class="error">*</span></div>
                                             <div>
-                                                <button type="button" ng-click="createEvent($index)" ng-disabled="event.submitted">Submit</button>
-                                                <a href="javascript:void(0)" ng-click="addEvent()" ng-show="event.last_event">+</a>
+                                                <button type="button" ng-click="createEvent($index)" ng-hide="event.dee" >Submit</button>
+
                                             </div>
                                         </li>
                                     </ul>

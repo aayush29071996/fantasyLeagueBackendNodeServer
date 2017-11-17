@@ -133,6 +133,7 @@ module.exports = function(app) {
 	app.get('/seedTeams',TeamsHandler.populateTeamsForAllSeasons);
 	app.get('/seedTeams/:seasonId',TeamsHandler.populateTeamsForSeason);
 	app.get('/seedPlayers',PlayersHandler.populatePlayersForAllTeams);
+	app.get('/seedPlayersPromise',PlayersHandler.populatePlayersForAllTeamsPromise);
 
 	app.get('/mergeTeams',TeamsHandler.mergeTeamDuplicates);
 
@@ -224,7 +225,7 @@ module.exports = function(app) {
 
 	app.post('/reportSuggest', UserController.reportSuggestMail);
 
-	//app.post('/upload',uploadController.multerUpload,uploadController.uploadProfile);
+	app.post('/upload',uploadController.multerUpload,uploadController.uploadProfile);
 
 
 

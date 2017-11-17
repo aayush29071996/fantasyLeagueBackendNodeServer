@@ -25,9 +25,9 @@ dashBoard.controller('eventCtrl', function($scope, $q, Football, $filter, $compi
         }];
 
         $scope.events = [{
-                "value": "Goal Scored",
-                "name": "Goal Scored"
-            },
+            "value": "Goal Scored",
+            "name": "Goal Scored"
+        },
             {
                 "value": "Assist",
                 "name": "Assist"
@@ -153,11 +153,13 @@ dashBoard.controller('eventCtrl', function($scope, $q, Football, $filter, $compi
                 "player_name": "",
                 "event_time": "",
                 "points": "",
+                "dee" : false,
                 "last_event": true,
                 "submitted": false,
                 "indent": $scope.eventSchedule[$scope.eventSchedule.length - 1].indent + 1
             });
             $scope.squence++;
+
         } else {
             alert("No Match Info Available");
         }
@@ -323,7 +325,7 @@ dashBoard.controller('eventCtrl', function($scope, $q, Football, $filter, $compi
         }
     };
 
-
+//edited by yashvanth
     $scope.createEvent = function(index) {
         if (validation(index)) {
             var minute = timeToMinutes($scope.eventSchedule[index].event_time);
@@ -338,9 +340,11 @@ dashBoard.controller('eventCtrl', function($scope, $q, Football, $filter, $compi
             };
             console.log(model);
             Football.creatEvent(model).then(function(res) {
+
                 if (res.data.status == "success") {
                     alert("Event Added" + " " + $scope.matchId);
                     $scope.eventSchedule[index].submitted = true;
+                    $scope.eventSchedule[index].dee = true;
                 } else {
                     alert(res.data.error);
                 }

@@ -1,4 +1,4 @@
-/*
+
 var User = require('../../models/User');
 var moment = require('moment');
 var Codes = require('../../Codes');
@@ -10,13 +10,13 @@ var multerS3 = require('multer-s3');
 var multer = require('multer');
 var fs = require('fs');
 var path = require('path');
-var Attachment = require('../../models/Football/Master/Attachment');
+var profilePicture = require('../../models/Football/Master/profilePicture');
 
 
 
-*/
 
-/*
+
+
 
 aws.config.loadFromPath('./config.json');
 aws.config.update({
@@ -43,8 +43,8 @@ var upload = multer({
     })
 
 })
-*/
-/*
+
+
 
 exports.multerUpload = upload.single('file');
 
@@ -63,11 +63,12 @@ exports.uploadProfile = function (req, res, next) {
         });
         return;
     }
-    var attachment = new Attachment;
-    attachment.url = req.file.location;
-    attachment.type = req.body.type;
-    attachment.viewport = req.body.viewport;
-    attachment.save(function (saveErr, savedAttachement) {
+    var pic = new profilePicture;
+    pic.username = req.body.username;
+    pic.url = req.file.location;
+    pic.type = req.body.type;
+    pic.viewport = req.body.viewport;
+    pic.save(function (saveErr, savedPic) {
         if (saveErr) {
             next({
                 status: Codes.httpStatus.BR,
@@ -78,10 +79,10 @@ exports.uploadProfile = function (req, res, next) {
         res.json({
             status: Codes.status.SUCCESS,
             code: Codes.httpStatus.OK,
-            data: savedAttachement,
+            data: savedPic,
             error: ''
         });
     });
 };
 
-*/
+
