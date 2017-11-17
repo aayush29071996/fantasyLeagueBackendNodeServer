@@ -79,7 +79,7 @@ exports.uploadProfile = function (req, res, next) {
         res.json({
             status: Codes.status.SUCCESS,
             code: Codes.httpStatus.OK,
-            data: savedPic,
+            data: pic.url,
             error: ''
         });
     });
