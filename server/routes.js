@@ -29,7 +29,7 @@ module.exports = function(app) {
 	var __dirname =  './public/';
 
 	app.all('/', function(req, res){
-		res.sendFile('index.html', {
+		res.sendFile('dashboard/index.html', {
 			root: __dirname
 		});
 	});
