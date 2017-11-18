@@ -810,7 +810,7 @@ exports.calculatePointsJob = function() {
                 // var thirtyMinsAfter = moment(moment().subtract('2','d').format("YYYY-MM-DD HH:mm:ss")).toISOString();
                 console.log('From ' + twoHoursBefore + ' To ' + thirtyMinsAfter);
                  console.log('calculatePointsJob called')
-                Match.find({startingDateTime:{$gte:twoHoursBefore, $lt:thirtyMinsAfter}, matchCalculationType: true}).populate('events').exec( function(matchesErr, matches){
+                Match.find({startingDateTime:{$gte:twoHoursBefore, $lt:thirtyMinsAfter}, pointsCalculationType: true}).populate('events').exec( function(matchesErr, matches){
                      console.log(' ******** MATCHES TO BE CALCULATED  :: ' + matches.length + '  ********');
                     if(matchesErr){
                            console.log(responseToConsole(Codes.status.FAILURE, Codes.httpStatus.ISE, matchesErr, Codes.errorMsg.UNEXP_ERROR));
