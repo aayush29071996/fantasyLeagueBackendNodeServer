@@ -225,7 +225,7 @@ module.exports = function(app) {
 
 	app.post('/reportSuggest', UserController.reportSuggestMail);
 
-	app.post('/upload',uploadController.multerUpload,uploadController.uploadProfile);
+	//app.post('/upload',uploadController.multerUpload,uploadController.uploadProfile);
 
 
 

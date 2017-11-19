@@ -84,7 +84,7 @@ exports.populateCompetitionsAndSeasons = function(req, res) {
 
 				//USED ONLY TO SEED EPL SEASON
 
-				if (competiton.id == '8'){
+				if (competiton.id == '8'|| competiton.id == '1007'){
 					Competition.findOne({competitionId: competiton.id}, function (compErr, comp) {
 						if (compErr) {
 							res.status(Codes.httpStatus.ISE).json({

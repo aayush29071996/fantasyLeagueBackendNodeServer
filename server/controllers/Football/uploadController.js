@@ -1,3 +1,4 @@
+/*
 
 var User = require('../../models/User');
 var moment = require('moment');
@@ -17,7 +18,7 @@ var profilePicture = require('../../models/Football/Master/profilePicture');
 
 
 
-
+/*
 aws.config.loadFromPath('./config.json');
 aws.config.update({
 
@@ -42,9 +43,10 @@ var upload = multer({
         }
     })
 
-})
+})*/
 
 
+/*
 
 exports.multerUpload = upload.single('file');
 
@@ -84,5 +86,6 @@ exports.uploadProfile = function (req, res, next) {
         });
     });
 };
+*/
 
 

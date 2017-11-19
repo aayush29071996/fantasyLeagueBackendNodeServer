@@ -223,13 +223,8 @@ exports.populatePlayersForAllTeams = function (req, res) {
                                                     return;
                                                 }
                                                 if (teamIndex == teams.length - 1) {
-                                                    res.status(Codes.httpStatus.OK).json({
-                                                        status: Codes.status.SUCCESS,
-                                                        code: Codes.httpStatus.OK,
-                                                        data: 'populated all players for all teams',
-                                                        error: ''
-                                                    });
-                                                    return;
+
+
                                                 }
 
                                             });
@@ -245,6 +240,13 @@ exports.populatePlayersForAllTeams = function (req, res) {
                 });
                 // }//'if' ends with this brace
             });
+            res.status(Codes.httpStatus.OK).json({
+                status: Codes.status.SUCCESS,
+                code: Codes.httpStatus.OK,
+                data: 'populated all players for all teams',
+                error: ''
+            });
+
         }
 
     });
