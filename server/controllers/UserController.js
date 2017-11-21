@@ -16,6 +16,7 @@ var fs = require('fs');
 var key = 'jallikattu';
 var UserProfile = require('../models/UserProfile')
 var smtpTransport = require('nodemailer-smtp-transport');
+var profilePicture = require('../models/Football/Master/profilePicture');
 
 // var LocalStrategy    = require('passport-local').Strategy;
 // var FacebookStrategy = require('passport-facebook').Strategy;
@@ -36,7 +37,7 @@ var errorMsg = {
 	INVALID_PASS_U: 'username and password does not match',
 	INVALID_PASS_E: 'email and password does not match',
 	FACEBOOK_IN_USE:'facebook account already in use',
-	GOOGLE_IN_USE:'facebook account already in use',
+	GOOGLE_IN_USE:'facebook account already in use'
 }
 
 var status = {
@@ -66,7 +67,8 @@ var transporter = nodemailer.createTransport(smtpTransport({
 
 
 //facebook
-/*passport.use(new FacebookStrategy({
+/*
+passport.use(new FacebookStrategy({
 
         clientID        : configAuth.facebookAuth.clientID,
         clientSecret    : configAuth.facebookAuth.clientSecret,
@@ -196,7 +198,8 @@ var transporter = nodemailer.createTransport(smtpTransport({
 				//
             }
         });
-	}));*/
+	}));
+*/
 
 
 	//google
@@ -382,6 +385,8 @@ exports.validate = function(req, res){
 //Saves User
 exports.save = function(req, res){
 	console.log(req.body);
+
+
 	User.findOne({'email' : new RegExp('^' + req.body.email + '$', 'i')}, function(err, user){
 		if(err){
 			res.status(httpStatus.ISE).json({
@@ -392,6 +397,42 @@ exports.save = function(req, res){
 			});
 			return;
 		}
+
+		//ONLY FOR SOCIAL AUTH
+
+		if(user !=null){
+			if(user.social_auth == true){
+		//		var social_auth;
+				if(user.facebook.auth_token != null){
+				//	social_auth =user.facebook.auth_token;
+					res.status(httpStatus.OK)
+						.json({
+							status: status.SUCCESS,
+							code: httpStatus.OK,
+							data: user,
+							error: ''
+
+						});
+					return;
+				}
+				else{
+		//			social_auth = user.google.accessToken;
+					res.status(httpStatus.OK)
+						.json({
+							status: status.SUCCESS,
+							code: httpStatus.OK,
+							data: user,
+							error: ''
+
+						});
+					 return;
+				}
+
+
+			}
+
+		}
+
 		if(user == null){
 			var user = new User;
 			var hash = encrypt(key, trimmed(req.body.password));
@@ -414,6 +455,15 @@ exports.save = function(req, res){
 			user.token = uuid.v4();
 			user.status = 'ACTIVE';
 			user.createdOn = moment.utc();
+			user.digitalSignature = req.body.digitalSignature;
+			user.social_auth = req.body.social_auth;
+			user.facebook.social_id = req.body.facebook.social_id;
+			user.facebook.auth_token = req.body.facebook.auth_token;
+			user.facebook.profile = req.body.facebook.profile;
+			user.google.accessToken = req.body.google.accessToken;
+			user.google.idToken = req.body.google.idToken;
+			user.google.imgUrl = req.body.google.imgUrl;
+
 			user.save(function (saveErr, saveUser){
 				if(saveErr){
 					res.status(httpStatus.BR).json({
@@ -468,7 +518,7 @@ exports.save = function(req, res){
 
 };
 
-//Saves User
+//Updates User
 exports.update = function(req, res){
 	console.log(req.body);
 	User.findOne({'email' : new RegExp('^' + req.body.email + '$', 'i')}, function(err, user){
@@ -828,12 +878,19 @@ exports.getProfile = function(req, res){
 			return;
 		}
 
-		res.status(httpStatus.OK).json({
-			status: status.SUCCESS,
-			code: httpStatus.OK,
-			data: userProfile ,
-			error:''
-		});
+
+
+			res.status(httpStatus.OK).json({
+				status: status.SUCCESS,
+				code: httpStatus.OK,
+				data: userProfile,
+				error:''
+			});
+
+
+
+
+
 	});
 
 };
@@ -850,9 +907,21 @@ exports.reportSuggestMail = function(req, res){
 
 	if(subject== 'report') {
 		sendReportProblemMail(email, subject, content);
+		res.status(httpStatus.OK).json({
+			status: status.SUCCESS,
+			code: httpStatus.OK,
+			data: 'Report mail sent to'+email ,
+			error:''
+		});
 	}
 	else{
 		sendSuggestMail(email, subject, content);
+		res.status(httpStatus.OK).json({
+			status: status.SUCCESS,
+			code: httpStatus.OK,
+			data: 'Suggestion mail sent to'+ email ,
+			error:''
+		});
 	}
 
 };
@@ -882,7 +951,7 @@ function trimmed(data){
 }
 
 function sendWelcomeMail(toAddr){
-    var htmlstream = fs.createReadStream('public/pitch/welcome_mail.html', {
+    var htmlstream = fs.createReadStream('public/welcomeMail/Fantumn.html', {
 			root: __dirname
 		});
     var mailOptions = {
@@ -900,7 +969,7 @@ function sendWelcomeMail(toAddr){
 	    }else{
 	        console.log('Welcome Mail sent: ' + info.response);
 	       return;
-	    };
+	    }
 	});
 }
 
@@ -909,11 +978,11 @@ function sendResetPasswordRequestMail(toAddr, token){
 		// 	root: __dirname
 		// });
     var mailOptions = {
-	    from: 'Inyards Pitch <noreply@inyards.com>',
-	    replyTo: 'support@inyards.com',
-	    sender: 'Inyards Pitch <noreply@inyards.com>',
+	    from: 'Fantumn <reach.fantumn@gmail.com>',
+	    replyTo: 'reach.fantumn@gmail.com',
+	    sender: 'Fantumn <reach.fantumn@gmail.com>',
 	    to: toAddr,
-	    subject: 'Inyards - Reset Password',
+	    subject: 'Fantumn - Reset Password',
 	    text:'https://inyards.com/reset/' + token
 	    // html: htmlstream
 	};
@@ -924,7 +993,7 @@ function sendResetPasswordRequestMail(toAddr, token){
 	    }else{
 	        console.log('Reset Password Mail sent: ' + info.response);
 	       return;
-	    };
+	    }
 	});
 }
 
@@ -933,11 +1002,11 @@ function sendResetPasswordMail(toAddr){
 		// 	root: __dirname
 		// });
     var mailOptions = {
-	    from: 'Inyards Pitch <noreply@inyards.com>',
-	    replyTo: 'support@inyards.com',
-	    sender: 'Inyards Pitch <noreply@inyards.com>',
+	    from: 'Fantumn <reach.fantumn@gmail.com>',
+	    replyTo: 'reach.fantumn@gmail.com',
+	    sender: 'Fantumn <reach.fantumn@gmail.com>',
 	    to: toAddr,
-	    subject: 'Inyards - Password Reset Successful',
+	    subject: 'Fantumn - Password Reset Successful',
 	    text:'Password has been reset'
 	    // html: htmlstream
 	};
@@ -948,7 +1017,7 @@ function sendResetPasswordMail(toAddr){
 	    }else{
 	        console.log('Reset Password Mail sent: ' + info.response);
 	       return;
-	    };
+	    }
 	});
 }
 
@@ -972,14 +1041,9 @@ function sendReportProblemMail(email,subject, content){
 			return;
 		}else{
 			console.log('Problem Mail sent: ' + problem.response);
-			res.status(httpStatus.OK).json({
-				status: status.SUCCESS,
-				code: httpStatus.OK,
-				data: problem.response ,
-				error:''
-			});
+
 			return;
-		};
+		}
 	});
 
 }
@@ -1003,14 +1067,9 @@ function sendSuggestMail(email, subject, content){
 			return;
 		}else{
 			console.log('Suggest Mail sent: ' + suggestion.response);
-			res.status(httpStatus.OK).json({
-				status: status.SUCCESS,
-				code: httpStatus.OK,
-				data: suggestion.response ,
-				error:''
-			});
+
 			return;
-		};
+		}
 	});
 
 }

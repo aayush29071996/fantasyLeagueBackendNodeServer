@@ -1,607 +1,159 @@
-<!doctype html>
-<!--[if lt IE 7]>		<html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="zxx"> <![endif]-->
-<!--[if IE 7]>			<html class="no-js lt-ie9 lt-ie8" lang="zxx"> <![endif]-->
-<!--[if IE 8]>			<html class="no-js lt-ie9" lang="zxx"> <![endif]-->
-<!--[if gt IE 8]><!-->	<html class="no-js" lang="zxx"> <!--<![endif]-->
+<!DOCTYPE html>
+<html ng-app="dashBoard" ng-controller="Play">
+
 <head>
 	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Inyards Fantasy Sports</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="description" content="">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="shortcut icon" href="images/favicon.png">
-	<link rel="stylesheet" href="css/bootstrap.min.css">
-	<link rel="stylesheet" href="css/normalize.css">
-	<link rel="stylesheet" href="css/font-awesome.min.css">
-	<link rel="stylesheet" href="css/transitions.css">
-	<link rel="stylesheet" href="css/prettyPhoto.css">
-	<link rel="stylesheet" href="css/swiper.min.css">
-	<link rel="stylesheet" href="css/jquery-ui.css">
-	<link rel="stylesheet" href="css/animate.css">
-	<link rel="stylesheet" href="css/owl.theme.css">
-	<link rel="stylesheet" href="css/owl.carousel.css">
-	<link rel="stylesheet" href="css/customScrollbar.css">
-	<link rel="stylesheet" href="css/icomoon.css">
-	<link rel="stylesheet" href="css/main.css">
-	<link rel="stylesheet" href="css/color.css">
-	<link rel="stylesheet" href="css/responsive.css">
-	<script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
+	<meta name="author" content="Pratheev">
+
+	<!--<link rel="shortcut icon" href="assets/images/favicon.ico">-->
+
+	<title>Admin | Inyards Fantasy Sports</title>
+
+	<!--Morris Chart CSS -->
+	<link rel="stylesheet" href="dashboard/css/dashboard.css">
+
+	<!--<base href="/">-->
+	<!-- App css -->
+	<link href="dashboard/css/bootstrap.min.css" rel="stylesheet">
+	<link href="dashboard/css/core.css" rel="stylesheet">
+	<link href="dashboard/css/components.css" rel="stylesheet">
+	<link href="dashboard/css/icons.css" rel="stylesheet">
+	<link href="dashboard/css/pages.css" rel="stylesheet">
+	<link href="dashboard/css/menu.css" rel="stylesheet">
+	<link href="dashboard/css/responsive.css" rel="stylesheet">
+	<link href="dashboard/css/sweet-alert.css" rel="stylesheet">
+	<link href="dashboard/css/angular-busy.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
+	<link rel="stylesheet" href="dashboard/css/newStyle.css">
+	<!--<link href="dashboard/css/custombox.css" rel="stylesheet">
+    -->
+	<!--<link href="dashboard/css/switchery.min.css" rel="stylesheet">
+    -->
+	<style type="text/css">
+		.outer {
+			display: table;
+			position: absolute;
+			height: 100%;
+			width: 100%;
+		}
+
+		.middle {
+			display: table-cell;
+			vertical-align: middle;
+		}
+
+		.inner {
+			margin-left: auto;
+			margin-right: auto;
+			width: 95%;
+		}
+
+		::-webkit-scrollbar {
+			width: 5px;
+			/* for vertical scrollbars */
+			height: 5px;
+			/* for horizontal scrollbars */
+		}
+
+		::-webkit-scrollbar-track {
+			background: rgba(0, 0, 0, 0);
+		}
+
+		::-webkit-scrollbar-thumb {
+			background: rgba(0, 0, 0, 0.5);
+		}
+	</style>
+	<script src="dashboard/js/modernizr.js"></script>
+	<!--<script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-85991646-2', 'auto');
+      ga('send', 'pageview');
+    </script>-->
+	<script src="https://momentjs.com/downloads/moment.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
 </head>
-<body>
-	<!--[if lt IE 8]>
-		<p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-	<![endif]-->
-	<!--************************************
-			Wrapper Start
-	*************************************-->
-	<div id="tg-wrapper" class="tg-wrapper tg-haslayout">
-		<!--************************************
-				Mobile Menu Start
-		*************************************-->
-		<div id="tg-navigationm-mobile" class="tg-navigationm-mobile tg-navigation collapse navbar-collapse">
-			<span id="tg-close" class="tg-close fa fa-close"></span>
-			<div class="tg-colhalf">
-				<ul>
-					<li>
-						<a href="#about">Inyards Fantasy Sports</a>
-					</li>
-					<li>
-						<a href="#how">How to play</a>
-					</li>
-				</ul>
-			</div>
-			<div class="tg-colhalf">
-				<ul>
-					<li>
-						<a href="#why">Why Us</a>
-					</li>
-					<li>
-						<a href="javascript()" data-toggle="modal" data-target="#tg-legal">Legality</a>
-					</li>
-				</ul>
-			</div>
-		</div>
-		<header id="tg-header" class="tg-header tg-haslayout">
-			<div class="container">
-				<div class="col-md-10 col-md-offset-1 col-sm-12 col-xs-12">
-					<div class="row">
-						<div class="tg-topbar tg-haslayout">
-							<nav id="tg-topaddnav" class="tg-topaddnav">
-								<div class="navbar-header">
-									<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#tg-addnavigationm-mobile">
-										<i class="fa fa-arrow-right"></i>
-									</button>
-								</div>
-								<div id="tg-addnavigationm-mobile" class="tg-addnavigationm-mobile collapse navbar-collapse">
-									<div class="tg-colhalf pull-right">
-										<nav class="tg-addnav">
-											<ul>
-												<li><a href="javascript()" data-toggle="modal" data-target="#tg-login">Invite</a></li>
-												<li><a href="javascript()" data-toggle="modal" data-target="#tg-about">About Us</a></li>
-											</ul>
-										</nav>
-									</div>
-									<div class="tg-colhalf">
-										<ul class="tg-socialicons">
-											<li>
-												<a href="https://www.facebook.com/InYards-1897952933818904/">
-													<i class="fa fa-facebook"></i>
-												</a>
-											</li>
-											<li>
-												<a href="https://twitter.com/inyards/">
-													<i class="fa fa-twitter"></i>
-												</a>
-											</li>
-											<li>
-												<a href="https://www.instagram.com/inyards/">
-													<i class="fa fa-instagram"></i>
-												</a>
-											</li>
-										</ul>
-									</div>
-								</div>
-							</nav>
-						</div>
-						<nav id="tg-nav" class="tg-nav brand-center">
-							<div class="navbar-header">
-								<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#tg-navigationm-mobile">
-									<i class="fa fa-bars"></i>
-								</button>
-								<strong class="tg-logo">
-									<a href="index.html"><img src="images/logo.png" alt="image description"></a>
-								</strong>
-							</div>
-							<div id="tg-navigation" class="tg-navigation">
-								<div class="tg-colhalf">
-                                    <ul>
-                                        <li>
-                                            <a href="#about">Inyards Fantasy Sports</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="tg-colhalf">
-                                    <ul>
-                                        <li>
-                                            <a href="#how">How to Play</a>
-                                        </li>
-                                        <li>
-                                            <a href="#why">Why Us</a>
-                                        </li>
-                                        <li>
-                                            <a href="javascript()" data-toggle="modal" data-target="#tg-legal">Legality</a>
-                                        </li>
-                                    </ul>
-                                </div>
-							</div>
-						</nav>
-					</div>
-				</div>
-			</div>
-		</header>
-		<div class="tg-sliderbox">
-			<div class="tg-imglayer">
-				<img src="images/bg-pattran.png" alt="image desctription">
-			</div>
-			<div id="tg-home-slider" class="tg-home-slider tg-haslayout">
-				<div class="swiper-wrapper">
-					<div class="swiper-slide">
-						<div class="container">
-							<figure class="floating">
-								<img src="images/slider/img-01.png" alt="image description">
-							</figure>
-							<div class="tg-slider-content">
-								<h1><span>Everybody</span> Wins.</h1>
-								<div class="tg-btnbox">
-									<h2>from May</h2>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="swiper-slide">
-						<div class="container">
-							<figure class="floating">
-								<img src="images/slider/img-01.png" alt="image description">
-							</figure>
-							<div class="tg-slider-content">
-								<h1><span>Everybody</span> Wins.</h1>
-								<div class="tg-btnbox">
-									<h2>from May</h2>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="tg-btn-next">
-					<span>next</span>
-					<span class="fa fa-angle-down"></span>
-				</div>
-				<div class="tg-btn-prev">
-					<span>prev</span>
-					<span class="fa fa-angle-down"></span>
-				</div>
-			</div>
-		</div>
-		<main id="tg-main" class="tg-main tg-haslayout">
-			<section class="tg-haslayout tg-bgstyleone" id="about">
-				<div class="tg-bgboxone"></div>
-				<div class="tg-bgboxtwo"></div>
-				<div class="tg-bgpattrant">
-					<div class="container">
-						<div class="row">
-							<div class="tg-upcomingmatch-counter">
-								<div class="col-md-4 col-sm-4 col-xs-12 hidden-xs">
-								</div>
-								<div class="col-md-8 col-sm-8 col-xs-12">
-									<div class="tg-contentbox">
-										<div class="tg-section-heading"><h2>About<span> Inyards</span></h2></div>
-										<div class="tg-description">
-											<p style="font-variant:small-caps;">We are building what will engage you in an unparalleled experience in fantasy gaming.</p>
-										</div>
-										<!--<div class="tg-counters">-->
-										<!--	<div class="tg-counter tg-days"></div>-->
-										<!--	<div class="tg-counter tg-hours"></div>-->
-										<!--	<div class="tg-counter tg-minutes"></div>-->
-										<!--	<div class="tg-counter tg-seconds"></div>-->
-										<!--</div>-->
-										<div class="tg-btnbox">
-											<a class="tg-btn" href="javascript()" data-toggle="modal" data-target="#tg-login"><span>Stay Updated</span></a>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</section>
-			<section class="tg-main-section tg-haslayout">
-				<div class="container">
-					<div class="tg-section-name">
-						<h2>Draft . Play . Win</h2>
-					</div>
-					<div class="col-sm-11 col-xs-11 pull-right">
-						<div class="row two-card-row">
-							<div class="tg-latestresult">
-								<div class="row">
-									<div class="col">
-										<div class="tab-content tg-tabscontent">
-											<div role="tabpanel" class="tab-pane active" id="one">
-												<div class="tg-matchresult">
-													<div class="tg-box">
-														<div class="tg-teamscore">
-															<div class="tg-team-nameplusstatus">
-																<h4><a href="#">Play For Free</a></h4>
-															</div>
-															<ul class="tg-playernameplusgoadtime">
-																<li style="padding-right: 5px;color:#fff;font-variant:small-caps;">Showcase your Cricket/Football Skills to your Friends and Family.</li>
-															</ul>
-														</div>
-														<div class="tg-teamscore">
-															<div class="tg-team-nameplusstatus">
-																<h4><a href="#">Play For Vouchers</a></h4>
-															</div>
-															<ul class="tg-playernameplusgoadtime">
-																<li style="color:#fff;font-variant:small-caps;">Win Vouchers from Restaurants, Stores and E-Commerce Sites.</li>
-															</ul>
-														</div>
-													</div>
-												</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</section>
-			<section class="tg-main-section tg-haslayout tg-bgdark" id="quote">
-				<div class="container">
-					<div class="row">
-						<div class="col">
-						<div class="tg-statistics">
-								<div class="tg-statistic tg-goals" style="width:100%;">
-									<h3 style="text-align:center;font-size:80px"><span style="color:#fff;">FANTASY SPORTS</span> REINVENTED.</h3>
-								</div>
-						</div>
-					</div>
-				</div>
-			</section>
-			<section class="tg-main-section tg-haslayout" id="how">
-				<div class="container">
-					<div class="tg-section-name">
-						<h2>How to play</h2>
-					</div>
-					<div class="col-sm-11 col-xs-11 pull-right">
-						<div class="row lilbit-padd">
-							<div class="tg-latestresult">
-								<div class="row">
-									<div class="col">
-									<div class="tg-contentbox">
-											<div class="tg-section-heading"><h2 style="text-align:center;">All what you want to know about the Arena</h2></div>
-										<div id="tg-upcomingmatch-slider" class="tg-upcomingmatch-slider tg-upcomingmatch">
-											<div class="swiper-wrapper">
-												<div class="swiper-slide">
-													<div class="tg-match">
-														<div class="tg-matchdetail">
-															<div class="tg-box" style="width: 100%;text-align: center;">
-																<h3>Select Game or Match</h3>
-															</div>
-														</div>
-														<div class="tg-matchhover">
-														<h3 style="color: #fff;text-align: center;">Select Game or Match</h3>
-														</div>
-													</div>
-												</div>
-												<div class="swiper-slide">
-													<div class="tg-match">
-														<div class="tg-matchdetail">
-															<div class="tg-box" style="width: 100%;text-align: center;">
-																<h3>Manage your team</h3>
-															</div>
-														</div>
-														<div class="tg-matchhover">
-														<h3 style="color: #fff;text-align: center;">Manage your team</h3>
-														</div>
-													</div>
-												</div>
-												<div class="swiper-slide">
-													<div class="tg-match">
-														<div class="tg-matchdetail">
-															<div class="tg-box" style="width: 100%;text-align: center;">
-																<h3>Join the League and Play</h3>
-															</div>
-														</div>
-														<div class="tg-matchhover">
-														<h3 style="color: #fff;text-align: center;">Join the League and Play</h3>
-														</div>
-													</div>
-												</div>
-												<div class="swiper-slide">
-													<div class="tg-match">
-														<div class="tg-matchdetail">
-															<div class="tg-box" style="width: 100%;text-align: center;">
-																<h3>Celebrate your Victory</h3>
-															</div>
-														</div>
-														<div class="tg-matchhover">
-														<h3 style="color: #fff;text-align: center;">Celebrate your Victory</h3>
-														</div>
-													</div>
-												</div>
-											</div>
-											<div class="tg-themebtnnext"><span class="fa fa-angle-down"></span></div>
-											<div class="tg-themebtnprev"><span class="fa fa-angle-up"></span></div>
-										</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</section>
-			<section class=" tg-haslayout tg-bgstyletwo">
-				<div class="tg-bgboxone"></div>
-				<div class="tg-bgboxtwo"></div>
-				<div class="tg-bgpattrant">
-					<div class="container">
-						<div class="row">
-							<div class="tg-pointstablewrapper">
-									<div class="tg-contentbox" id="islegal" style="padding: 80px;width:50%">
-										<div class="tg-section-heading"><h2 style="color:#fff;">IS IT<span style="color:#ffcc33;"> LEGAL?</span></h2></div>
-										<div class="tg-description">
-											<p style="font-variant:small-caps;color: #fff;">Of Course YES. After all, it's a Game of Skill.</p>
-										</div>
-										<div class="tg-btnbox">
-											<a class="tg-btn" href="javascript()" data-toggle="modal" data-target="#tg-legal"><span>Know More</span></a>
-										</div>
-									</div>
-								<div class="col-sm-4 col-xs-12 hidden-xs">
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</section>
-			<section class="tg-main-section tg-haslayout" id="why">
-				<div class="container">
-					<div class="tg-section-name">
-						<h2>Why Us</h2>
-					</div>
-					<div class="col-sm-11 col-xs-11 pull-right">
-						<div class="row lilbit-padd">
-							<div class="tg-latestresult">
-								<div class="row">
-									<div class="col">
-									<div class="tg-contentbox">
-											<div class="tg-section-heading"><h2 style="text-align:center;">Why are we the Best</h2></div>
-										<div id="tg-why-slider" class="tg-upcomingmatch-slider tg-upcomingmatch">
-											<div class="swiper-wrapper">
-												<div class="swiper-slide">
-													<div class="tg-match">
-														<div class="tg-matchdetail">
-															<div class="tg-box" style="width: 100%;text-align: center;">
-																<h3>Vouchers</h3>
-															</div>
-														</div>
-														<div class="tg-matchhover">
-														<h3 style="color: #fff;text-align: center;">Vouchers</h3>
-														</div>
-													</div>
-												</div>
-												<div class="swiper-slide">
-													<div class="tg-match">
-														<div class="tg-matchdetail">
-															<div class="tg-box" style="width: 100%;text-align: center;">
-																<h3>Multiple Leagues</h3>
-															</div>
-														</div>
-														<div class="tg-matchhover">
-														<h3 style="color: #fff;text-align: center;">Multiple Leagues</h3>
-														</div>
-													</div>
-												</div>
-												<div class="swiper-slide">
-													<div class="tg-match">
-														<div class="tg-matchdetail">
-															<div class="tg-box" style="width: 100%;text-align: center;">
-																<h3>Assurance</h3>
-															</div>
-														</div>
-														<div class="tg-matchhover">
-														<h3 style="color: #fff;text-align: center;">Assurance</h3>
-														</div>
-													</div>
-												</div>
-												<div class="swiper-slide">
-													<div class="tg-match">
-														<div class="tg-matchdetail">
-															<div class="tg-box" style="width: 100%;text-align: center;">
-																<h3>Transparency</h3>
-															</div>
-														</div>
-														<div class="tg-matchhover">
-														<h3 style="color: #fff;text-align: center;">Transparency</h3>
-														</div>
-													</div>
-												</div>
-												<div class="swiper-slide">
-													<div class="tg-match">
-														<div class="tg-matchdetail">
-															<div class="tg-box" style="width: 100%;text-align: center;">
-																<h3>Responsibility</h3>
-															</div>
-														</div>
-														<div class="tg-matchhover">
-														<h3 style="color: #fff;text-align: center;">Responsibility</h3>
-														</div>
-													</div>
-												</div>
-											</div>
-											<div class="tg-themebtnnext"><span class="fa fa-angle-down"></span></div>
-											<div class="tg-themebtnprev"><span class="fa fa-angle-up"></span></div>
-										</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</section>
-		</main>
-		<footer id="tg-footer" class="tg-footer tg-haslayout">
-		<section class="tg-videobox tg-haslayout">
-				<figure>
-					<img src="images/bg-video.jpg" alt="image description">
-					<figcaption>
-						<h2>Inyards Fantasy Sports is not affiliated in any way to and claims no association, in any capacity whatsoever, with the (i) ICC (ii) BCCI, (iii) IPL or any IPL franchises, (iv) FIFA, (v) FA, (vi) EPL or any domestic clubs in the UK, (vii) ISL, or (viii) any other domestic cricket/football/league/competition, or tournament franchise/team/club (other than where specifically stated). Inyards Fantasy Sports acknowledges that the ICC, BCCI, IPL, FIFA, FA, EPL, ISL, PKL and its franchises/teams/clubs, respective national football associations/federations, domestic tournament/competition organisers and franchises/teams/clubs, respectively, own all proprietary names and marks relating to the relevant tournament or competition. Residents of the states of Assam and Odisha, and where otherwise prohibited by law are not eligible to enter Inyard's Fantasy leagues.</h2>
-					</figcaption>
-				</figure>
-			</section>
-			<div class="tg-footerbar">
-				<div class="container">
-				<ul>
-				<li class="tg-copyright" style="list-style: none;width:100%;text-align: center;font-variant:small-caps;">Made with <i style="color: #D75A4A;" class="fa fa-heart"></i> by Superheroes</li>
-				</ul>
-				</div>
-			</div>
-		</footer>
-	</div>
-	<div class="tg-modalbox modal fade" id="tg-login" tabindex="-1" role="dialog">
-		<div class="modal-dialog" role="document">
-			<div class="tg-modal-content laptop-bg">
-				<div class="tg-formarea w-100">
-					<div class="tg-border-heading">
-						<h3 class="soon-to-store">Coming soon to google play store</h3>
-					</div>
-					<form class="tg-loginform">
-					<p class="soon-to-store" style="font-variant:small-caps;">Enter your E-mail and We will send a Invite as soon as We Launch!</p>
-						<fieldset>
-							<div class="form-group">
-								<input id="emailData" type="text" name="email" style="text-transform: lowercase;" class="form-control block-center w-60" placeholder="Email Address">
-							</div>
-							<p id="emailInvalidAlert" class="soon-to-store" style="font-variant:small-caps;color:#D75A4A;"></p>
-							<p id="emailValidAlert" class="soon-to-store" style="font-variant:small-caps;color:#88C057;"></p>
-							<div class="form-group">
-								<button id="inviteBtn" class="tg-btn tg-btn-lg block-center">Subscribe</button>
-							</div>
-						</fieldset>
-					</form>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="tg-modalbox modal fade" id="tg-about" tabindex="-1" role="dialog">
-		<div class="modal-dialog toomuch-popup" role="document" style="top:14vh !important;">
-			<div class="tg-modal-content laptop-bg">
-				<div class="tg-formarea w-100">
-					<div class="tg-border-heading">
-						<h3 class="soon-to-store">Mission</h3>
-						<p class="soon-to-store" style="font-variant:small-caps;">Our Mission is to bring the Lead, the Coach and the Gamechanger abilities out of you. To get you real close to the tosses and kick-off whistles of every single match. To engage your fan sense to its fullest and let you decide your unbeatable team and play against your boss and dad, your friends and foes.</p>
-					</div>
-					<div class="tg-border-heading">
-						<h3 class="soon-to-store">Vision</h3>
-						<p class="soon-to-store" style="font-variant:small-caps;">To become world's best platform that provides the Fantasy sports experience to its greatest form with all possible features and exciting cash prizes.</p>
-					</div>
-					<div class="tg-border-heading">
-						<h3 class="soon-to-store">Promise</h3>
-						<p class="soon-to-store" style="font-variant:small-caps;">We promise that we would spend a hefty portion of profit obtained by Inyards Fantasy Arena either for improvement of Sports in India or for a child's education, a patient's treatment , various social and moral purposes, in turn by making the world a better place.</p>
-					</div>
-					</div>
-			</div>
-		</div>
-	</div>
-	<div class="tg-modalbox modal fade" id="tg-legal" tabindex="-1" role="dialog">
-		<div class="modal-dialog toomuch-popup" role="document">
-			<div class="tg-modal-content laptop-bg">
-				<div class="tg-formarea w-100">
-					<p class="soon-to-store" style="font-variant:small-caps;">Fantasy Sports is purely legal in India. It is considered as Game of Skill and is not related to Gambling or betting in any way since users need their knowledge of sports and skills in building up their high performing team.</p><div class="tg-border-heading"><h3 class="soon-to-store">What is Game of Skill ?</h3></div><p class="soon-to-store" style="font-variant:small-caps;">A game of skill is a game where the outcome is determined mainly by mental or physical skill, rather than by chance. A game of skill generally has an element of chance, but skill plays a greater role in determining the outcome.<br>For more, please refer to the Public Gambling Act,1867 (India) - www.indiankanoon.org/doc/1824663/<br>Age Limitation : Citizens of india 18 and Above<br>Anybody who is 18 and above are allowed to play Fantasy sports in India with the exception of Orissa and Assam.Since the laws of these states are unclear with respect to Game of Skill, Residents of Orissa and Assam are allowed to participate only in Play for Free category and not in Play for Cash.</p>
-				</div>
-			</div>
-		</div>
-	</div>
-	
-	<script src="js/vendor/jquery-library.js"></script>
-	<script src="js/vendor/bootstrap.min.js"></script>
-	<script src="js/customScrollbar.min.js"></script>
-	<script src="js/owl.carousel.js"></script>
-	<script src="js/isotope.pkgd.js"></script>
-	<script src="js/prettyPhoto.js"></script>
-	<script src="js/swiper.min.js"></script>
-	<script src="js/jquery-ui.js"></script>
-	<script src="js/countTo.js"></script>
-	<script src="js/appear.js"></script>
-	<script src="js/main.js"></script>
-	<script type="text/javascript ">
 
 
-       $(document).ready(function(){
+<body class="fixed-left">
+<div ui-view></div>
 
-        setTimeout(hideAlerts, 10);
-        function hideAlerts(){
-            console.log('hide 10');
-            $("#emailValidAlert").text('');
-            $("#emailInvalidAlert").text('');
-        }     
-
-        function validateEmail(email) {
-            var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
-            return emailReg.test(email);
-        }
-
-        $("#inviteBtn").click(function(){
-            var email = $("#emailData").val();
-             if(email === ''){
-                $("#emailInvalidAlert").text('Enter an Email Address');
-                setTimeout(hideAlerts, 2000);
-                return;
-            } else if(!validateEmail(email)){
-                $("#emailInvalidAlert").text('Looks like you\'ve entered an invalid email address. Try Again.');
-                setTimeout(hideAlerts, 2000);
-                return;
-            } else if(email != undefined && validateEmail(email)){
-                     $.ajax({
-                        type: "POST",
-                        url: "/invite",
-                        data: JSON.stringify({
-                            'email':email
-                        }),
-                        contentType: "application/json; charset=utf-8",
-                        dataType: "json",
-                        success: function(data){ 
-                            if(data.error === 'Email Already in use'){
-                             $("#emailInvalidAlert").text('You have already subscribed for our Invite');
-                             setTimeout(hideAlerts, 2000);
-                            } 
-                            else{
-                            console.log(data);
-                            $("#emailValidAlert").text('Thank You!');
-                            setTimeout(hideAlerts, 2000);
-                         }
-                        },
-                        failure: function(errMsg) {
-                            
-                        }
-                        });
-            
-            } else{
-                 $("#emailInvalidAlert").show();
-                  setTimeout(hideAlerts, 2000);
-            }
-        });
-        });
-
-  </script>
 <script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-90400500-1', 'auto');
-  ga('send', 'pageview');
-
+	var resizefunc = [];
 </script>
 
+<!-- jQuery  -->
+<script src="dashboard/js/jquery.min.js"></script>
+<script src="dashboard/js/bootstrap.min.js"></script>
+<script src="dashboard/js/moment.js"></script>
+<script src="dashboard/js/detect.js"></script>
+<script src="dashboard/js/fastclick.js"></script>
+<script src="dashboard/js/jquery.slimscroll.js"></script>
+<script src="dashboard/js/jquery.blockUI.js"></script>
+<script src="dashboard/js/waves.js"></script>
+<script src="dashboard/js/jquery.nicescroll.js"></script>
+<script src="dashboard/js/jquery.slimscroll.js"></script>
+<script src="dashboard/js/jquery.scrollTo.min.js"></script>
+<!--
+<script src="dashboard/js/custombox.js"></script>
+<script src="dashboard/js/legacy.js"></script>-->
+<script src="dashboard/js/sweet-alert.min.js"></script>
+<script src="dashboard/js/admin.js"></script>
+
+<!--<script src="dashboard/js/jquery.magnific-popup.min.js"></script>
+<script src="dashboard/js/jquery.dataTables.js"></script>
+<script src="dashboard/js/dataTables.bootstrap.js"></script>
+<script src="dashboard/js/mindmup-editabletable.js"></script>
+<script src="dashboard/js/numeric-input-example.js"></script>
+<script src="dashboard/js/datatables.editable.init.js"></script>
+<script src="dashboard/js/switchery.min.js"></script>
+<!-- KNOB JS -->
+<script src="dashboard/js/jquery.knob.js"></script>
+
+<!--Morris Chart-->
+<script src="dashboard/js/morris.min.js"></script>
+<script src="dashboard/js/raphael-min.js"></script>
+
+<!-- Dashboard init -->
+<!--<script src="dashboard/js/jquery.dashboard.js"></script>-->
+
+<!-- App js -->
+<script src="dashboard/js/jquery.core.js"></script>
+<script src="dashboard/js/jquery.app.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.4.2/angular-ui-router.min.js"></script>
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular-route.js"></script>-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular-resource.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+
+<!-- Angular Material Library -->
+<script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
+<script src="dashboard/js/angular-busy.min.js"></script>
+
+<script src="dashboard/app/dirPagination.js"></script>
+<script src="dashboard/js/angular-moment.js"></script>
+<script src="dashboard/app/app.js"></script>
+
+<script src="dashboard/app/dashboardCtrl.js"></script>
+<script src="dashboard/app/userCustCtrl.js"></script>
+<script src="dashboard/app/userEmpCtrl.js"></script>
+<script src="dashboard/app/userVendorsCtrl.js"></script>
+<script src="dashboard/app/footTeamsCtrl.js"></script>
+<script src="dashboard/app/footPlayersCtrl.js"></script>
+<script src="dashboard/app/controller.js"></script>
+
+<script src="dashboard/app/services.js"></script>
+
+<script src="dashboard/app/manualEvent.js"></script>
+
 </body>
+
 </html>

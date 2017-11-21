@@ -15,8 +15,22 @@
 
  var Codes = require('../../Codes');
  var Validation = require('../Validation');
+var EventHistory = require('../../models/Football/EventHistory');
+
+
 
 var HistoryCount = require('../../modules/getHistoryCount');
+var responseToConsole = function(_status, _code, _data, _error) {
+
+	var responseJSON = {
+		status: _status,
+		code: _code,
+		data: _data,
+		error: _error
+	}
+	return responseJSON;
+}
+
 
 
 exports.createPointSystem = function(req, res) {
@@ -898,6 +912,292 @@ exports.resetPointsFixture = function(req, res){
 };
 
 
+//MANUAL SYSTEM FOR POINT CALCULATION
+
+exports.manualSystem1 = function(req, res){
+
+	Match.findOne({matchId:req.body.matchId}).exec(function(matchErr, match){
+
+		if(matchErr){
+			res.status(Codes.httpStatus.ISE).json({
+				status: Codes.status.FAILURE,
+				code: Codes.httpStatus.ISE,
+				data: '',
+				error: Codes.errorMsg.UNEXP_ERROR
+			});
+			return;
+		}
+		if(match == null){
+			res.status(Codes.httpStatus.BR).json({
+				status: Codes.status.FAILURE,
+				code: Codes.httpStatus.BR,
+				data: '',
+				error: Codes.errorMsg.F_INV_MID
+			});
+			return;
+		}
+
+
+		//UPDATE THE EVENT SCHEMA
+		var newEvent = new Event;
+		newEvent.eventId = req.body.eventId;
+		newEvent.matchId = req.body.matchId;
+		newEvent.teamId = null;
+		newEvent.type = req.body.eventName;
+		newEvent.minute = req.body.minute;
+		newEvent.extraMinute = null;
+		newEvent.reason = null;
+		newEvent.injuried = null;
+		newEvent.playerId = req.body.playerId;
+		newEvent.playerName = req.body.playerName;
+		newEvent.computed = true;
+		//	newEvent.relatedPlayerId = req.body.relatedPlayerId;
+     	//	newEvent.relatedPlayerName = event.related_player_name;
+
+		newEvent.save(function (saveErr, saveEvent){
+			if(saveErr){
+				res.status(Codes.httpStatus.BR).json({
+					status:Codes.status.FAILURE,
+					code: Codes.httpStatus.BR,
+					data: '',
+					error: Validation.validatingErrors(saveErr)
+				});
+			}
+			// SAVES event
+		});
+
+
+		const playerPoints= _.findWhere(match.lineup,{"playerId":req.body.playerId}).points;
+		const eventPoints = req.body.eventPoints;
+		const playerPosition = _.findWhere(match.lineup,{"playerId":req.body.playerId}).position;
+
+		//UPDATE THE EVENT HISTORY SCHEMA
+		var eventHistory = new EventHistory;
+
+		eventHistory.eventId = req.body.eventId;
+		eventHistory.matchId = req.body.matchId;
+		eventHistory.playerId = req.body.playerId;
+		eventHistory.position = playerPosition;
+		eventHistory.eventPoints = eventPoints;
+		eventHistory.playerPoints = playerPoints;
+
+		eventHistory.save(function (saveErr, saveEventHistory){
+			if(saveErr){
+				res.status(Codes.httpStatus.BR).json({
+					status:Codes.status.FAILURE,
+					code: Codes.httpStatus.BR,
+					data: '',
+					error: Validation.validatingErrors(saveErr)
+
+				});
+			}
+			// SAVES eventHistory
+		});
+
+
+        // MATCH POINTS AND LINE UP CHANGES
+		var wholeMatchPreviousPoints = _.findWhere({match}).points;
+	//	console.log(wholeMatchPreviousPoints);
+		var playerPreviousPoints = _.findWhere(match.lineup,{"playerId":req.body.playerId}).points;
+	//	console.log(playerPreviousPoints);
+		var playerNewPoints = playerPreviousPoints + req.body.eventPoints;
+	//	console.log(playerNewPoints);
+		var wholeMatchPoints = wholeMatchPreviousPoints + req.body.eventPoints;
+	//	console.log(wholeMatchPoints);
+		_.findWhere(match.lineup,{"playerId":req.body.playerId}).points = playerNewPoints;
+		match.points = wholeMatchPoints;
+	//	console.log(match.points);
+
+		//PUSH THE EVENT IN MATCHES SCHEMA FOR THAT MATCH
+
+
+		match.events.push(newEvent);
+
+		match.save(function(matchSaveErr, savedMatch){
+
+			if (matchSaveErr) {
+				console.log(responseToConsole(Codes.status.FAILURE, Codes.httpStatus.BR, '', Validation.validatingErrors(matchSaveErr)));
+				return;
+			}
+
+
+			//MATCHCARD POINTS AND LINEUP CHANGES
+
+			MatchCard.find({match:savedMatch._id}).populate('match players').exec(function(matchCardsErr, matchCards){
+				if(matchCardsErr){
+					console.log(responseToConsole(Codes.status.FAILURE, Codes.httpStatus.ISE, matchCardErr, Codes.errorMsg.UNEXP_ERROR));
+					return;
+				}
+				console.log('Update matchCards');
+
+				if(matchCards.length == 0){
+					console.log(responseToConsole(Codes.status.SUCCESS, Codes.httpStatus.OK, '', Codes.errorMsg.F_NO_MC_M));
+					return;
+				}
+
+				_.each(matchCards, function(matchCard, index, matchCards){
+					var lineupInMatch = {};
+					var prevMatchPoints = _.findWhere({matchCard}).matchPoints;
+					var matchPoints = 0;
+					lineupInMatch = savedMatch.lineup;
+
+					//LOOK FOR EACH PLAYER IN LINEUP AND COMPARE WITH MATCHCARD PLAYERS
+
+					_.each(lineupInMatch, function(lineup, index, lineups){
+						// console.log('MATCHCARD PLAYERS');
+						// console.log(matchCard);
+						var player = _.findWhere(matchCard.players,{"playerId":lineup.playerId});
+						if(player !== undefined && player){
+							_.findWhere(matchCard.players,{"playerId":lineup.playerId}).points = lineup.points;
+							matchPoints = matchPoints + _.findWhere(matchCard.players,{"playerId":lineup.playerId}).points;
+						}
+
+					});
+
+					matchCard.matchPoints = matchPoints;
+					var diff = matchCard.matchPoints - prevMatchPoints;
+					console.log(matchCard.user);
+
+
+					//SAVE THE MATCHCARD
+
+					matchCard.save(function(matchCardSaveErr, savedMatchCard){
+						if (matchCardSaveErr) {
+							console.log(responseToConsole(Codes.status.FAILURE, Codes.httpStatus.BR, '', Validation.validatingErrors(matchCardSaveErr)));
+							return;
+						}
+						if(savedMatchCard){
+							console.log(responseToConsole(Codes.status.SUCCESS, Codes.httpStatus.OK, 'Match ' + match.matchId + ' Points Calculated', ''));
+							return;
+						}
+					});
 
 
 
+
+					//UPDATE THE MATCHCARD USER SIMULTANEOUSLY
+
+					                                             //LOGIC TO BE IMPLEMENTED FOR UPDATING USER POINTS FOR THAT PARTICULAR PLAYER AND EVENT ONLY AND FIND IF THE PLAYER EXISTS IN USER PLAYERS LIST
+
+					User.findById({_id:matchCard.user}, function(err, user){
+						if(err){
+							console.log(responseToConsole(Codes.status.FAILURE, Codes.httpStatus.ISE, 'Unexpected error', Validation.validatingErrors(errorMsg.UNEXP_ERROR)));
+							return;
+						}
+						if(user == null){
+							console.log(responseToConsole(Codes.status.FAILURE, Codes.httpStatus.BR, 'User Not Found', Validation.validatingErrors(errorMsg.USER_NOT_FOUND)));
+							return;
+						}
+
+						var prevPoints = user.userPoints;
+
+						user.userPoints = prevPoints + diff;
+
+						user.save(function(err, savedUser){
+							if (err) {
+								console.log(responseToConsole(Codes.status.FAILURE, Codes.httpStatus.BR, '', Validation.validatingErrors(err)));
+								return;
+							}
+							if(savedUser){
+								console.log(responseToConsole(Codes.status.SUCCESS, Codes.httpStatus.OK, 'User ' + user.username + ' Points Calculated and Saved', ''));
+							}
+
+						});
+					});
+
+
+
+
+				});
+
+
+				});
+
+
+
+
+			});
+
+
+		res.status(Codes.httpStatus.OK).json({
+			status:Codes.status.SUCCESS,
+			code:Codes.httpStatus.OK,
+			data: "Match Id with MatchID " +match+" and Event with EventID "+req.body.eventId+" Updated successfully",
+			error: ''
+		});
+
+
+		});
+
+};
+
+
+
+//POINTS CALCULATION TYPE FOR SWITCHING FROM MANUAL TO AUTOMATIC
+
+exports.pointsCalculationType = function(req, res){
+
+	Match.findOne({matchId:req.body.matchId}).exec(function(matchErr, match) {
+
+		if(matchErr){
+			res.status(Codes.httpStatus.ISE).json({
+				status: Codes.status.FAILURE,
+				code: Codes.httpStatus.ISE,
+				data: '',
+				error: Codes.errorMsg.UNEXP_ERROR
+			});
+			return;
+		}
+		if(match == null){
+			res.status(Codes.httpStatus.BR).json({
+				status: Codes.status.FAILURE,
+				code: Codes.httpStatus.BR,
+				data: '',
+				error: Codes.errorMsg.F_INV_MID
+			});
+			return;
+		}
+
+		if(match.pointsCalculationType == false){
+
+			match.pointsCalculationType = true;
+			match.save(function(matchSaveErr, savedMatch){
+				if (matchSaveErr) {
+					console.log(responseToConsole(Codes.status.FAILURE, Codes.httpStatus.BR, '', Validation.validatingErrors(matchSaveErr)));
+					return;
+				}
+				if(savedMatch){
+					console.log(responseToConsole(Codes.status.SUCCESS, Codes.httpStatus.OK, 'Match ' + match.matchId + ' Saved Points Calculation Type As True', ''));
+                     return;
+
+				}
+
+			});
+
+
+		}
+
+		else{
+
+			match.pointsCalculationType = false;
+			match.save(function(matchSaveErr, savedMatch){
+				if (matchSaveErr) {
+					console.log(responseToConsole(Codes.status.FAILURE, Codes.httpStatus.BR, '', Validation.validatingErrors(matchSaveErr)));
+					return;
+				}
+				if(savedMatch){
+					console.log(responseToConsole(Codes.status.SUCCESS, Codes.httpStatus.OK, 'Match ' + match.matchId + ' Saved Points Calculation Type As False', ''));
+
+					return;
+				}
+			});
+
+		}
+
+
+	});
+
+
+
+
+};

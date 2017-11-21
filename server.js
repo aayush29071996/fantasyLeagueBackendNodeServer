@@ -14,10 +14,10 @@ var mongoose = require('mongoose');
 var autoIncrement = require('mongoose-auto-increment');
 var path = require('path');
 
-var port = process.env.PORT || 9000;
+var port = process.env.PORT || 80;
 
-var mongooseUri = 'mongodb://127.0.0.1:27017';
-// var mongooseUri = 'mongo db://heroku_5598ll25:egpvjohtsscsnq85friakf1260@ds157278.mlab.com:57278/heroku_5598ll25/';
+var mongooseUri = 'mongodb://127.0.0.1:27017' ;  //  process.env.MONGODB_URI;
+//var mongooseUri = 'mongodb://heroku_5598ll25:egpvjohtsscsnq85friakf1260@ds157278.mlab.com:57278/heroku_5598ll25/';
 var connection = mongoose.connect(mongooseUri);
 autoIncrement.initialize(connection);
 

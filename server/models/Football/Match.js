@@ -92,7 +92,10 @@ var MatchSchema = new mongoose.Schema({
 	autoLineup:{type:Boolean, default:false},
 	points:{type:Number, default:0},
 	pointsCalculated:{type:Boolean, default:false},
+	bonusPointsCalculated:{type:Boolean, default:false},
 	leaderboard:{type:Schema.Types.ObjectId, ref:'Leaderboard'},
+	matchCompleted:{type:Boolean, default:false},
+	pointsCalculationType:{type:Boolean, default:false}
 		
 });
 

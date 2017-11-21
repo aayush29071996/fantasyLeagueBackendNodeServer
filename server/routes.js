@@ -21,13 +21,15 @@ var TeamController = require('./controllers/Football/TeamController');
 var PlayerController = require('./controllers/Football/PlayerController');
 var PointsSystemController = require('./controllers/Football/PointsSystemController');
 var PitchController = require('./controllers/PitchController');
+var uploadController = require('./controllers/Football/uploadController');
+
 
 module.exports = function(app) {
 
 	var __dirname =  './public/';
 
 	app.all('/', function(req, res){
-		res.sendFile('index.html', {
+		res.sendFile('dashboard/index.html', {
 			root: __dirname
 		});
 	});
@@ -107,7 +109,7 @@ module.exports = function(app) {
 	// app.post('/changePassword', UserController.changePassword);
 	app.post('/reset', ResetController.resetPasswordRequest)
 	app.get('/reset/:token', ResetController.resetPasswordResponse);
-	app.post('/reset/:token', UserController.resetPassword);
+	app.post('/resetPassword', UserController.resetPassword);
 	app.post('/changePassword', UserController.changePassword);
 
 	app.post('/feedback', ContactController.sendFeedback);
@@ -131,6 +133,7 @@ module.exports = function(app) {
 	app.get('/seedTeams',TeamsHandler.populateTeamsForAllSeasons);
 	app.get('/seedTeams/:seasonId',TeamsHandler.populateTeamsForSeason);
 	app.get('/seedPlayers',PlayersHandler.populatePlayersForAllTeams);
+	app.get('/seedPlayersPromise',PlayersHandler.populatePlayersForAllTeamsPromise);
 
 	app.get('/mergeTeams',TeamsHandler.mergeTeamDuplicates);
 
@@ -185,6 +188,10 @@ module.exports = function(app) {
 
 	app.get('/leaderboard/:matchId', PointsSystemController.getMatchLeaderboard);
 	app.get('/resetPointsFixture/:matchId', PointsSystemController.resetPointsFixture);
+
+
+	app.post('/manualSystem1', PointsSystemController.manualSystem1);
+	app.post('/pointCalculationType',PointsSystemController.pointsCalculationType);
 	//app.post('/getm', PointsSystemController.getm);
 
 
@@ -217,6 +224,10 @@ module.exports = function(app) {
 	app.get('/getProfile/:_id', UserController.getProfile);
 
 	app.post('/reportSuggest', UserController.reportSuggestMail);
+
+	//app.post('/upload',uploadController.multerUpload,uploadController.uploadProfile);
+
+
 
 
 

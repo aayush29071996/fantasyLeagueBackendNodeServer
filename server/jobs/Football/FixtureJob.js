@@ -8,6 +8,8 @@ var CronJob = require('cron').CronJob;
 var Subtract = require('array-subtract');
 var _ = require('underscore');
 async = require("async");
+var User = require('../../models/User');
+
 
 
 
@@ -28,6 +30,20 @@ var fireUrl = function(params, include) {
     console.log('firing url : ' + baseUrl + params + "?api_token=" + API_TOKEN + "&include=" + include);
     return baseUrl + params + "?api_token=" + API_TOKEN + "&include=" + include;
 };
+var errorMsg = {
+    UNEXP_ERROR : 'unexpected error in accessing data',
+    USER_NOT_FOUND : 'user not found',
+    EMAIL_IN_USE : 'email already in use',
+    USERNAME_IN_USE : 'username already in use',
+    MOBILE_IN_USE : 'mobile number in use',
+    INVALID_TOKEN : 'invalid reset password token',
+    OLD_PASS_DOESNT_MATCH: 'Old Password does not match',
+    NO_USERS_FOUND : 'no users found',
+    INVALID_PASS_U: 'username and password does not match',
+    INVALID_PASS_E: 'email and password does not match',
+    FACEBOOK_IN_USE:'facebook account already in use',
+    GOOGLE_IN_USE:'facebook account already in use',
+}
 
 var responseToConsole = function(_status, _code, _data, _error) {
 
@@ -777,21 +793,24 @@ exports.updateFixturesJob = function() {
 
 
 //calculate points every 1 minute
+
+
 exports.calculatePointsJob = function() {
     console.log(moment().format('MMMM Do YYYY, h:mm:ss a'));
-    console.log('calculatePointsJob inside')
+    console.log('calculatePointsJob inside');
     var calculatePointsJob = new CronJob({
 
         cronTime: '*/30 * * * * *',
         onTick: function() {
 
-                var twoHoursBefore = moment().utcOffset(330).subtract('2','h').format("YYYY-MM-DD HH:mm:ss");
-                var thirtyMinsAfter = moment().utcOffset(330).add('30','m').format("YYYY-MM-DD HH:mm:ss");
+
+                var twoHoursBefore = moment.utc().subtract('2','h').format("YYYY-MM-DD HH:mm:ss");
+                var thirtyMinsAfter = moment.utc().add('30','m').format("YYYY-MM-DD HH:mm:ss");
                 // var twoHoursBefore = moment(moment().subtract('6','d').format("YYYY-MM-DD HH:mm:ss")).toISOString();
                 // var thirtyMinsAfter = moment(moment().subtract('2','d').format("YYYY-MM-DD HH:mm:ss")).toISOString();
                 console.log('From ' + twoHoursBefore + ' To ' + thirtyMinsAfter);
                  console.log('calculatePointsJob called')
-                Match.find({startingDateTime:{$gte:twoHoursBefore, $lt:thirtyMinsAfter}}).populate('events').exec( function(matchesErr, matches){
+                Match.find({startingDateTime:{$gte:twoHoursBefore, $lt:thirtyMinsAfter}, pointsCalculationType: true}).populate('events').exec( function(matchesErr, matches){
                      console.log(' ******** MATCHES TO BE CALCULATED  :: ' + matches.length + '  ********');
                     if(matchesErr){
                            console.log(responseToConsole(Codes.status.FAILURE, Codes.httpStatus.ISE, matchesErr, Codes.errorMsg.UNEXP_ERROR));
@@ -1209,6 +1228,7 @@ exports.calculatePointsJob = function() {
 
                                         _.each(matchCards, function(matchCard, index, matchCards){
                                                 var lineupInMatch = {};
+                                                var prevMatchPoints = _.findWhere({matchCard}).matchPoints;
                                                 var matchPoints = 0;
                                                 lineupInMatch = savedMatch.lineup;
                                                 _.each(lineupInMatch, function(lineup, index, lineups){
@@ -1222,34 +1242,27 @@ exports.calculatePointsJob = function() {
                                                     
                                                 });
 
-                                                matchCard.matchPoints = matchPoints;
+                                            matchCard.matchPoints = matchPoints;
+                                            var diff = matchCard.matchPoints - prevMatchPoints;
+                                            console.log(matchCard.user);
 
 
 
                                             //Adding matchcard points to users Database
 
-                                            User.findOne({id:matchCard.user}, function(err, user){
+                                            User.findById({_id:matchCard.user}, function(err, user){
                                                 if(err){
-                                                    res.status(httpStatus.ISE).json({
-                                                        status: status.FAILURE,
-                                                        code: httpStatus.ISE,
-                                                        data: '',
-                                                        error: errorMsg.UNEXP_ERROR
-                                                    });
+                                                    console.log(responseToConsole(Codes.status.FAILURE, Codes.httpStatus.ISE, 'Unexpected error', Validation.validatingErrors(errorMsg.UNEXP_ERROR)));
                                                     return;
                                                 }
                                                 if(user == null){
-                                                    res.status(httpStatus.BR).json({
-                                                        status: status.FAILURE,
-                                                        code: httpStatus.BR,
-                                                        data: '',
-                                                        error: errorMsg.USER_NOT_FOUND
-                                                    });
+                                                    console.log(responseToConsole(Codes.status.FAILURE, Codes.httpStatus.BR, 'User Not Found', Validation.validatingErrors(errorMsg.USER_NOT_FOUND)));
                                                     return;
                                                 }
 
                                                 var prevPoints = user.userPoints;
-                                                user.userPoints = prevPoints + matchCard.matchPoints;
+
+                                                user.userPoints = prevPoints + diff;
 
                                                 user.save(function(err, savedUser){
                                                     if (err) {
@@ -1284,10 +1297,6 @@ exports.calculatePointsJob = function() {
                             });
 
 
-
-
-
-
                             // } //match.active
                         // } // index == 0 
 
@@ -1302,3 +1311,75 @@ exports.calculatePointsJob = function() {
     });
     calculatePointsJob.start();
 }
+
+
+
+
+
+
+/*
+exports.calculateBonusPointsJob = function() {
+
+    console.log(moment().format('MMMM Do YYYY, h:mm:ss a'));
+    console.log('calculateBonusPointsJob inside');
+
+    var calculateBonusPointsJob = new CronJob({
+
+        cronTime: '*!/2 * * *',
+
+
+        onTick: function() {
+
+            Match.find({matchCompleted:true ,bonusPointsCalculated:false}).exec( function(matchesErr, matches){
+                    console.log(' ******** MATCHES TO BE CALCULATED  :: ' + matches.length + '  ********');
+                    if(matchesErr){
+                        console.log(responseToConsole(Codes.status.FAILURE, Codes.httpStatus.ISE, matchesErr, Codes.errorMsg.UNEXP_ERROR));
+                    }
+
+                //CALCULATING FOR A SINGLE MATCH
+
+                matches.forEach(function(match, index) {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                });
+
+
+
+            });
+
+
+
+        },
+        onComplete: function() {
+            console.log('Calculate Bonus Points Job Stopped');
+        },
+        start: true
+
+
+        });
+    calculateBonusPointsJob.start();
+
+
+}
+*/
